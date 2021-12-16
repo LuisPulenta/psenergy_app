@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff8c8c94),
+      backgroundColor: Color(0xffd3a735),
       body: Stack(
         children: <Widget>[
           Container(
@@ -46,8 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xff242424),
-                    Color(0xff8c8c94),
+                    Color(0xffe9dac2),
+                    Color(0xffd3a735),
                   ],
                 ),
               ),
