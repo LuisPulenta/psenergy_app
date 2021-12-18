@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:psenergy_app/helpers/constants.dart';
 import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/components/loader_component.dart';
-import 'package:psenergy_app/models/user.dart';
+import 'package:psenergy_app/models/usuario.dart';
 import 'package:psenergy_app/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -250,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     var decodedJson = jsonDecode(body);
-    var user = User.fromJson(decodedJson);
+    var user = Usuario.fromJson(decodedJson);
 
     setState(() {
       _showLoader = false;

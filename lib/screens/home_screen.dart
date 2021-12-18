@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:psenergy_app/models/user.dart';
+import 'package:psenergy_app/models/usuario.dart';
 import 'package:psenergy_app/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
-  final User user;
+  final Usuario user;
 
   HomeScreen({required this.user});
 

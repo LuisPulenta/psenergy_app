@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:psenergy_app/models/user.dart';
+import 'package:psenergy_app/models/usuario.dart';
 import 'package:psenergy_app/screens/home_screen.dart';
 import 'package:psenergy_app/screens/login_screen.dart';
 import 'package:psenergy_app/screens/wait_screen.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _isLoading = true;
   bool _showLoginPage = true;
-  late User _user;
+  late Usuario _user;
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
       String dateActual = DateTime.now().toString().substring(0, 10);
       if (userBody != null) {
         var decodedJson = jsonDecode(userBody);
-        _user = User.fromJson(decodedJson);
+        _user = Usuario.fromJson(decodedJson);
         if (dateAlmacenada != dateActual) {
           _showLoginPage = true;
         } else {
