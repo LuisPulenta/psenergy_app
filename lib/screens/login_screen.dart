@@ -23,6 +23,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   List<Usuario> _usuariosApi = [];
   List<Usuario> _usuarios = [];
+  Usuario _usuarioLogueado = Usuario(
+      idUsuario: 0,
+      nombre: '',
+      apellido: '',
+      login: '',
+      contrasena: '',
+      fechaUltimoAcceso: '',
+      fullName: '');
 
   String _email = '';
   String _emailError = '';
@@ -230,40 +238,27 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    setState(() {
-      _showLoader = true;
-    });
+    List<Usuario> filteredUsuario = [];
+    for (var usuario in _usuarios) {
+      if (usuario.login.toLowerCase() == (_email.toLowerCase()) &&
+          usuario.contrasena.toLowerCase() == (_password.toLowerCase())) {
+        filteredUsuario.add(usuario);
+      }
+    }
 
-    Map<String, dynamic> request = {
-      'Email': _email,
-      'password': _password,
-    };
-
-    var url = Uri.parse('${Constants.apiUrl}/Api/Account/GetUserByEmail');
-    var response = await http.post(
-      url,
-      headers: {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-      },
-      body: jsonEncode(request),
-    );
-
-    if (response.statusCode >= 400) {
+    if (filteredUsuario.length == 0) {
       setState(() {
         _passwordShowError = true;
-        _passwordError = 'Email o contraseña incorrectos';
+        _passwordError = 'Usuario o contraseña incorrectos';
       });
       return;
     }
 
-    var body = response.body;
-    if (_rememberme) {
-      _storeUser(body);
-    }
+    _usuarioLogueado = filteredUsuario[0];
 
-    var decodedJson = jsonDecode(body);
-    var user = Usuario.fromJson(decodedJson);
+    // if (_rememberme) {
+    //   _storeUser(_usuarioLogueado);
+    // }
 
     setState(() {
       _showLoader = false;
@@ -273,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         MaterialPageRoute(
             builder: (context) => HomeScreen(
-                  user: user,
+                  user: _usuarioLogueado,
                 )));
   }
 
@@ -283,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_email.isEmpty) {
       isValid = false;
       _emailShowError = true;
-      _emailError = 'Debes ingresar tu Email';
+      _emailError = 'Debes ingresar tu Usuario';
     } else {
       _emailShowError = false;
     }
@@ -292,10 +287,6 @@ class _LoginScreenState extends State<LoginScreen> {
       isValid = false;
       _passwordShowError = true;
       _passwordError = 'Debes ingresar tu Contraseña';
-    } else if (_password.length < 6) {
-      isValid = false;
-      _passwordShowError = true;
-      _passwordError = 'La Contraseña debe tener al menos 6 caracteres';
     } else {
       _passwordShowError = false;
     }
