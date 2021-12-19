@@ -1,14 +1,17 @@
 import 'dart:convert';
-
-import 'package:email_validator/email_validator.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/helpers/constants.dart';
 import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/components/loader_component.dart';
 import 'package:psenergy_app/models/usuario.dart';
 import 'package:psenergy_app/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as p;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,11 +21,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String _email = 'AVASILE';
+  List<Usuario> _usuariosApi = [];
+  List<Usuario> _usuarios = [];
+
+  String _email = '';
   String _emailError = '';
   bool _emailShowError = false;
+  bool _hayInternet = false;
 
-  String _password = 'AVA123';
+  String _password = '';
   String _passwordError = '';
   bool _passwordShowError = false;
 
@@ -31,6 +38,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _passwordShow = false;
 
   bool _showLoader = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUsuarios();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -297,5 +310,102 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setBool('isRemembered', true);
     await prefs.setString('userBody', body);
     await prefs.setString('date', DateTime.now().toString());
+  }
+
+  Future<Null> _getUsuarios() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      setState(() {
+        _showLoader = true;
+      });
+
+      Response response = await ApiHelper.getUsuarios();
+
+      setState(() {
+        _showLoader = false;
+      });
+
+      if (response.isSuccess) {
+        _usuariosApi = response.result;
+        _usuariosApi.sort((a, b) {
+          return a.apellido
+              .toString()
+              .toLowerCase()
+              .compareTo(b.apellido.toString().toLowerCase());
+        });
+        _hayInternet = true;
+        await showAlertDialog(
+            context: context,
+            title: 'Listo!',
+            message: "Se actualizó la base de datos de usuarios.",
+            actions: <AlertDialogAction>[
+              AlertDialogAction(key: null, label: 'OK'),
+            ]);
+      }
+    }
+    _getTablaUsuarios();
+    return;
+  }
+
+  void _getTablaUsuarios() async {
+    final Future<Database> database = openDatabase(
+      p.join(await getDatabasesPath(), 'usuarios.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE usuarios(idUsuario INTEGER PRIMARY KEY, nombre TEXT, apellido TEXT, login TEXT, contrasena TEXT,fechaUltimoAcceso  TEXT,  fullName TEXT)",
+        );
+      },
+      version: 1,
+    );
+
+    Future<void> insertUsuario(Usuario usuario) async {
+      final Database db = await database;
+      await db.insert(
+        'usuarios',
+        usuario.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    void _insertUsuarios() async {
+      _usuariosApi.forEach((element) {
+        insertUsuario(element);
+      });
+    }
+
+    Future<List<Usuario>> _getUsuariosSQLite() async {
+      final Database db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('usuarios');
+      return List.generate(
+        maps.length,
+        (i) {
+          return Usuario(
+            idUsuario: maps[i]['idUsuario'],
+            nombre: maps[i]['nombre'],
+            apellido: maps[i]['apellido'],
+            login: maps[i]['login'],
+            contrasena: maps[i]['contrasena'],
+            fechaUltimoAcceso: maps[i]['fechaUltimoAcceso'],
+            fullName: maps[i]['fullName'],
+          );
+        },
+      );
+    }
+
+    if (_hayInternet) {
+      _insertUsuarios();
+      _usuarios = await _getUsuariosSQLite();
+      _usuarios.forEach((element) {
+        print(element.fullName);
+      });
+    }
+
+    if (!_hayInternet) {
+      _usuarios = await _getUsuariosSQLite();
+      _usuarios.forEach((element) {
+        print(element.fullName);
+      });
+    }
   }
 }

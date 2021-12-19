@@ -4,7 +4,7 @@ class Usuario {
   String apellido = '';
   String login = '';
   String contrasena = '';
-  String fechaUltimoAcceso = '';
+  String? fechaUltimoAcceso = '';
   String fullName = '';
 
   Usuario(
@@ -36,5 +36,17 @@ class Usuario {
     data['fechaUltimoAcceso'] = this.fechaUltimoAcceso;
     data['fullName'] = this.fullName;
     return data;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'idUsuario': idUsuario,
+      'nombre': nombre,
+      'apellido': apellido,
+      'login': login,
+      'contrasena': contrasena,
+      'fechaUltimoAcceso': fechaUltimoAcceso,
+      'fullName': fullName,
+    };
   }
 }
