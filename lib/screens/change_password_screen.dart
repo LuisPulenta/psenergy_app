@@ -38,22 +38,38 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         appBar: AppBar(
           title: Text('Cambio de Contraseña'),
         ),
-        body: Stack(
-          children: [
-            Column(
-              children: <Widget>[
-                _showCurrentPassword(),
-                _showNewPassword(),
-                _showConfirmPassword(),
-                _showButtons(),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(
+                  (0xffe9dac2),
+                ),
+                Color(
+                  (0xffd3a735),
+                ),
               ],
             ),
-            _showLoader
-                ? LoaderComponent(
-                    text: 'Por favor espere...',
-                  )
-                : Container(),
-          ],
+          ),
+          child: Stack(
+            children: [
+              Column(
+                children: <Widget>[
+                  _showCurrentPassword(),
+                  _showNewPassword(),
+                  _showConfirmPassword(),
+                  _showButtons(),
+                ],
+              ),
+              _showLoader
+                  ? LoaderComponent(
+                      text: 'Por favor espere...',
+                    )
+                  : Container(),
+            ],
+          ),
         ));
   }
 
@@ -172,7 +188,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
               (Set<MaterialState> states) {
-            return Color(0xFF120E43);
+            return Color(0xFF9a6a2e);
           }),
         ),
         onPressed: () => _save(),

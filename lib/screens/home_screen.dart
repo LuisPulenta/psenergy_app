@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:psenergy_app/models/usuario.dart';
 import 'package:psenergy_app/screens/change_password_screen.dart';
+import 'package:psenergy_app/screens/contacto_screen.dart';
 import 'package:psenergy_app/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -247,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
-                        return Color(0xFF120E43);
+                        return Color(0xFF9a6a2e);
                       }),
                     ),
                     onPressed: () => _actualizarPassword(),
@@ -269,10 +270,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
-                        return Color(0xFF120E43);
+                        return Color(0xFF9a6a2e);
                       }),
                     ),
-                    onPressed: () => _actualizarPassword(),
+                    onPressed: () => _contacto(),
                   ),
                   SizedBox(
                     height: 25,
@@ -291,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
-                        return Color(0xFF120E43);
+                        return Color(0xFF9a6a2e);
                       }),
                     ),
                     onPressed: () => _logOut(),
@@ -313,5 +314,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _logOut() async {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+
+  void _contacto() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ContactoScreen()));
   }
 }

@@ -61,20 +61,56 @@ class _LoginScreenState extends State<LoginScreen> {
         children: <Widget>[
           Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 0),
+              padding: EdgeInsets.symmetric(vertical: 60),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xffe9dac2),
-                    Color(0xffd3a735),
+                    Color(
+                      (0xffe9dac2),
+                    ),
+                    Color(
+                      (0xffd3a735),
+                    ),
                   ],
                 ),
               ),
-              child: Image.asset(
-                "assets/logo.png",
-                height: 200,
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/logo.png",
+                    height: 100,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "PS",
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.yellow),
+                      ),
+                      Text(
+                        "Energy",
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "v.1.2.1",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ],
               )),
           Transform.translate(
             offset: Offset(0, -60),
@@ -106,21 +142,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 40,
-                ),
-              ],
-            ),
-          ),
-          _showLoader
-              ? LoaderComponent(
-                  text: 'Por favor espere...',
-                )
-              : Container(),
         ],
       ),
     );
@@ -218,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                  return Color(0xFF781f1e);
+                  return Color(0xFF9a6a2e);
                 }),
               ),
               onPressed: () => _login(),
