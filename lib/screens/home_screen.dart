@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:psenergy_app/models/usuario.dart';
 import 'package:psenergy_app/screens/change_password_screen.dart';
@@ -14,7 +15,10 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  @override
+  TabController? _tabController;
   Usuario _user = Usuario(
       idUsuario: 0,
       nombre: '',
@@ -29,78 +33,37 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     _user = widget.user;
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: DefaultTabController(
-      length: 3,
-      child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              title: Text("PSEnergy"),
-              // expandedHeight: 320,
-              flexibleSpace: Container(
-                decoration: BoxDecoration(),
-                child: Container(
-                  color: Colors.yellow.withOpacity(.5),
-                ),
+      backgroundColor: Color(0xffe9dac2),
+      appBar: AppBar(
+        title: (Text("PSEnergy App")),
+        centerTitle: true,
+        backgroundColor: Color(0xff9a6a2e),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(
+                (0xffe9dac2),
               ),
-              pinned: true,
-              bottom: TabBar(
-                indicatorWeight: 5,
-                labelColor: Colors.white,
-                tabs: <Widget>[
-                  Tab(
-                    child: Column(
-                      children: [
-                        Icon(Icons.add_circle),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Nueva",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Column(
-                      children: [
-                        Icon(Icons.cloud_upload),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Cargadas",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Column(
-                      children: [
-                        Icon(Icons.person),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Usuario",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              Color(
+                (0xffd3a735),
               ),
-            )
-          ];
-        },
-        body: TabBarView(
+            ],
+          ),
+        ),
+        child: TabBarView(
+          controller: _tabController,
+          physics: AlwaysScrollableScrollPhysics(),
+          dragStartBehavior: DragStartBehavior.start,
           children: <Widget>[
             Center(
               child: Text("Hola"),
@@ -303,7 +266,65 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-    ));
+      bottomNavigationBar: BottomAppBar(
+        child: TabBar(
+            controller: _tabController,
+            // indicator: BoxDecoration(
+            //     color: Colors.orange,
+            //     border: Border.all(width: 5, color: Colors.yellow)),
+            indicatorColor: Color(0xff9a6a2e),
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorWeight: 5,
+            // isScrollable: false,
+            labelColor: Color(0xff9a6a2e),
+            unselectedLabelColor: Colors.grey,
+            labelPadding: EdgeInsets.all(10),
+            tabs: <Widget>[
+              Tab(
+                child: Column(
+                  children: [
+                    Icon(Icons.add_circle),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Nueva",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Column(
+                  children: [
+                    Icon(Icons.cloud_upload),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Cargadas",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Column(
+                  children: [
+                    Icon(Icons.person),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Usuario",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+            ]),
+      ),
+    );
   }
 
   void _actualizarPassword() async {
