@@ -34,12 +34,12 @@ class _LoginScreenState extends State<LoginScreen> {
       causanteC: '',
       habilitaPaqueteria: 0);
 
-  String _email = '';
+  String _email = 'arivas';
   String _emailError = '';
   bool _emailShowError = false;
   bool _hayInternet = false;
 
-  String _password = '';
+  String _password = 'ari193';
   String _passwordError = '';
   bool _passwordShowError = false;
 
@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        _showRememberme(),
+                        //_showRememberme(),
                         _showButtons(),
                       ],
                     ),
@@ -208,17 +208,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _showRememberme() {
-    return CheckboxListTile(
-      title: Text('Recordarme:'),
-      value: _rememberme,
-      onChanged: (value) {
-        setState(() {
-          _rememberme = value!;
-        });
-      },
-    );
-  }
+  // _showRememberme() {
+  //   return CheckboxListTile(
+  //     title: Text('Recordarme:'),
+  //     value: _rememberme,
+  //     onChanged: (value) {
+  //       setState(() {
+  //         _rememberme = value!;
+  //       });
+  //     },
+  //   );
+  // }
 
   Widget _showButtons() {
     return Container(
@@ -286,6 +286,12 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _showLoader = false;
     });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('conectadodesde', DateTime.now().toString());
+    await prefs.setString(
+        'validohasta', DateTime.now().add(new Duration(hours: 12)).toString());
+    await prefs.setString('ultimaactualizacion', DateTime.now().toString());
 
     Navigator.pushReplacement(
         context,

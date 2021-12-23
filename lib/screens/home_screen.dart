@@ -1,6 +1,14 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:psenergy_app/helpers/api_helper.dart';
+import 'package:psenergy_app/helpers/constants.dart';
+import 'package:psenergy_app/models/area.dart';
+import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/models/usuario.dart';
+import 'package:psenergy_app/models/yacimiento.dart';
 import 'package:psenergy_app/screens/change_password_screen.dart';
 import 'package:psenergy_app/screens/contacto_screen.dart';
 import 'package:psenergy_app/screens/login_screen.dart';
@@ -30,12 +38,29 @@ class _HomeScreenState extends State<HomeScreen>
       causanteC: '',
       habilitaPaqueteria: 0);
 
+  bool _showLoader = false;
+  String _conectadodesde = '';
+  String _validohasta = '';
+  String _ultimaactualizacion = '';
+
+  String _areaSelected = 'Seleccione un Área...';
+  String _areaError = '';
+  bool _areaShowError = false;
+  List<Area> _areas = [];
+
+  String _yacimientoSelected = 'Seleccione un Yacimiento...';
+  String _yacimientoError = '';
+  bool _yacimientoShowError = false;
+  List<Yacimiento> _yacimientos = [];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _user = widget.user;
     _tabController = TabController(length: 3, vsync: this);
+    _getprefs();
+    _loadData();
   }
 
   @override
@@ -67,8 +92,11 @@ class _HomeScreenState extends State<HomeScreen>
           physics: AlwaysScrollableScrollPhysics(),
           dragStartBehavior: DragStartBehavior.start,
           children: <Widget>[
-            Center(
-              child: Text("Hola"),
+            Column(
+              children: <Widget>[
+                _showAreas(),
+                _showYacimientos(),
+              ],
             ),
             Center(
               child: Text("Chau"),
@@ -110,7 +138,9 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       Container(
                         child: Text(
-                          _user.causanteC.toString(),
+                          _conectadodesde == ''
+                              ? ''
+                              : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_conectadodesde))}',
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -136,7 +166,9 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       Container(
                         child: Text(
-                          _user.causanteC.toString(),
+                          _validohasta == ''
+                              ? ''
+                              : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_validohasta))}',
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -162,7 +194,9 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       Container(
                         child: Text(
-                          _user.causanteC.toString(),
+                          _ultimaactualizacion == ''
+                              ? ''
+                              : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_ultimaactualizacion))}',
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -188,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       Container(
                         child: Text(
-                          _user.causanteC.toString(),
+                          Constants.version,
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -342,5 +376,193 @@ class _HomeScreenState extends State<HomeScreen>
   void _contacto() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ContactoScreen()));
+  }
+
+  void _getprefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _conectadodesde = prefs.getString('conectadodesde').toString();
+    _validohasta = prefs.getString('validohasta').toString();
+    _ultimaactualizacion = prefs.getString('ultimaactualizacion').toString();
+    var a = 123;
+    setState(() {});
+  }
+
+  void _loadData() async {
+    await _getAreas();
+  }
+
+  Future<Null> _getAreas() async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estés conectado a Internet',
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+    Response response = await ApiHelper.getAreas();
+
+    setState(() {
+      _showLoader = false;
+    });
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+
+    setState(() {
+      _areas = response.result;
+      var a = 1;
+    });
+  }
+
+  Widget _showAreas() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: _areas.length == 0
+          ? Text('Cargando áreas...')
+          : DropdownButtonFormField(
+              items: _getComboAreas(),
+              value: _areaSelected,
+              onChanged: (option) {
+                //_areaId = option as int;
+                _areaSelected = option as String;
+                _yacimientos = [];
+                _getYacimientos(_areaSelected);
+                _yacimientoSelected = 'Seleccione un Yacimiento...';
+                setState(() {});
+              },
+              decoration: InputDecoration(
+                hintText: 'Seleccione un área...',
+                labelText: 'Área',
+                errorText: _areaShowError ? _areaError : null,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              )),
+    );
+  }
+
+  List<DropdownMenuItem<String>> _getComboAreas() {
+    List<DropdownMenuItem<String>> list = [];
+    list.add(DropdownMenuItem(
+      child: Text('Seleccione un Área...'),
+      value: 'Seleccione un Área...',
+      //value: 0,
+    ));
+
+    _areas.forEach((area) {
+      list.add(DropdownMenuItem(
+        child: Text(area.nombrearea),
+        value: area.nombrearea,
+      ));
+    });
+
+    return list;
+  }
+
+  Widget _showYacimientos() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: _yacimientos.length == 0
+          ? Text('')
+          : DropdownButtonFormField(
+              items: _getComboYacimientos(),
+              value: _yacimientoSelected,
+              onChanged: (option) {
+                setState(() {
+                  _yacimientoSelected = option as String;
+                });
+              },
+              decoration: InputDecoration(
+                hintText: 'Seleccione un yacimiento...',
+                labelText: 'Yacimiento',
+                errorText: _yacimientoShowError ? _yacimientoError : null,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              )),
+    );
+  }
+
+  List<DropdownMenuItem<String>> _getComboYacimientos() {
+    List<DropdownMenuItem<String>> list = [];
+    list.add(DropdownMenuItem(
+      child: Text('Seleccione un Yacimiento...'),
+      value: 'Seleccione un Yacimiento...',
+    ));
+
+    _yacimientos.forEach((yacimiento) {
+      list.add(DropdownMenuItem(
+        child: Text(yacimiento.nombreyacimiento),
+        value: yacimiento.nombreyacimiento,
+      ));
+    });
+
+    return list;
+  }
+
+  Future<Null> _getYacimientos(String area) async {
+    setState(() {
+      _showLoader = true;
+    });
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _showLoader = false;
+      });
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'Verifica que estés conectado a Internet',
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+
+    Map<String, dynamic> request = {
+      'Area': area,
+    };
+
+    Response response = await ApiHelper.getYacimientos(request, area);
+
+    setState(() {
+      _showLoader = false;
+    });
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+
+    setState(() {
+      _yacimientos = response.result;
+      var a = 1;
+    });
   }
 }
