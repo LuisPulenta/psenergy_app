@@ -543,7 +543,7 @@ class _HomeScreenState extends State<HomeScreen>
       'Area': area,
     };
 
-    Response response = await ApiHelper.getYacimientos(request, area);
+    Response response = await ApiHelper.getYacimientosByArea(request, area);
 
     setState(() {
       _showLoader = false;

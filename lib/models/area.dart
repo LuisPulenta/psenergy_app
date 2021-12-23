@@ -12,4 +12,10 @@ class Area {
     data['nombrearea'] = this.nombrearea;
     return data;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'nombrearea': nombrearea,
+    };
+  }
 }

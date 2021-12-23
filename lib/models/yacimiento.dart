@@ -25,4 +25,13 @@ class Yacimiento {
     data['activo'] = this.activo;
     return data;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'nombreyacimiento': nombreyacimiento,
+      'fechaalta': fechaalta,
+      'area': area,
+      'activo': activo,
+    };
+  }
 }

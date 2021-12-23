@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/helpers/constants.dart';
+import 'package:psenergy_app/models/area.dart';
+import 'package:psenergy_app/models/bateria.dart';
+import 'package:psenergy_app/models/pozo.dart';
 import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/components/loader_component.dart';
 import 'package:psenergy_app/models/usuario.dart';
+import 'package:psenergy_app/models/yacimiento.dart';
 import 'package:psenergy_app/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -23,6 +27,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   List<Usuario> _usuariosApi = [];
   List<Usuario> _usuarios = [];
+  List<Area> _areasApi = [];
+  List<Area> _areas = [];
+  List<Yacimiento> _yacimientosApi = [];
+  List<Yacimiento> _yacimientos = [];
+  List<Bateria> _bateriasApi = [];
+  List<Bateria> _baterias = [];
+  List<Pozo> _pozosApi = [];
+  List<Pozo> _pozos = [];
+
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
       codigo: '',
@@ -53,6 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _getUsuarios();
+    _getAreas();
+    _getYacimientos();
+    _getBaterias();
+    _getPozos();
   }
 
   @override
@@ -417,17 +434,359 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (_hayInternet) {
       _insertUsuarios();
-      _usuarios = await _getUsuariosSQLite();
-      _usuarios.forEach((element) {
-        print(element.apellidonombre);
+    }
+
+    _usuarios = await _getUsuariosSQLite();
+  }
+
+  Future<Null> _getAreas() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      setState(() {
+        _showLoader = true;
+      });
+
+      Response response = await ApiHelper.getAreas();
+
+      setState(() {
+        _showLoader = false;
+      });
+
+      if (response.isSuccess) {
+        _areasApi = response.result;
+        _areasApi.sort((a, b) {
+          return a.nombrearea
+              .toString()
+              .toLowerCase()
+              .compareTo(b.nombrearea.toString().toLowerCase());
+        });
+        _hayInternet = true;
+        // await showAlertDialog(
+        //     context: context,
+        //     title: 'Listo!',
+        //     message: "Se actualizó la base de datos de áreas.",
+        //     actions: <AlertDialogAction>[
+        //       AlertDialogAction(key: null, label: 'OK'),
+        //     ]);
+      }
+    }
+    _getTablaAreas();
+    return;
+  }
+
+  void _getTablaAreas() async {
+    final Future<Database> database = openDatabase(
+      p.join(await getDatabasesPath(), 'areas.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE areas(nombrearea TEXT PRIMARY KEY)",
+        );
+      },
+      version: 1,
+    );
+
+    Future<void> insertArea(Area area) async {
+      final Database db = await database;
+      await db.insert(
+        'areas',
+        area.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    void _insertAreas() async {
+      _areasApi.forEach((element) {
+        insertArea(element);
       });
     }
 
-    if (!_hayInternet) {
-      _usuarios = await _getUsuariosSQLite();
-      _usuarios.forEach((element) {
-        print(element.apellidonombre);
+    Future<List<Area>> _getAreasSQLite() async {
+      final Database db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('areas');
+      return List.generate(
+        maps.length,
+        (i) {
+          return Area(
+            nombrearea: maps[i]['nombrearea'],
+          );
+        },
+      );
+    }
+
+    if (_hayInternet) {
+      _insertAreas();
+    }
+
+    _areas = await _getAreasSQLite();
+  }
+
+  Future<Null> _getYacimientos() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      setState(() {
+        _showLoader = true;
+      });
+
+      Response response = await ApiHelper.getYacimientos();
+
+      setState(() {
+        _showLoader = false;
+      });
+
+      if (response.isSuccess) {
+        _yacimientosApi = response.result;
+        _yacimientosApi.sort((a, b) {
+          return a.nombreyacimiento
+              .toString()
+              .toLowerCase()
+              .compareTo(b.nombreyacimiento.toString().toLowerCase());
+        });
+        _hayInternet = true;
+        // await showAlertDialog(
+        //     context: context,
+        //     title: 'Listo!',
+        //     message: "Se actualizó la base de datos de yacimientos.",
+        //     actions: <AlertDialogAction>[
+        //       AlertDialogAction(key: null, label: 'OK'),
+        //     ]);
+      }
+    }
+    _getTablaYacimientos();
+    return;
+  }
+
+  void _getTablaYacimientos() async {
+    final Future<Database> database = openDatabase(
+      p.join(await getDatabasesPath(), 'yacimientos.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE yacimientos(nombreyacimiento TEXT PRIMARY KEY,fechaalta TEXT,area TEXT,activo INTEGER)",
+        );
+      },
+      version: 1,
+    );
+
+    Future<void> insertYacimiento(Yacimiento yacimiento) async {
+      final Database db = await database;
+      await db.insert(
+        'yacimientos',
+        yacimiento.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    void _insertYacimientos() async {
+      _yacimientosApi.forEach((element) {
+        insertYacimiento(element);
       });
     }
+
+    Future<List<Yacimiento>> _getYacimientosSQLite() async {
+      final Database db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('yacimientos');
+      return List.generate(
+        maps.length,
+        (i) {
+          return Yacimiento(
+            nombreyacimiento: maps[i]['nombreyacimiento'],
+            fechaalta: maps[i]['fechaalta'],
+            area: maps[i]['area'],
+            activo: maps[i]['activo'],
+          );
+        },
+      );
+    }
+
+    if (_hayInternet) {
+      _insertYacimientos();
+    }
+
+    _yacimientos = await _getYacimientosSQLite();
+  }
+
+  Future<Null> _getBaterias() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      setState(() {
+        _showLoader = true;
+      });
+
+      Response response = await ApiHelper.getBaterias();
+
+      setState(() {
+        _showLoader = false;
+      });
+
+      if (response.isSuccess) {
+        _bateriasApi = response.result;
+        _bateriasApi.sort((a, b) {
+          return a.descripcion
+              .toString()
+              .toLowerCase()
+              .compareTo(b.descripcion.toString().toLowerCase());
+        });
+        _hayInternet = true;
+        // await showAlertDialog(
+        //     context: context,
+        //     title: 'Listo!',
+        //     message: "Se actualizó la base de datos de baterías.",
+        //     actions: <AlertDialogAction>[
+        //       AlertDialogAction(key: null, label: 'OK'),
+        //     ]);
+      }
+    }
+    _getTablaBaterias();
+    return;
+  }
+
+  void _getTablaBaterias() async {
+    final Future<Database> database = openDatabase(
+      p.join(await getDatabasesPath(), 'baterias.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE baterias(codigobateria TEXT PRIMARY KEY,descripcion TEXT, fechaalta TEXT,activa INTEGER,nombreyacimiento TEXT)",
+        );
+      },
+      version: 1,
+    );
+
+    Future<void> insertBateria(Bateria bateria) async {
+      final Database db = await database;
+      await db.insert(
+        'baterias',
+        bateria.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    void _insertBaterias() async {
+      _bateriasApi.forEach((element) {
+        insertBateria(element);
+      });
+    }
+
+    Future<List<Bateria>> _getBateriasSQLite() async {
+      final Database db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('baterias');
+      return List.generate(
+        maps.length,
+        (i) {
+          return Bateria(
+            codigobateria: maps[i]['codigobateria'],
+            descripcion: maps[i]['descripcion'],
+            fechaalta: maps[i]['fechaalta'],
+            activa: maps[i]['activa'],
+            nombreyacimiento: maps[i]['nombreyacimiento'],
+          );
+        },
+      );
+    }
+
+    if (_hayInternet) {
+      _insertBaterias();
+    }
+
+    _baterias = await _getBateriasSQLite();
+  }
+
+  Future<Null> _getPozos() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      setState(() {
+        _showLoader = true;
+      });
+
+      Response response = await ApiHelper.getPozos();
+
+      setState(() {
+        _showLoader = false;
+      });
+
+      if (response.isSuccess) {
+        _pozosApi = response.result;
+        _pozosApi.sort((a, b) {
+          return a.codigopozo
+              .toString()
+              .toLowerCase()
+              .compareTo(b.codigopozo.toString().toLowerCase());
+        });
+        _hayInternet = true;
+        // await showAlertDialog(
+        //     context: context,
+        //     title: 'Listo!',
+        //     message: "Se actualizó la base de datos de pozos.",
+        //     actions: <AlertDialogAction>[
+        //       AlertDialogAction(key: null, label: 'OK'),
+        //     ]);
+      }
+    }
+    _getTablaPozos();
+    return;
+  }
+
+  void _getTablaPozos() async {
+    final Future<Database> database = openDatabase(
+      p.join(await getDatabasesPath(), 'pozos.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE pozos(codigopozo TEXT PRIMARY KEY,codigobateria TEXT, descripcion TEXT,fechaalta TEXT,activo INTEGER,ultimalectura TEXT,latitud TEXT, longitud TEXT,qrcode TEXT,observaciones TEXT,tipopozo TEXT,sistemaExtraccion TEXT,cuenca TEXT, idProvincia INTEGER,cota DOUBLE, profundidad DOUBLE, vidaUtil DOUBLE)",
+        );
+      },
+      version: 1,
+    );
+
+    Future<void> insertPozo(Pozo pozo) async {
+      final Database db = await database;
+      await db.insert(
+        'pozos',
+        pozo.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    void _insertPozos() async {
+      _pozosApi.forEach((element) {
+        insertPozo(element);
+      });
+    }
+
+    Future<List<Pozo>> _getPozosSQLite() async {
+      final Database db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('pozos');
+      return List.generate(
+        maps.length,
+        (i) {
+          return Pozo(
+            codigopozo: maps[i]['codigopozo'],
+            codigobateria: maps[i]['codigobateria'],
+            descripcion: maps[i]['descripcion'],
+            fechaalta: maps[i]['fechaalta'],
+            activo: maps[i]['activo'],
+            ultimalectura: maps[i]['ultimalectura'],
+            latitud: maps[i]['latitud'],
+            longitud: maps[i]['longitud'],
+            qrcode: maps[i]['qrcode'],
+            observaciones: maps[i]['observaciones'],
+            tipopozo: maps[i]['tipopozo'],
+            sistemaExtraccion: maps[i]['sistemaExtraccion'],
+            cuenca: maps[i]['cuenca'],
+            idProvincia: maps[i]['idProvincia'],
+            cota: maps[i]['cota'],
+            profundidad: maps[i]['profundidad'],
+            vidaUtil: maps[i]['vidaUtil'],
+          );
+        },
+      );
+    }
+
+    if (_hayInternet) {
+      _insertPozos();
+    }
+
+    _pozos = await _getPozosSQLite();
   }
 }
