@@ -20,13 +20,15 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   TabController? _tabController;
   Usuario _user = Usuario(
-      idUsuario: 0,
-      nombre: '',
-      apellido: '',
-      login: '',
-      contrasena: '',
-      fechaUltimoAcceso: '',
-      fullName: '');
+      idUser: 0,
+      codigo: '',
+      apellidonombre: '',
+      usrlogin: '',
+      usrcontrasena: '',
+      perfil: 0,
+      habilitadoWeb: 0,
+      causanteC: '',
+      habilitaPaqueteria: 0);
 
   @override
   void initState() {
@@ -77,14 +79,14 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   Center(
                     child: Text(
-                      _user.login.toUpperCase(),
+                      _user.usrlogin!.toUpperCase(),
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Center(
                     child: Text(
-                      _user.fullName,
+                      _user.apellidonombre!,
                       style: TextStyle(
                         fontSize: 25,
                       ),
@@ -108,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       Container(
                         child: Text(
-                          _user.fechaUltimoAcceso.toString(),
+                          _user.causanteC.toString(),
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -134,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       Container(
                         child: Text(
-                          _user.fechaUltimoAcceso.toString(),
+                          _user.causanteC.toString(),
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -160,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       Container(
                         child: Text(
-                          _user.fechaUltimoAcceso.toString(),
+                          _user.causanteC.toString(),
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -186,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       Container(
                         child: Text(
-                          _user.fechaUltimoAcceso.toString(),
+                          _user.causanteC.toString(),
                           style: TextStyle(
                             fontSize: 16,
                           ),

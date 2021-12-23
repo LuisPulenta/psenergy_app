@@ -24,13 +24,15 @@ class _LoginScreenState extends State<LoginScreen> {
   List<Usuario> _usuariosApi = [];
   List<Usuario> _usuarios = [];
   Usuario _usuarioLogueado = Usuario(
-      idUsuario: 0,
-      nombre: '',
-      apellido: '',
-      login: '',
-      contrasena: '',
-      fechaUltimoAcceso: '',
-      fullName: '');
+      idUser: 0,
+      codigo: '',
+      apellidonombre: '',
+      usrlogin: '',
+      usrcontrasena: '',
+      perfil: 0,
+      habilitadoWeb: 0,
+      causanteC: '',
+      habilitaPaqueteria: 0);
 
   String _email = '';
   String _emailError = '';
@@ -261,8 +263,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     List<Usuario> filteredUsuario = [];
     for (var usuario in _usuarios) {
-      if (usuario.login.toLowerCase() == (_email.toLowerCase()) &&
-          usuario.contrasena.toLowerCase() == (_password.toLowerCase())) {
+      if (usuario.usrlogin.toLowerCase() == (_email.toLowerCase()) &&
+          usuario.usrcontrasena.toLowerCase() == (_password.toLowerCase())) {
         filteredUsuario.add(usuario);
       }
     }
@@ -341,10 +343,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.isSuccess) {
         _usuariosApi = response.result;
         _usuariosApi.sort((a, b) {
-          return a.apellido
+          return a.apellidonombre
               .toString()
               .toLowerCase()
-              .compareTo(b.apellido.toString().toLowerCase());
+              .compareTo(b.apellidonombre.toString().toLowerCase());
         });
         _hayInternet = true;
         await showAlertDialog(
@@ -365,7 +367,7 @@ class _LoginScreenState extends State<LoginScreen> {
       p.join(await getDatabasesPath(), 'usuarios.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE usuarios(idUsuario INTEGER PRIMARY KEY, nombre TEXT, apellido TEXT, login TEXT, contrasena TEXT,fechaUltimoAcceso  TEXT,  fullName TEXT)",
+          "CREATE TABLE usuarios(idUser INTEGER PRIMARY KEY, codigo TEXT, apellidonombre TEXT, usrlogin TEXT, usrcontrasena TEXT,perfil  INTEGER,  habilitadoWeb INTEGER, causanteC TEXT, habilitaPaqueteria INTEGER)",
         );
       },
       version: 1,
@@ -393,13 +395,15 @@ class _LoginScreenState extends State<LoginScreen> {
         maps.length,
         (i) {
           return Usuario(
-            idUsuario: maps[i]['idUsuario'],
-            nombre: maps[i]['nombre'],
-            apellido: maps[i]['apellido'],
-            login: maps[i]['login'],
-            contrasena: maps[i]['contrasena'],
-            fechaUltimoAcceso: maps[i]['fechaUltimoAcceso'],
-            fullName: maps[i]['fullName'],
+            idUser: maps[i]['idUser'],
+            codigo: maps[i]['codigo'],
+            apellidonombre: maps[i]['apellidonombre'],
+            usrlogin: maps[i]['usrlogin'],
+            usrcontrasena: maps[i]['usrcontrasena'],
+            perfil: maps[i]['perfil'],
+            habilitadoWeb: maps[i]['habilitadoWeb'],
+            causanteC: maps[i]['causanteC'],
+            habilitaPaqueteria: maps[i]['habilitaPaqueteria'],
           );
         },
       );
@@ -409,14 +413,14 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertUsuarios();
       _usuarios = await _getUsuariosSQLite();
       _usuarios.forEach((element) {
-        print(element.fullName);
+        print(element.apellidonombre);
       });
     }
 
     if (!_hayInternet) {
       _usuarios = await _getUsuariosSQLite();
       _usuarios.forEach((element) {
-        print(element.fullName);
+        print(element.apellidonombre);
       });
     }
   }
