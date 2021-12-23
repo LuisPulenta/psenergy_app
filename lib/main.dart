@@ -23,7 +23,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _getHome();
   }
 
   @override
@@ -39,36 +38,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme:
             ColorScheme.fromSwatch().copyWith(secondary: Colors.cyan[300]),
       ),
-      home: _isLoading
-          ? WaitScreen()
-          : _showLoginPage
-              ? LoginScreen()
-              : HomeScreen(user: _user),
+      home: LoginScreen(),
     );
-  }
-
-  void _getHome() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    bool isRemembered = prefs.getBool('isRemembered') ?? false;
-
-    if (isRemembered) {
-      String? userBody = prefs.getString('userBody');
-      String date = prefs.getString('date').toString();
-      String dateAlmacenada = date.substring(0, 10);
-      String dateActual = DateTime.now().toString().substring(0, 10);
-      if (userBody != null) {
-        var decodedJson = jsonDecode(userBody);
-        _user = Usuario.fromJson(decodedJson);
-        if (dateAlmacenada != dateActual) {
-          _showLoginPage = true;
-        } else {
-          _showLoginPage = false;
-        }
-      }
-    }
-
-    _isLoading = false;
-    setState(() {});
   }
 }

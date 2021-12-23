@@ -315,6 +315,10 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(
             builder: (context) => HomeScreen(
                   user: _usuarioLogueado,
+                  areas: _areas,
+                  yacimientos: _yacimientos,
+                  baterias: _baterias,
+                  pozos: _pozos,
                 )));
   }
 

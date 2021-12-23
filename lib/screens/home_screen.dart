@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/helpers/constants.dart';
 import 'package:psenergy_app/models/area.dart';
+import 'package:psenergy_app/models/bateria.dart';
+import 'package:psenergy_app/models/pozo.dart';
 import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/models/usuario.dart';
 import 'package:psenergy_app/models/yacimiento.dart';
@@ -16,8 +18,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   final Usuario user;
+  final List<Area> areas;
+  final List<Yacimiento> yacimientos;
+  final List<Bateria> baterias;
+  final List<Pozo> pozos;
 
-  HomeScreen({required this.user});
+  HomeScreen(
+      {required this.user,
+      required this.areas,
+      required this.yacimientos,
+      required this.baterias,
+      required this.pozos});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -393,44 +404,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<Null> _getAreas() async {
     setState(() {
-      _showLoader = true;
-    });
-
-    var connectivityResult = await Connectivity().checkConnectivity();
-
-    if (connectivityResult == ConnectivityResult.none) {
-      setState(() {
-        _showLoader = false;
-      });
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estés conectado a Internet',
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
-    Response response = await ApiHelper.getAreas();
-
-    setState(() {
-      _showLoader = false;
-    });
-
-    if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
-
-    setState(() {
-      _areas = response.result;
-      var a = 1;
+      _areas = widget.areas;
     });
   }
 
@@ -519,50 +493,14 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<Null> _getYacimientos(String area) async {
-    setState(() {
-      _showLoader = true;
-    });
-
-    var connectivityResult = await Connectivity().checkConnectivity();
-
-    if (connectivityResult == ConnectivityResult.none) {
-      setState(() {
-        _showLoader = false;
-      });
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estés conectado a Internet',
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
+    List<Yacimiento> filteredYacimientos = [];
+    for (var yacimiento in widget.yacimientos) {
+      if (yacimiento.area == _areaSelected) {
+        filteredYacimientos.add(yacimiento);
+      }
     }
-
-    Map<String, dynamic> request = {
-      'Area': area,
-    };
-
-    Response response = await ApiHelper.getYacimientosByArea(request, area);
-
     setState(() {
-      _showLoader = false;
-    });
-
-    if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
-
-    setState(() {
-      _yacimientos = response.result;
-      var a = 1;
+      _yacimientos = filteredYacimientos;
     });
   }
 }
