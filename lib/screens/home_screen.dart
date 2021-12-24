@@ -14,6 +14,7 @@ import 'package:psenergy_app/models/yacimiento.dart';
 import 'package:psenergy_app/screens/change_password_screen.dart';
 import 'package:psenergy_app/screens/contacto_screen.dart';
 import 'package:psenergy_app/screens/login_screen.dart';
+import 'package:psenergy_app/screens/medicion_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -64,6 +65,33 @@ class _HomeScreenState extends State<HomeScreen>
   bool _yacimientoShowError = false;
   List<Yacimiento> _yacimientos = [];
 
+  String _bateriaSelected = 'Seleccione una Batería...';
+  String _bateriaError = '';
+  bool _bateriaShowError = false;
+  List<Bateria> _baterias = [];
+
+  Pozo _pozoSelected = new Pozo(
+      codigopozo: '',
+      codigobateria: '',
+      descripcion: '',
+      fechaalta: '',
+      activo: 0,
+      ultimalectura: '',
+      latitud: '',
+      longitud: '',
+      qrcode: '',
+      observaciones: '',
+      tipopozo: '',
+      sistemaExtraccion: '',
+      cuenca: '',
+      idProvincia: 0,
+      cota: 0.0,
+      profundidad: 0.0,
+      vidaUtil: 0.0);
+  List<Pozo> _pozos = [];
+
+  String Titulo = "Nueva medición";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -78,11 +106,12 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffe9dac2),
-      appBar: AppBar(
-        title: (Text("PSEnergy App")),
-        centerTitle: true,
-        backgroundColor: Color(0xff9a6a2e),
-      ),
+      // appBar: AppBar(
+      //   //title: (Text("PSEnergy App")),
+      //   title: (Text(Titulo)),
+      //   centerTitle: true,
+      //   backgroundColor: Color(0xff9a6a2e),
+      // ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -105,210 +134,238 @@ class _HomeScreenState extends State<HomeScreen>
           children: <Widget>[
             Column(
               children: <Widget>[
+                AppBar(
+                  title: (Text("Nueva medición")),
+                  centerTitle: true,
+                  backgroundColor: Color(0xff9a6a2e),
+                ),
                 _showAreas(),
                 _showYacimientos(),
+                _showBaterias(),
+                Expanded(
+                  child: _pozos.length == 0 ? _noContent() : _showPozos(),
+                )
               ],
             ),
-            Center(
-              child: Text("Chau"),
+            Column(
+              children: [
+                AppBar(
+                  title: (Text("Ultimas mediciones")),
+                  centerTitle: true,
+                  backgroundColor: Color(0xff9a6a2e),
+                ),
+                Center(
+                  child: Text("Chau"),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      _user.usrlogin!.toUpperCase(),
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      _user.apellidonombre!,
-                      style: TextStyle(
-                        fontSize: 25,
+            Column(
+              children: [
+                AppBar(
+                  title: (Text("Información")),
+                  centerTitle: true,
+                  backgroundColor: Color(0xff9a6a2e),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(children: [
+                    Center(
+                      child: Text(
+                        _user.usrlogin!.toUpperCase(),
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          "Conectado desde:",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                    Center(
+                      child: Text(
+                        _user.apellidonombre!,
+                        style: TextStyle(
+                          fontSize: 25,
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          _conectadodesde == ''
-                              ? ''
-                              : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_conectadodesde))}',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          "Válido hasta:",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          _validohasta == ''
-                              ? ''
-                              : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_validohasta))}',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          "Ultima actualización de Usuarios:",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          _ultimaactualizacion == ''
-                              ? ''
-                              : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_ultimaactualizacion))}',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          "Versión:",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          Constants.version,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  ElevatedButton(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
                       children: [
-                        Icon(Icons.password),
-                        SizedBox(
-                          width: 15,
+                        Container(
+                          child: Text(
+                            "Conectado desde:",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        Text('ACTUALIZAR CONTRASEÑA'),
                       ],
                     ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        return Color(0xFF9a6a2e);
-                      }),
-                    ),
-                    onPressed: () => _actualizarPassword(),
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  ElevatedButton(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Row(
                       children: [
-                        Icon(Icons.keyboard),
-                        SizedBox(
-                          width: 15,
+                        Container(
+                          child: Text(
+                            _conectadodesde == ''
+                                ? ''
+                                : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_conectadodesde))}',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
-                        Text('CONTACTO KEYPRESS'),
                       ],
                     ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        return Color(0xFF9a6a2e);
-                      }),
+                    SizedBox(
+                      height: 15,
                     ),
-                    onPressed: () => _contacto(),
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  ElevatedButton(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Row(
                       children: [
-                        Icon(Icons.exit_to_app),
-                        SizedBox(
-                          width: 15,
+                        Container(
+                          child: Text(
+                            "Válido hasta:",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        Text('CERRAR SESION'),
                       ],
                     ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        return Color(0xFF9a6a2e);
-                      }),
+                    Row(
+                      children: [
+                        Container(
+                          child: Text(
+                            _validohasta == ''
+                                ? ''
+                                : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_validohasta))}',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    onPressed: () => _logOut(),
-                  ),
-                ],
-              ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          child: Text(
+                            "Ultima actualización de Usuarios:",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          child: Text(
+                            _ultimaactualizacion == ''
+                                ? ''
+                                : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_ultimaactualizacion))}',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          child: Text(
+                            "Versión:",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          child: Text(
+                            Constants.version,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    ElevatedButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.password),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text('ACTUALIZAR CONTRASEÑA'),
+                        ],
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                          return Color(0xFF9a6a2e);
+                        }),
+                      ),
+                      onPressed: () => _actualizarPassword(),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    ElevatedButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.keyboard),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text('CONTACTO KEYPRESS'),
+                        ],
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                          return Color(0xFF9a6a2e);
+                        }),
+                      ),
+                      onPressed: () => _contacto(),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    ElevatedButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.exit_to_app),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text('CERRAR SESION'),
+                        ],
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                          return Color(0xFF9a6a2e);
+                        }),
+                      ),
+                      onPressed: () => _logOut(),
+                    ),
+                  ]),
+                ),
+              ],
             ),
           ],
         ),
@@ -420,6 +477,8 @@ class _HomeScreenState extends State<HomeScreen>
                 //_areaId = option as int;
                 _areaSelected = option as String;
                 _yacimientos = [];
+                _baterias = [];
+                _pozos = [];
                 _getYacimientos(_areaSelected);
                 _yacimientoSelected = 'Seleccione un Yacimiento...';
                 setState(() {});
@@ -461,9 +520,12 @@ class _HomeScreenState extends State<HomeScreen>
               items: _getComboYacimientos(),
               value: _yacimientoSelected,
               onChanged: (option) {
-                setState(() {
-                  _yacimientoSelected = option as String;
-                });
+                _yacimientoSelected = option as String;
+                _baterias = [];
+                _pozos = [];
+                _getBaterias(_yacimientoSelected);
+                _bateriaSelected = 'Seleccione una Batería...';
+                setState(() {});
               },
               decoration: InputDecoration(
                 hintText: 'Seleccione un yacimiento...',
@@ -503,4 +565,166 @@ class _HomeScreenState extends State<HomeScreen>
       _yacimientos = filteredYacimientos;
     });
   }
+
+  Widget _showBaterias() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: _baterias.length == 0
+          ? Text('')
+          : DropdownButtonFormField(
+              items: _getComboBaterias(),
+              value: _bateriaSelected,
+              onChanged: (option) {
+                _bateriaSelected = option as String;
+                _pozos = [];
+                _getPozos(_bateriaSelected);
+                setState(() {});
+              },
+              decoration: InputDecoration(
+                hintText: 'Seleccione una Batería...',
+                labelText: 'Batería',
+                errorText: _bateriaShowError ? _bateriaError : null,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              )),
+    );
+  }
+
+  List<DropdownMenuItem<String>> _getComboBaterias() {
+    List<DropdownMenuItem<String>> list = [];
+    list.add(DropdownMenuItem(
+      child: Text('Seleccione una Batería...'),
+      value: 'Seleccione una Batería...',
+    ));
+
+    _baterias.forEach((bateria) {
+      list.add(DropdownMenuItem(
+        child: Text(bateria.descripcion),
+        value: bateria.codigobateria,
+      ));
+    });
+
+    return list;
+  }
+
+  Future<Null> _getBaterias(String yacimiento) async {
+    List<Bateria> filteredBaterias = [];
+    for (var bateria in widget.baterias) {
+      if (bateria.nombreyacimiento == _yacimientoSelected) {
+        filteredBaterias.add(bateria);
+      }
+    }
+    setState(() {
+      _baterias = filteredBaterias;
+    });
+  }
+
+  Future<Null> _getPozos(String bateria) async {
+    List<Pozo> filteredPozos = [];
+    for (var pozo in widget.pozos) {
+      if (pozo.codigobateria == _bateriaSelected) {
+        filteredPozos.add(pozo);
+      }
+    }
+    setState(() {
+      _pozos = filteredPozos;
+    });
+  }
+
+  Widget _showPozos() {
+    return ListView(
+      children: _pozos.map((e) {
+        return Card(
+          color: Color(0xFFe9dac2),
+          shadowColor: Colors.white,
+          elevation: 10,
+          margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+          child: InkWell(
+            onTap: () {
+              _pozoSelected = e;
+              _goQuestionPozo(e);
+            },
+            child: Container(
+              margin: EdgeInsets.all(0),
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("Pozo: ",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFF781f1e),
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    Expanded(
+                                      child: Text(e.descripcion.toString(),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                    ),
+                                    Text("Tipo Pozo: ",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFF781f1e),
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    Expanded(
+                                      child: Text(e.tipopozo.toString(),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Icon(Icons.arrow_forward_ios),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  void _goQuestionPozo(Pozo pozo) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MedicionScreen(
+                  user: widget.user,
+                  pozo: _pozoSelected,
+                )));
+  }
+}
+
+Widget _noContent() {
+  return Center(
+    child: Container(
+      margin: EdgeInsets.all(20),
+      child: Text(
+        '',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
 }

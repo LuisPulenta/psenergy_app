@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Rowing App',
+      title: 'PSEnergy App',
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: Color(0xFF781f1e),
