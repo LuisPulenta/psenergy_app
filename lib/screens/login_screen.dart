@@ -62,6 +62,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _showLoader = false;
 
+  Color colorUsuarios = Color(0xff9e9e9e);
+  Color colorAreas = Color(0xff9e9e9e);
+  Color colorYacimientos = Color(0xff9e9e9e);
+  Color colorBaterias = Color(0xff9e9e9e);
+  Color colorPozos = Color(0xff9e9e9e);
+
   @override
   void initState() {
     super.initState();
@@ -95,42 +101,133 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/logo.png",
-                    height: 100,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "PS",
-                        style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.yellow),
-                      ),
-                      Text(
-                        "Energy",
-                        style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "v.1.2.1",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
-                  ),
-                ],
+              child: Container(
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/logo.png",
+                      height: 100,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "PS",
+                          style: TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.yellow),
+                        ),
+                        Text(
+                          "Energy",
+                          style: TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "v.1.2.1",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               )),
+          Container(
+              child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 120, vertical: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Usuarios:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 12,
+                      color: colorUsuarios,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Areas:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 12,
+                      color: colorAreas,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Yacimientos:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 12,
+                      color: colorYacimientos,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Baterías:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 12,
+                      color: colorBaterias,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Pozos:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 12,
+                      color: colorPozos,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )),
           Transform.translate(
             offset: Offset(0, -60),
             child: Center(
@@ -161,6 +258,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+          Center(
+            child: _showLoader
+                ? LoaderComponent(text: 'Por favor espere...')
+                : Container(),
+          )
         ],
       ),
     );
@@ -301,10 +403,6 @@ class _LoginScreenState extends State<LoginScreen> {
     //   _storeUser(_usuarioLogueado);
     // }
 
-    setState(() {
-      _showLoader = false;
-    });
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('conectadodesde', DateTime.now().toString());
     await prefs.setString(
@@ -355,18 +453,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<Null> _getUsuarios() async {
+    setState(() {
+      _showLoader = true;
+    });
+
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      setState(() {
-        _showLoader = true;
-      });
-
       Response response = await ApiHelper.getUsuarios();
-
-      setState(() {
-        _showLoader = false;
-      });
 
       if (response.isSuccess) {
         _usuariosApi = response.result;
@@ -377,13 +471,6 @@ class _LoginScreenState extends State<LoginScreen> {
               .compareTo(b.apellidonombre.toString().toLowerCase());
         });
         _hayInternet = true;
-        await showAlertDialog(
-            context: context,
-            title: 'Listo!',
-            message: "Se actualizó la base de datos de usuarios.",
-            actions: <AlertDialogAction>[
-              AlertDialogAction(key: null, label: 'OK'),
-            ]);
       }
     }
     _getTablaUsuarios();
@@ -411,9 +498,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     void _insertUsuarios() async {
-      _usuariosApi.forEach((element) {
-        insertUsuario(element);
-      });
+      if (_usuariosApi.length > 0) {
+        _usuariosApi.forEach((element) {
+          insertUsuario(element);
+        });
+      }
     }
 
     Future<List<Usuario>> _getUsuariosSQLite() async {
@@ -442,21 +531,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _usuarios = await _getUsuariosSQLite();
+
+    if (_usuarios.length > 0) {
+      setState(() {
+        colorUsuarios = Colors.green;
+      });
+    }
   }
 
   Future<Null> _getAreas() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      setState(() {
-        _showLoader = true;
-      });
-
       Response response = await ApiHelper.getAreas();
-
-      setState(() {
-        _showLoader = false;
-      });
 
       if (response.isSuccess) {
         _areasApi = response.result;
@@ -467,13 +554,6 @@ class _LoginScreenState extends State<LoginScreen> {
               .compareTo(b.nombrearea.toString().toLowerCase());
         });
         _hayInternet = true;
-        // await showAlertDialog(
-        //     context: context,
-        //     title: 'Listo!',
-        //     message: "Se actualizó la base de datos de áreas.",
-        //     actions: <AlertDialogAction>[
-        //       AlertDialogAction(key: null, label: 'OK'),
-        //     ]);
       }
     }
     _getTablaAreas();
@@ -501,9 +581,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     void _insertAreas() async {
-      _areasApi.forEach((element) {
-        insertArea(element);
-      });
+      if (_areasApi.length > 0) {
+        _areasApi.forEach((element) {
+          insertArea(element);
+        });
+      }
     }
 
     Future<List<Area>> _getAreasSQLite() async {
@@ -524,21 +606,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _areas = await _getAreasSQLite();
+
+    if (_areas.length > 0) {
+      setState(() {
+        colorAreas = Colors.green;
+      });
+    }
   }
 
   Future<Null> _getYacimientos() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      setState(() {
-        _showLoader = true;
-      });
-
       Response response = await ApiHelper.getYacimientos();
-
-      setState(() {
-        _showLoader = false;
-      });
 
       if (response.isSuccess) {
         _yacimientosApi = response.result;
@@ -549,13 +629,6 @@ class _LoginScreenState extends State<LoginScreen> {
               .compareTo(b.nombreyacimiento.toString().toLowerCase());
         });
         _hayInternet = true;
-        // await showAlertDialog(
-        //     context: context,
-        //     title: 'Listo!',
-        //     message: "Se actualizó la base de datos de yacimientos.",
-        //     actions: <AlertDialogAction>[
-        //       AlertDialogAction(key: null, label: 'OK'),
-        //     ]);
       }
     }
     _getTablaYacimientos();
@@ -583,9 +656,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     void _insertYacimientos() async {
-      _yacimientosApi.forEach((element) {
-        insertYacimiento(element);
-      });
+      if (_yacimientosApi.length > 0) {
+        _yacimientosApi.forEach((element) {
+          insertYacimiento(element);
+        });
+      }
     }
 
     Future<List<Yacimiento>> _getYacimientosSQLite() async {
@@ -609,21 +684,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _yacimientos = await _getYacimientosSQLite();
+
+    if (_yacimientos.length > 0) {
+      setState(() {
+        colorYacimientos = Colors.green;
+      });
+    }
   }
 
   Future<Null> _getBaterias() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      setState(() {
-        _showLoader = true;
-      });
-
       Response response = await ApiHelper.getBaterias();
-
-      setState(() {
-        _showLoader = false;
-      });
 
       if (response.isSuccess) {
         _bateriasApi = response.result;
@@ -634,13 +707,6 @@ class _LoginScreenState extends State<LoginScreen> {
               .compareTo(b.descripcion.toString().toLowerCase());
         });
         _hayInternet = true;
-        // await showAlertDialog(
-        //     context: context,
-        //     title: 'Listo!',
-        //     message: "Se actualizó la base de datos de baterías.",
-        //     actions: <AlertDialogAction>[
-        //       AlertDialogAction(key: null, label: 'OK'),
-        //     ]);
       }
     }
     _getTablaBaterias();
@@ -668,9 +734,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     void _insertBaterias() async {
-      _bateriasApi.forEach((element) {
-        insertBateria(element);
-      });
+      if (_bateriasApi.length > 0) {
+        _bateriasApi.forEach((element) {
+          insertBateria(element);
+        });
+      }
     }
 
     Future<List<Bateria>> _getBateriasSQLite() async {
@@ -695,21 +763,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _baterias = await _getBateriasSQLite();
+
+    if (_baterias.length > 0) {
+      setState(() {
+        colorBaterias = Colors.green;
+      });
+    }
   }
 
   Future<Null> _getPozos() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      setState(() {
-        _showLoader = true;
-      });
-
       Response response = await ApiHelper.getPozos();
-
-      setState(() {
-        _showLoader = false;
-      });
 
       if (response.isSuccess) {
         _pozosApi = response.result;
@@ -720,16 +786,10 @@ class _LoginScreenState extends State<LoginScreen> {
               .compareTo(b.codigopozo.toString().toLowerCase());
         });
         _hayInternet = true;
-        // await showAlertDialog(
-        //     context: context,
-        //     title: 'Listo!',
-        //     message: "Se actualizó la base de datos de pozos.",
-        //     actions: <AlertDialogAction>[
-        //       AlertDialogAction(key: null, label: 'OK'),
-        //     ]);
       }
     }
     _getTablaPozos();
+
     return;
   }
 
@@ -754,9 +814,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     void _insertPozos() async {
-      _pozosApi.forEach((element) {
-        insertPozo(element);
-      });
+      if (_pozosApi.length > 0) {
+        _pozosApi.forEach((element) {
+          insertPozo(element);
+        });
+      }
     }
 
     Future<List<Pozo>> _getPozosSQLite() async {
@@ -793,5 +855,15 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _pozos = await _getPozosSQLite();
+
+    if (_pozos.length > 0) {
+      setState(() {
+        colorPozos = Colors.green;
+      });
+
+      setState(() {
+        _showLoader = false;
+      });
+    }
   }
 }
