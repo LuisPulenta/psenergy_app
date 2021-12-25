@@ -308,12 +308,12 @@ class _HomeScreenState extends State<HomeScreen>
                           Text('ACTUALIZAR CONTRASEÑA'),
                         ],
                       ),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                                (Set<MaterialState> states) {
-                          return Color(0xFF9a6a2e);
-                        }),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF9a6a2e),
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                       ),
                       onPressed: () => _actualizarPassword(),
                     ),
@@ -331,12 +331,12 @@ class _HomeScreenState extends State<HomeScreen>
                           Text('CONTACTO KEYPRESS'),
                         ],
                       ),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                                (Set<MaterialState> states) {
-                          return Color(0xFF9a6a2e);
-                        }),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF9a6a2e),
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                       ),
                       onPressed: () => _contacto(),
                     ),
@@ -354,12 +354,12 @@ class _HomeScreenState extends State<HomeScreen>
                           Text('CERRAR SESION'),
                         ],
                       ),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                                (Set<MaterialState> states) {
-                          return Color(0xFF9a6a2e);
-                        }),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF9a6a2e),
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                       ),
                       onPressed: () => _logOut(),
                     ),

@@ -237,7 +237,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
                         : Container(),
                     _showobservaciones(),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     _showButton(),
                   ],
@@ -273,11 +273,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.compress),
+            Icon(Icons.compress, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Pr Tgb:"),
+            Text(
+              "Pr Tgb:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -331,11 +337,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.compare_sharp),
+            Icon(Icons.compare_sharp, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Pr Línea:"),
+            Text(
+              "Pr Línea:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -389,11 +401,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.compare_arrows),
+            Icon(Icons.compare_arrows, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Pr Csg:"),
+            Text(
+              "Pr Csg:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -447,11 +465,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.water),
+            Icon(Icons.water, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Ql:"),
+            Text(
+              "Ql:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -505,11 +529,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.waves),
+            Icon(Icons.waves, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Qg:"),
+            Text(
+              "Qg:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -563,11 +593,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.hourglass_bottom),
+            Icon(Icons.hourglass_bottom, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Tiempo:"),
+            Text(
+              "Tiempo:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -621,11 +657,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.av_timer),
+            Icon(Icons.av_timer, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("GPM:"),
+            Text(
+              "GPM:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -679,11 +721,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.run_circle),
+            Icon(Icons.run_circle, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Carrera:"),
+            Text(
+              "Carrera:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -737,11 +785,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.air),
+            Icon(Icons.air, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Caudal Inst.:"),
+            Text(
+              "Caudal Inst.:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -795,11 +849,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.add_task),
+            Icon(Icons.add_task, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Lectura Acumulada.:"),
+            Text(
+              "Lectura Acumulada.:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -855,11 +915,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.restore),
+            Icon(Icons.restore, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Presión antes del filtro:"),
+            Text(
+              "Presión antes del filtro:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -915,11 +981,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
       child: Expanded(
         child: Row(
           children: [
-            Icon(Icons.list),
+            Icon(Icons.list, color: Color(0xFF781f1e)),
             SizedBox(
               width: 10,
             ),
-            Text("Observaciones:"),
+            Text(
+              "Observaciones:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
             SizedBox(
               width: 10,
             ),
@@ -965,11 +1037,12 @@ class _MedicionScreenState extends State<MedicionScreen> {
                   Text('Enviar'),
                 ],
               ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
-                  return Color(0xFF9a6a2e);
-                }),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFF9a6a2e),
+                minimumSize: Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
               ),
               onPressed: () => _save(),
             ),

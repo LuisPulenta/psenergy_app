@@ -185,11 +185,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             Text('Cambiar contraseña'),
           ],
         ),
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-            return Color(0xFF9a6a2e);
-          }),
+        style: ElevatedButton.styleFrom(
+          primary: Color(0xFF9a6a2e),
+          minimumSize: Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
         ),
         onPressed: () => _save(),
       ),
