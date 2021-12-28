@@ -74,10 +74,25 @@ class _MedicionScreenState extends State<MedicionScreen> {
   TextEditingController _presionantesdelfiltroController =
       TextEditingController();
 
+  String _observaciones = '';
+  String _observacionesError = '';
+  bool _observacionesShowError = false;
+  TextEditingController _observacionesController = TextEditingController();
+
   String _tiempo = '';
   String _tiempoError = '';
   bool _tiempoShowError = false;
   TextEditingController _tiempoController = TextEditingController();
+
+  String _rpm = '';
+  String _rpmError = '';
+  bool _rpmShowError = false;
+  TextEditingController _rpmController = TextEditingController();
+
+  String _torque = '';
+  String _torqueError = '';
+  bool _torqueShowError = false;
+  TextEditingController _torqueController = TextEditingController();
 
   String _gpm = '';
   String _gpmError = '';
@@ -89,10 +104,35 @@ class _MedicionScreenState extends State<MedicionScreen> {
   bool _carreraShowError = false;
   TextEditingController _carreraController = TextEditingController();
 
-  String _observaciones = '';
-  String _observacionesError = '';
-  bool _observacionesShowError = false;
-  TextEditingController _observacionesController = TextEditingController();
+  String _frecuencia = '';
+  String _frecuenciaError = '';
+  bool _frecuenciaShowError = false;
+  TextEditingController _frecuenciaController = TextEditingController();
+
+  String _pip = '';
+  String _pipError = '';
+  bool _pipShowError = false;
+  TextEditingController _pipController = TextEditingController();
+
+  String _amp = '';
+  String _ampError = '';
+  bool _ampShowError = false;
+  TextEditingController _ampController = TextEditingController();
+
+  String _volt = '';
+  String _voltError = '';
+  bool _voltShowError = false;
+  TextEditingController _voltController = TextEditingController();
+
+  String _orificio = '';
+  String _orificioError = '';
+  bool _orificioShowError = false;
+  TextEditingController _orificioController = TextEditingController();
+
+  String _temperatura = '';
+  String _temperaturaError = '';
+  bool _temperaturaShowError = false;
+  TextEditingController _temperaturaController = TextEditingController();
 
   @override
   void initState() {

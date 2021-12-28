@@ -8,6 +8,8 @@ import 'package:psenergy_app/helpers/constants.dart';
 import 'package:psenergy_app/models/area.dart';
 import 'package:psenergy_app/models/bateria.dart';
 import 'package:psenergy_app/models/pozo.dart';
+import 'package:psenergy_app/models/pozoscontrole.dart';
+import 'package:psenergy_app/models/pozosformula.dart';
 import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/components/loader_component.dart';
 import 'package:psenergy_app/models/usuario.dart';
@@ -35,6 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
   List<Bateria> _baterias = [];
   List<Pozo> _pozosApi = [];
   List<Pozo> _pozos = [];
+  List<PozosFormula> _pozosformulasApi = [];
+  List<PozosFormula> _pozosformulas = [];
+  List<PozosControle> _pozoscontrolesApi = [];
+  List<PozosControle> _pozoscontroles = [];
 
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
@@ -67,6 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Color colorYacimientos = Color(0xff9e9e9e);
   Color colorBaterias = Color(0xff9e9e9e);
   Color colorPozos = Color(0xff9e9e9e);
+  Color colorPozosFormulas = Color(0xff9e9e9e);
+  Color colorPozosControles = Color(0xff9e9e9e);
 
   @override
   void initState() {
@@ -76,6 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
     _getYacimientos();
     _getBaterias();
     _getPozos();
+    _getPozosFormulas();
+    _getPozosControles();
   }
 
   @override
@@ -222,6 +232,38 @@ class _LoginScreenState extends State<LoginScreen> {
                       Icons.radio_button_checked,
                       size: 12,
                       color: colorPozos,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Pozos Fórmulas:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 12,
+                      color: colorPozosFormulas,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Pozos Controles:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 12,
+                      color: colorPozosControles,
                     ),
                   ],
                 ),
@@ -859,6 +901,166 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_pozos.length > 0) {
       setState(() {
         colorPozos = Colors.green;
+      });
+    }
+  }
+
+  Future<Null> _getPozosFormulas() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      Response response = await ApiHelper.getPozosFormulas();
+
+      if (response.isSuccess) {
+        _pozosformulasApi = response.result;
+        _pozosformulasApi.sort((a, b) {
+          return a.idformula
+              .toString()
+              .toLowerCase()
+              .compareTo(b.idformula.toString().toLowerCase());
+        });
+        _hayInternet = true;
+      }
+    }
+    _getTablaPozosFormulas();
+
+    return;
+  }
+
+  void _getTablaPozosFormulas() async {
+    final Future<Database> database = openDatabase(
+      p.join(await getDatabasesPath(), 'pozosformulas.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE pozosformulas(idformula INTEGER PRIMARY KEY,tiposistema TEXT, tipodatos TEXT,rangodesde INTEGER,rangohasta INTEGER)",
+        );
+      },
+      version: 1,
+    );
+
+    Future<void> insertPozoFormula(PozosFormula pozosformula) async {
+      final Database db = await database;
+      await db.insert(
+        'pozosformulas',
+        pozosformula.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    void _insertPozosFormulas() async {
+      if (_pozosformulasApi.length > 0) {
+        _pozosformulasApi.forEach((element) {
+          insertPozoFormula(element);
+        });
+      }
+    }
+
+    Future<List<PozosFormula>> _getPozosFormulasSQLite() async {
+      final Database db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('pozosformulas');
+      return List.generate(
+        maps.length,
+        (i) {
+          return PozosFormula(
+            idformula: maps[i]['idformula'],
+            tiposistema: maps[i]['tiposistema'],
+            tipodatos: maps[i]['tipodatos'],
+            rangodesde: maps[i]['rangodesde'],
+            rangohasta: maps[i]['rangohasta'],
+          );
+        },
+      );
+    }
+
+    if (_hayInternet) {
+      _insertPozosFormulas();
+    }
+
+    _pozosformulas = await _getPozosFormulasSQLite();
+
+    if (_pozosformulas.length > 0) {
+      setState(() {
+        colorPozosFormulas = Colors.green;
+      });
+    }
+  }
+
+  Future<Null> _getPozosControles() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      Response response = await ApiHelper.getPozosControles();
+
+      if (response.isSuccess) {
+        _pozoscontrolesApi = response.result;
+        _pozoscontrolesApi.sort((a, b) {
+          return a.idcontrol
+              .toString()
+              .toLowerCase()
+              .compareTo(b.idcontrol.toString().toLowerCase());
+        });
+        _hayInternet = true;
+      }
+    }
+    _getTablaPozosControles();
+
+    return;
+  }
+
+  void _getTablaPozosControles() async {
+    final Future<Database> database = openDatabase(
+      p.join(await getDatabasesPath(), 'pozoscontrol.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE pozoscontrol(idcontrol INTEGER PRIMARY KEY,codigopozo TEXT, idformula INTEGER,alarma TEXT,obligatorio TEXT)",
+        );
+      },
+      version: 1,
+    );
+
+    Future<void> insertPozoControle(PozosControle pozocontrole) async {
+      final Database db = await database;
+      await db.insert(
+        'pozoscontrol',
+        pozocontrole.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    void _insertPozosControles() async {
+      if (_pozoscontrolesApi.length > 0) {
+        _pozoscontrolesApi.forEach((element) {
+          insertPozoControle(element);
+        });
+      }
+    }
+
+    Future<List<PozosControle>> _getPozosControlesSQLite() async {
+      final Database db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('pozoscontrol');
+      return List.generate(
+        maps.length,
+        (i) {
+          return PozosControle(
+            idcontrol: maps[i]['idcontrol'],
+            codigopozo: maps[i]['codigopozo'],
+            idformula: maps[i]['idformula'],
+            alarma: maps[i]['alarma'],
+            obligatorio: maps[i]['obligatorio'],
+          );
+        },
+      );
+    }
+
+    if (_hayInternet) {
+      _insertPozosControles();
+    }
+
+    _pozoscontroles = await _getPozosControlesSQLite();
+
+    if (_pozoscontroles.length > 0) {
+      setState(() {
+        colorPozosControles = Colors.green;
       });
 
       setState(() {
