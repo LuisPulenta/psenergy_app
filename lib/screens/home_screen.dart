@@ -8,6 +8,8 @@ import 'package:psenergy_app/helpers/constants.dart';
 import 'package:psenergy_app/models/area.dart';
 import 'package:psenergy_app/models/bateria.dart';
 import 'package:psenergy_app/models/pozo.dart';
+import 'package:psenergy_app/models/pozoscontrole.dart';
+import 'package:psenergy_app/models/pozosformula.dart';
 import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/models/usuario.dart';
 import 'package:psenergy_app/models/yacimiento.dart';
@@ -23,13 +25,17 @@ class HomeScreen extends StatefulWidget {
   final List<Yacimiento> yacimientos;
   final List<Bateria> baterias;
   final List<Pozo> pozos;
+  final List<PozosFormula> pozosformulas;
+  final List<PozosControle> pozoscontroles;
 
   HomeScreen(
       {required this.user,
       required this.areas,
       required this.yacimientos,
       required this.baterias,
-      required this.pozos});
+      required this.pozos,
+      required this.pozosformulas,
+      required this.pozoscontroles});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -710,6 +716,8 @@ class _HomeScreenState extends State<HomeScreen>
             builder: (context) => MedicionScreen(
                   user: widget.user,
                   pozo: _pozoSelected,
+                  pozosformulas: widget.pozosformulas,
+                  pozoscontroles: widget.pozoscontroles,
                 )));
   }
 }

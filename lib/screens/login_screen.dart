@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/helpers/constants.dart';
+import 'package:psenergy_app/helpers/db_helper.dart';
+import 'package:psenergy_app/models/ControlDePozoEMBLLE%20.dart';
 import 'package:psenergy_app/models/area.dart';
 import 'package:psenergy_app/models/bateria.dart';
 import 'package:psenergy_app/models/pozo.dart';
@@ -41,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
   List<PozosFormula> _pozosformulas = [];
   List<PozosControle> _pozoscontrolesApi = [];
   List<PozosControle> _pozoscontroles = [];
+  List<ControlDePozoEMBLLE> _pozosemblles = [];
 
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
@@ -75,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Color colorPozos = Color(0xff9e9e9e);
   Color colorPozosFormulas = Color(0xff9e9e9e);
   Color colorPozosControles = Color(0xff9e9e9e);
+  Color colorControlDePozoEMBLLE = Color(0xff9e9e9e);
 
   @override
   void initState() {
@@ -86,6 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _getPozos();
     _getPozosFormulas();
     _getPozosControles();
+    //_getControlDePozoEMBLLE();
   }
 
   @override
@@ -264,6 +269,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       Icons.radio_button_checked,
                       size: 12,
                       color: colorPozosControles,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "ControlDePozoEMBLLE:",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 12,
+                      color: colorControlDePozoEMBLLE,
                     ),
                   ],
                 ),
@@ -460,6 +481,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   yacimientos: _yacimientos,
                   baterias: _baterias,
                   pozos: _pozos,
+                  pozosformulas: _pozosformulas,
+                  pozoscontroles: _pozoscontroles,
                 )));
   }
 
@@ -507,10 +530,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.isSuccess) {
         _usuariosApi = response.result;
         _usuariosApi.sort((a, b) {
-          return a.apellidonombre
+          return a.idUser
               .toString()
               .toLowerCase()
-              .compareTo(b.apellidonombre.toString().toLowerCase());
+              .compareTo(b.idUser.toString().toLowerCase());
         });
         _hayInternet = true;
       }
@@ -573,6 +596,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _usuarios = await _getUsuariosSQLite();
+    //_usuarios = await DBUsuarios.usuarios();
 
     if (_usuarios.length > 0) {
       setState(() {
@@ -1009,10 +1033,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaPozosControles() async {
     final Future<Database> database = openDatabase(
-      p.join(await getDatabasesPath(), 'pozoscontrol.db'),
+      p.join(await getDatabasesPath(), 'pozoscontroles.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE pozoscontrol(idcontrol INTEGER PRIMARY KEY,codigopozo TEXT, idformula INTEGER,alarma TEXT,obligatorio TEXT)",
+          "CREATE TABLE pozoscontroles(idcontrol INTEGER PRIMARY KEY,codigopozo TEXT, idformula INTEGER,alarma TEXT,obligatorio TEXT)",
         );
       },
       version: 1,
@@ -1021,7 +1045,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Future<void> insertPozoControle(PozosControle pozocontrole) async {
       final Database db = await database;
       await db.insert(
-        'pozoscontrol',
+        'pozoscontroles',
         pozocontrole.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -1037,7 +1061,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     Future<List<PozosControle>> _getPozosControlesSQLite() async {
       final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('pozoscontrol');
+      final List<Map<String, dynamic>> maps = await db.query('pozoscontroles');
       return List.generate(
         maps.length,
         (i) {
@@ -1061,6 +1085,88 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_pozoscontroles.length > 0) {
       setState(() {
         colorPozosControles = Colors.green;
+      });
+
+      setState(() {
+        _showLoader = false;
+      });
+    }
+  }
+
+  Future<Null> _getControlDePozoEMBLLE() async {
+    _getTablaControlDePozoEMBLLES();
+    return;
+  }
+
+  void _getTablaControlDePozoEMBLLES() async {
+    final database = openDatabase(
+      p.join(await getDatabasesPath(), 'pozoemb.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE pozoemb(idControlPozo INTEGER PRIMARY KEY,bateria TEXT,pozo TEXT,fecha TEXT,ql INTEGER,qo INTEGER,qw INTEGER,qg INTEGER,wcLibre INTEGER,wcEmulc INTEGER,wcTotal INTEGER,sales INTEGER,gor INTEGER,t INTEGER,validacionControl TEXT,prTbg INTEGER,prLinea INTEGER,prCsg INTEGER,regimenOperacion INTEGER,aibCarrera INTEGER,bespip INTEGER,pcpTorque INTEGER,observaciones TEXT,validadoSupervisor INTEGER,userIdInput INTEGERuserIDValida INTEGER,caudalInstantaneo DOUBLE,caudalMedio DOUBLE,lecturaAcumulada INTEGER,presionBDP INTEGER,presionAntFiltro INTEGER,presionEC INTEGER,ingresoDatos TEXT,reenvio INTEGER,muestra TEXT,fechaCarga TEXT,idUserValidaMuestra INTEGER,idUserImputSoft INTEGER,volt INTEGER,amper INTEGER,temp INTEGER,fechaCargaAPP TEXT)",
+        );
+      },
+      version: 1,
+    );
+
+    Future<List<ControlDePozoEMBLLE>> _getPozosEmbllesSQLite() async {
+      final Database db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('pozoemb');
+      return List.generate(
+        maps.length,
+        (i) {
+          return ControlDePozoEMBLLE(
+              idControlPozo: maps[i]['idControlPozo'],
+              bateria: maps[i]['bateria'],
+              pozo: maps[i]['pozo'],
+              fecha: maps[i]['fecha'],
+              ql: maps[i]['ql'],
+              qo: maps[i]['qo'],
+              qw: maps[i]['qw'],
+              qg: maps[i]['qg'],
+              wcLibre: maps[i]['wcLibre'],
+              wcEmulc: maps[i]['wcEmulc'],
+              wcTotal: maps[i]['wcTotal'],
+              sales: maps[i]['sales'],
+              gor: maps[i]['gor'],
+              t: maps[i]['t'],
+              validacionControl: maps[i]['validacionControl'],
+              prTbg: maps[i]['prTbg'],
+              prLinea: maps[i]['prLinea'],
+              prCsg: maps[i]['prCsg'],
+              regimenOperacion: maps[i]['regimenOperacion'],
+              aibCarrera: maps[i]['aibCarrera'],
+              bespip: maps[i]['bespip'],
+              pcpTorque: maps[i]['pcpTorque'],
+              observaciones: maps[i]['observaciones'],
+              validadoSupervisor: maps[i]['validadoSupervisor'],
+              userIdInput: maps[i]['userIdInput'],
+              userIDValida: maps[i]['userIDValida'],
+              caudalInstantaneo: maps[i]['caudalInstantaneo'],
+              caudalMedio: maps[i]['caudalMedio'],
+              lecturaAcumulada: maps[i]['lecturaAcumulada'],
+              presionBDP: maps[i]['presionBDP'],
+              presionAntFiltro: maps[i]['presionAntFiltro'],
+              presionEC: maps[i]['presionEC'],
+              ingresoDatos: maps[i]['ingresoDatos'],
+              reenvio: maps[i]['reenvio'],
+              muestra: maps[i]['muestra'],
+              fechaCarga: maps[i]['fechaCarga'],
+              idUserValidaMuestra: maps[i]['idUserValidaMuestra'],
+              idUserImputSoft: maps[i]['idUserImputSoft'],
+              volt: maps[i]['volt'],
+              amper: maps[i]['amper'],
+              temp: maps[i]['temp'],
+              fechaCargaAPP: maps[i]['fechaCargaAPP']);
+        },
+      );
+    }
+
+    _pozosemblles = await _getPozosEmbllesSQLite();
+
+    if (_pozosemblles.length > 0) {
+      setState(() {
+        colorControlDePozoEMBLLE = Colors.green;
       });
 
       setState(() {

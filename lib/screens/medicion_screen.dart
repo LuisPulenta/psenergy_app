@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:psenergy_app/models/pozo.dart';
+import 'package:psenergy_app/models/pozoscontrole.dart';
+import 'package:psenergy_app/models/pozosformula.dart';
 import 'package:psenergy_app/models/usuario.dart';
 
 class MedicionScreen extends StatefulWidget {
   final Usuario user;
   final Pozo pozo;
+  final List<PozosFormula> pozosformulas;
+  final List<PozosControle> pozoscontroles;
 
-  MedicionScreen({required this.user, required this.pozo});
+  MedicionScreen(
+      {required this.user,
+      required this.pozo,
+      required this.pozosformulas,
+      required this.pozoscontroles});
 
   @override
   _MedicionScreenState createState() => _MedicionScreenState();
@@ -32,6 +40,19 @@ class _MedicionScreenState extends State<MedicionScreen> {
       cota: 0.0,
       profundidad: 0.0,
       vidaUtil: 0.0);
+
+  List<PozosControle> _pozoscontroles = [];
+
+  bool _mostrarRPM = false;
+  bool _mostrarTorque = false;
+  bool _mostrarGPM = false;
+  bool _mostrarCarrera = false;
+  bool _mostrarFrecuencia = false;
+  bool _mostrarPip = false;
+  bool _mostrarAmp = false;
+  bool _mostrarVolt = false;
+  bool _mostrarOrificio = false;
+  bool _mostrarTemperatura = false;
 
   String _prtbg = '';
   String _prtbgError = '';
@@ -138,6 +159,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
   void initState() {
     super.initState();
     _pozo = widget.pozo;
+    widget.pozoscontroles.forEach((pozoscontrol) {
+      if (pozoscontrol.codigopozo == _pozo.codigopozo) {
+        _pozoscontroles.add(pozoscontrol);
+        if (pozoscontrol.idformula == 1) {
+          _mostrarRPM = true;
+        }
+        if (pozoscontrol.idformula == 2) {
+          _mostrarTorque = true;
+        }
+        if (pozoscontrol.idformula == 3) {
+          _mostrarGPM = true;
+        }
+        if (pozoscontrol.idformula == 4) {
+          _mostrarCarrera = true;
+        }
+        if (pozoscontrol.idformula == 5) {
+          _mostrarFrecuencia = true;
+        }
+        if (pozoscontrol.idformula == 6) {
+          _mostrarPip = true;
+        }
+        if (pozoscontrol.idformula == 7) {
+          _mostrarAmp = true;
+        }
+        if (pozoscontrol.idformula == 8) {
+          _mostrarVolt = true;
+        }
+        if (pozoscontrol.idformula == 9) {
+          _mostrarOrificio = true;
+        }
+        if (pozoscontrol.idformula == 10) {
+          _mostrarTemperatura = true;
+        }
+      }
+    });
   }
 
   @override
@@ -260,12 +316,6 @@ class _MedicionScreenState extends State<MedicionScreen> {
                     widget.pozo.tipopozo.toLowerCase() == 'productor'
                         ? _showtiempo()
                         : Container(),
-                    widget.pozo.tipopozo.toLowerCase() == 'productor'
-                        ? _showgpm()
-                        : Container(),
-                    widget.pozo.tipopozo.toLowerCase() == 'productor'
-                        ? _showcarrera()
-                        : Container(),
                     widget.pozo.tipopozo.toLowerCase() != 'productor'
                         ? _showcaudalinst()
                         : Container(),
@@ -275,6 +325,16 @@ class _MedicionScreenState extends State<MedicionScreen> {
                     widget.pozo.tipopozo.toLowerCase() != 'productor'
                         ? _showpresionantesdelfiltro()
                         : Container(),
+                    _mostrarRPM ? _showRPM() : Container(),
+                    _mostrarTorque ? _showTorque() : Container(),
+                    _mostrarGPM ? _showGPM() : Container(),
+                    _mostrarCarrera ? _showCarrera() : Container(),
+                    _mostrarFrecuencia ? _showFrecuencia() : Container(),
+                    _mostrarPip ? _showPip() : Container(),
+                    _mostrarAmp ? _showAmp() : Container(),
+                    _mostrarVolt ? _showVolt() : Container(),
+                    _mostrarOrificio ? _showOrificio() : Container(),
+                    _mostrarTemperatura ? _showTemperatura() : Container(),
                     _showobservaciones(),
                     SizedBox(
                       height: 20,
@@ -1054,6 +1114,606 @@ class _MedicionScreenState extends State<MedicionScreen> {
               width: 10,
             ),
             Text(""),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showRPM() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.speed, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "RPM:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _rpmController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa RPM...',
+                  errorText: _rpmShowError ? _rpmError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showTorque() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.sync_disabled, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Torque:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _torqueController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa Torque...',
+                  errorText: _torqueShowError ? _torqueError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showGPM() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.speed, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "GPM:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _gpmController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa GPM...',
+                  errorText: _gpmShowError ? _gpmError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showCarrera() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.run_circle, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Carrera:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _carreraController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa Carrera...',
+                  errorText: _carreraShowError ? _carreraError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showFrecuencia() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.bolt, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Frecuencia:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _frecuenciaController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa Frecuencia...',
+                  errorText: _frecuenciaShowError ? _frecuenciaError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showPip() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.stacked_bar_chart, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Pip:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _pipController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa Pip...',
+                  errorText: _pipShowError ? _pipError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showAmp() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.motion_photos_auto, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Amp:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _ampController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa Amp...',
+                  errorText: _ampShowError ? _ampError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showVolt() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.battery_charging_full, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Volt:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _voltController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa Volt...',
+                  errorText: _voltShowError ? _voltError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showOrificio() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.circle, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Orificio:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _orificioController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa Orificio...',
+                  errorText: _orificioShowError ? _orificioError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showTemperatura() {
+    return Container(
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.yellow,
+          border: Border.all(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(colors: [
+            Color(
+              (0xffe9dac2),
+            ),
+            Color(
+              (0xffd3a735),
+            )
+          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black,
+                offset: Offset(3, 5),
+                blurRadius: 5,
+                spreadRadius: 3)
+          ]),
+      padding: EdgeInsets.all(5),
+      child: Expanded(
+        child: Row(
+          children: [
+            Icon(Icons.thermostat, color: Color(0xFF781f1e)),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Temperatura:",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF781f1e)),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: TextField(
+                controller: _temperaturaController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  hintText: 'Ingresa Temperatura...',
+                  errorText: _temperaturaShowError ? _temperaturaError : null,
+                ),
+                onChanged: (value) {
+                  _caudalinst = value;
+                },
+              ),
+            ),
           ],
         ),
       ),
