@@ -68,25 +68,13 @@ class _LoginScreenState extends State<LoginScreen> {
   String _emailError = '';
   bool _emailShowError = false;
   bool _hayInternet = false;
-
   String _password = 'ari193';
   String _passwordError = '';
   bool _passwordShowError = false;
-
   bool _rememberme = true;
-
   bool _passwordShow = false;
 
   bool _showLoader = false;
-
-  Color colorUsuarios = Color(0xff9e9e9e);
-  Color colorAreas = Color(0xff9e9e9e);
-  Color colorYacimientos = Color(0xff9e9e9e);
-  Color colorBaterias = Color(0xff9e9e9e);
-  Color colorPozos = Color(0xff9e9e9e);
-  Color colorPozosFormulas = Color(0xff9e9e9e);
-  Color colorPozosControles = Color(0xff9e9e9e);
-  Color colorMedicionesCab = Color(0xff9e9e9e);
 
   @override
   void initState() {
@@ -162,171 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               )),
-          Container(
-              child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 120, vertical: 15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Usuarios:",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    Icon(
-                      Icons.radio_button_checked,
-                      size: 12,
-                      color: colorUsuarios,
-                    ),
-                    Text(
-                      _usuarios.length.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Areas:",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    Icon(
-                      Icons.radio_button_checked,
-                      size: 12,
-                      color: colorAreas,
-                    ),
-                    Text(
-                      _areas.length.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Yacimientos:",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    Icon(
-                      Icons.radio_button_checked,
-                      size: 12,
-                      color: colorYacimientos,
-                    ),
-                    Text(
-                      _yacimientos.length.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Baterías:",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    Icon(
-                      Icons.radio_button_checked,
-                      size: 12,
-                      color: colorBaterias,
-                    ),
-                    Text(
-                      _baterias.length.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Pozos:",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    Icon(
-                      Icons.radio_button_checked,
-                      size: 12,
-                      color: colorPozos,
-                    ),
-                    Text(
-                      _pozos.length.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Pozos Fórmulas:",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    Icon(
-                      Icons.radio_button_checked,
-                      size: 12,
-                      color: colorPozosFormulas,
-                    ),
-                    Text(
-                      _pozosformulas.length.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Pozos Controles:",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    Icon(
-                      Icons.radio_button_checked,
-                      size: 12,
-                      color: colorPozosControles,
-                    ),
-                    Text(
-                      _pozoscontroles.length.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "ControlDePozoEMBLLE:",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                    Icon(
-                      Icons.radio_button_checked,
-                      size: 12,
-                      color: colorMedicionesCab,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )),
           Transform.translate(
             offset: Offset(0, -60),
             child: Center(
@@ -611,11 +434,6 @@ class _LoginScreenState extends State<LoginScreen> {
       SystemNavigator.pop();
       return;
     }
-    if (_usuarios.length > 0) {
-      setState(() {
-        colorUsuarios = Colors.green;
-      });
-    }
   }
 
 //***************************************************************
@@ -657,12 +475,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _areas = await DBAreas.areas();
-
-    if (_areas.length > 0) {
-      setState(() {
-        colorAreas = Colors.green;
-      });
-    }
   }
 
   //***************************************************************
@@ -704,12 +516,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _yacimientos = await DBYacimientos.yacimientos();
-
-    if (_yacimientos.length > 0) {
-      setState(() {
-        colorYacimientos = Colors.green;
-      });
-    }
   }
 
 //***************************************************************
@@ -749,14 +555,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_hayInternet) {
       _insertBaterias();
     }
-
     _baterias = await DBBaterias.baterias();
-
-    if (_baterias.length > 0) {
-      setState(() {
-        colorBaterias = Colors.green;
-      });
-    }
   }
 
 //***************************************************************
@@ -796,14 +595,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_hayInternet) {
       _insertPozos();
     }
-
     _pozos = await DBPozos.pozos();
-
-    if (_pozos.length > 0) {
-      setState(() {
-        colorPozos = Colors.green;
-      });
-    }
   }
 
 //***************************************************************
@@ -843,14 +635,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_hayInternet) {
       _insertPozosFormulas();
     }
-
     _pozosformulas = await DBPozosFormulas.pozosformulas();
-
-    if (_pozosformulas.length > 0) {
-      setState(() {
-        colorPozosFormulas = Colors.green;
-      });
-    }
   }
 
 //***************************************************************
@@ -890,14 +675,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_hayInternet) {
       _insertPozosControles();
     }
-
     _pozoscontroles = await DBPozosControles.pozoscontroles();
-
-    if (_pozoscontroles.length > 0) {
-      setState(() {
-        colorPozosControles = Colors.green;
-      });
-    }
   }
 
 //***************************************************************
@@ -910,13 +688,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaMedicionesCab() async {
     _medicionesCab = await DBMedicionesCabecera.medicionescabecera();
-
-    if (_medicionesCab.length > 0) {
-      setState(() {
-        colorMedicionesCab = Colors.green;
-      });
-    }
-
     setState(() {
       _showLoader = false;
     });
