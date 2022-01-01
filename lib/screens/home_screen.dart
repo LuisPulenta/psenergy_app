@@ -177,14 +177,14 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Column(children: [
                     Center(
                       child: Text(
-                        _user.usrlogin!.toUpperCase(),
+                        _user.usrlogin.toUpperCase(),
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Center(
                       child: Text(
-                        _user.apellidonombre!,
+                        _user.apellidonombre,
                         style: TextStyle(
                           fontSize: 25,
                         ),

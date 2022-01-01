@@ -7,7 +7,7 @@ class DBUsuarios {
     return openDatabase(join(await getDatabasesPath(), 'usuarios.db'),
         onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE usuarios(idUser INTEGER PRIMARY KEY, codigo TEXT, apellidonombre TEXT, usrlogin TEXT, usrcontrasena TEXT,perfil  INTEGER,  habilitadoWeb INTEGER, causanteC TEXT, habilitaPaqueteria INTEGER)",
+        "CREATE TABLE usuarios(idUser INTEGER, codigo TEXT, apellidonombre TEXT, usrlogin TEXT, usrcontrasena TEXT,perfil  INTEGER,  habilitadoWeb INTEGER, causanteC TEXT, habilitaPaqueteria INTEGER)",
       );
     }, version: 1);
   }
@@ -15,6 +15,11 @@ class DBUsuarios {
   static Future<int> insertUsuario(Usuario usuario) async {
     Database database = await _openDBUsuarios();
     return database.insert("usuarios", usuario.toMap());
+  }
+
+  static Future<int> delete() async {
+    Database database = await _openDBUsuarios();
+    return database.delete("usuarios");
   }
 
   static Future<List<Usuario>> usuarios() async {

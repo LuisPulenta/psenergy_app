@@ -1,4 +1,4 @@
-class ControlDePozoEMBLLE {
+class MedicionCabecera {
   int idControlPozo = 0;
   String bateria = '';
   String pozo = '';
@@ -42,7 +42,7 @@ class ControlDePozoEMBLLE {
   int temp = 0;
   String fechaCargaAPP = '';
 
-  ControlDePozoEMBLLE(
+  MedicionCabecera(
       {required this.idControlPozo,
       required this.bateria,
       required this.pozo,
@@ -86,7 +86,7 @@ class ControlDePozoEMBLLE {
       required this.temp,
       required this.fechaCargaAPP});
 
-  ControlDePozoEMBLLE.fromJson(Map<String, dynamic> json) {
+  MedicionCabecera.fromJson(Map<String, dynamic> json) {
     idControlPozo = json['idControlPozo'];
     bateria = json['bateria'];
     pozo = json['pozo'];

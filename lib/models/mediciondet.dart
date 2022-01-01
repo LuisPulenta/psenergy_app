@@ -1,4 +1,4 @@
-class ControlPozoValoresFormula {
+class MedicionDet {
   int idcontrolformula = 0;
   int idcontrolcab = 0;
   String idpozo = '';
@@ -6,7 +6,7 @@ class ControlPozoValoresFormula {
   int valor = 0;
   String fechaAPP = '';
 
-  ControlPozoValoresFormula(
+  MedicionDet(
       {required this.idcontrolformula,
       required this.idcontrolcab,
       required this.idpozo,
@@ -14,7 +14,7 @@ class ControlPozoValoresFormula {
       required this.valor,
       required this.fechaAPP});
 
-  ControlPozoValoresFormula.fromJson(Map<String, dynamic> json) {
+  MedicionDet.fromJson(Map<String, dynamic> json) {
     idcontrolformula = json['idcontrolformula'];
     idcontrolcab = json['idcontrolcab'];
     idpozo = json['idpozo'];

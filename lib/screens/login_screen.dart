@@ -2,13 +2,21 @@ import 'dart:convert';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/helpers/constants.dart';
-import 'package:psenergy_app/helpers/db_helper.dart';
-import 'package:psenergy_app/models/ControlDePozoEMBLLE%20.dart';
+import 'package:psenergy_app/helpers/dbareas_helper.dart';
+import 'package:psenergy_app/helpers/dbbaterias_helper.dart';
+import 'package:psenergy_app/helpers/dbmedicionescabecera_helper.dart';
+import 'package:psenergy_app/helpers/dbpozos_helper.dart';
+import 'package:psenergy_app/helpers/dbpozoscontroles_helper.dart';
+import 'package:psenergy_app/helpers/dbpozosformulas_helper.dart';
+import 'package:psenergy_app/helpers/dbusuarios_helper.dart';
+import 'package:psenergy_app/helpers/dbyacimientos_helper.dart';
 import 'package:psenergy_app/models/area.dart';
 import 'package:psenergy_app/models/bateria.dart';
+import 'package:psenergy_app/models/medicioncabecera.dart';
 import 'package:psenergy_app/models/pozo.dart';
 import 'package:psenergy_app/models/pozoscontrole.dart';
 import 'package:psenergy_app/models/pozosformula.dart';
@@ -43,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
   List<PozosFormula> _pozosformulas = [];
   List<PozosControle> _pozoscontrolesApi = [];
   List<PozosControle> _pozoscontroles = [];
-  List<ControlDePozoEMBLLE> _pozosemblles = [];
+  List<MedicionCabecera> _medicionesCab = [];
 
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
@@ -78,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Color colorPozos = Color(0xff9e9e9e);
   Color colorPozosFormulas = Color(0xff9e9e9e);
   Color colorPozosControles = Color(0xff9e9e9e);
-  Color colorControlDePozoEMBLLE = Color(0xff9e9e9e);
+  Color colorMedicionesCab = Color(0xff9e9e9e);
 
   @override
   void initState() {
@@ -90,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _getPozos();
     _getPozosFormulas();
     _getPozosControles();
-    //_getControlDePozoEMBLLE();
+    _getMedicionesCab();
   }
 
   @override
@@ -174,6 +182,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       size: 12,
                       color: colorUsuarios,
                     ),
+                    Text(
+                      _usuarios.length.toString(),
+                      style: TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
                 Row(
@@ -189,6 +201,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Icons.radio_button_checked,
                       size: 12,
                       color: colorAreas,
+                    ),
+                    Text(
+                      _areas.length.toString(),
+                      style: TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -206,6 +222,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       size: 12,
                       color: colorYacimientos,
                     ),
+                    Text(
+                      _yacimientos.length.toString(),
+                      style: TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
                 Row(
@@ -221,6 +241,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Icons.radio_button_checked,
                       size: 12,
                       color: colorBaterias,
+                    ),
+                    Text(
+                      _baterias.length.toString(),
+                      style: TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -238,6 +262,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       size: 12,
                       color: colorPozos,
                     ),
+                    Text(
+                      _pozos.length.toString(),
+                      style: TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
                 Row(
@@ -253,6 +281,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Icons.radio_button_checked,
                       size: 12,
                       color: colorPozosFormulas,
+                    ),
+                    Text(
+                      _pozosformulas.length.toString(),
+                      style: TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -270,6 +302,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       size: 12,
                       color: colorPozosControles,
                     ),
+                    Text(
+                      _pozoscontroles.length.toString(),
+                      style: TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
                 Row(
@@ -284,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Icon(
                       Icons.radio_button_checked,
                       size: 12,
-                      color: colorControlDePozoEMBLLE,
+                      color: colorMedicionesCab,
                     ),
                   ],
                 ),
@@ -517,11 +553,13 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString('date', DateTime.now().toString());
   }
 
+//***************************************************************
+//*********************** USUARIOS ******************************
+//***************************************************************
   Future<Null> _getUsuarios() async {
     setState(() {
       _showLoader = true;
     });
-
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
@@ -543,61 +581,36 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _getTablaUsuarios() async {
-    final Future<Database> database = openDatabase(
-      p.join(await getDatabasesPath(), 'usuarios.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE usuarios(idUser INTEGER PRIMARY KEY, codigo TEXT, apellidonombre TEXT, usrlogin TEXT, usrcontrasena TEXT,perfil  INTEGER,  habilitadoWeb INTEGER, causanteC TEXT, habilitaPaqueteria INTEGER)",
-        );
-      },
-      version: 1,
-    );
-
-    Future<void> insertUsuario(Usuario usuario) async {
-      final Database db = await database;
-      await db.insert(
-        'usuarios',
-        usuario.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-
     void _insertUsuarios() async {
       if (_usuariosApi.length > 0) {
+        DBUsuarios.delete();
         _usuariosApi.forEach((element) {
-          insertUsuario(element);
+          DBUsuarios.insertUsuario(element);
         });
       }
-    }
-
-    Future<List<Usuario>> _getUsuariosSQLite() async {
-      final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('usuarios');
-      return List.generate(
-        maps.length,
-        (i) {
-          return Usuario(
-            idUser: maps[i]['idUser'],
-            codigo: maps[i]['codigo'],
-            apellidonombre: maps[i]['apellidonombre'],
-            usrlogin: maps[i]['usrlogin'],
-            usrcontrasena: maps[i]['usrcontrasena'],
-            perfil: maps[i]['perfil'],
-            habilitadoWeb: maps[i]['habilitadoWeb'],
-            causanteC: maps[i]['causanteC'],
-            habilitaPaqueteria: maps[i]['habilitaPaqueteria'],
-          );
-        },
-      );
     }
 
     if (_hayInternet) {
       _insertUsuarios();
     }
 
-    _usuarios = await _getUsuariosSQLite();
-    //_usuarios = await DBUsuarios.usuarios();
+    _usuarios = await DBUsuarios.usuarios();
 
+    if (_usuarios.length == 0) {
+      setState(() {
+        _showLoader = false;
+      });
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message:
+              "La tabla Usuarios local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      SystemNavigator.pop();
+      return;
+    }
     if (_usuarios.length > 0) {
       setState(() {
         colorUsuarios = Colors.green;
@@ -605,6 +618,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+//***************************************************************
+//************************* AREAS *******************************
+//***************************************************************
   Future<Null> _getAreas() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -627,51 +643,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _getTablaAreas() async {
-    final Future<Database> database = openDatabase(
-      p.join(await getDatabasesPath(), 'areas.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE areas(nombrearea TEXT PRIMARY KEY)",
-        );
-      },
-      version: 1,
-    );
-
-    Future<void> insertArea(Area area) async {
-      final Database db = await database;
-      await db.insert(
-        'areas',
-        area.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-
     void _insertAreas() async {
       if (_areasApi.length > 0) {
+        DBAreas.delete();
         _areasApi.forEach((element) {
-          insertArea(element);
+          DBAreas.insertArea(element);
         });
       }
-    }
-
-    Future<List<Area>> _getAreasSQLite() async {
-      final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('areas');
-      return List.generate(
-        maps.length,
-        (i) {
-          return Area(
-            nombrearea: maps[i]['nombrearea'],
-          );
-        },
-      );
     }
 
     if (_hayInternet) {
       _insertAreas();
     }
 
-    _areas = await _getAreasSQLite();
+    _areas = await DBAreas.areas();
 
     if (_areas.length > 0) {
       setState(() {
@@ -680,6 +665,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  //***************************************************************
+  //********************** YACIMIENTOS ****************************
+  //***************************************************************
   Future<Null> _getYacimientos() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -702,54 +690,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _getTablaYacimientos() async {
-    final Future<Database> database = openDatabase(
-      p.join(await getDatabasesPath(), 'yacimientos.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE yacimientos(nombreyacimiento TEXT PRIMARY KEY,fechaalta TEXT,area TEXT,activo INTEGER)",
-        );
-      },
-      version: 1,
-    );
-
-    Future<void> insertYacimiento(Yacimiento yacimiento) async {
-      final Database db = await database;
-      await db.insert(
-        'yacimientos',
-        yacimiento.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-
     void _insertYacimientos() async {
       if (_yacimientosApi.length > 0) {
+        DBYacimientos.delete();
         _yacimientosApi.forEach((element) {
-          insertYacimiento(element);
+          DBYacimientos.insertYacimiento(element);
         });
       }
-    }
-
-    Future<List<Yacimiento>> _getYacimientosSQLite() async {
-      final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('yacimientos');
-      return List.generate(
-        maps.length,
-        (i) {
-          return Yacimiento(
-            nombreyacimiento: maps[i]['nombreyacimiento'],
-            fechaalta: maps[i]['fechaalta'],
-            area: maps[i]['area'],
-            activo: maps[i]['activo'],
-          );
-        },
-      );
     }
 
     if (_hayInternet) {
       _insertYacimientos();
     }
 
-    _yacimientos = await _getYacimientosSQLite();
+    _yacimientos = await DBYacimientos.yacimientos();
 
     if (_yacimientos.length > 0) {
       setState(() {
@@ -758,6 +712,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+//***************************************************************
+//************************* BATERIAS ****************************
+//***************************************************************
   Future<Null> _getBaterias() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -767,10 +724,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.isSuccess) {
         _bateriasApi = response.result;
         _bateriasApi.sort((a, b) {
-          return a.descripcion
+          return a.codigobateria
               .toString()
               .toLowerCase()
-              .compareTo(b.descripcion.toString().toLowerCase());
+              .compareTo(b.codigobateria.toString().toLowerCase());
         });
         _hayInternet = true;
       }
@@ -780,55 +737,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _getTablaBaterias() async {
-    final Future<Database> database = openDatabase(
-      p.join(await getDatabasesPath(), 'baterias.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE baterias(codigobateria TEXT PRIMARY KEY,descripcion TEXT, fechaalta TEXT,activa INTEGER,nombreyacimiento TEXT)",
-        );
-      },
-      version: 1,
-    );
-
-    Future<void> insertBateria(Bateria bateria) async {
-      final Database db = await database;
-      await db.insert(
-        'baterias',
-        bateria.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-
     void _insertBaterias() async {
       if (_bateriasApi.length > 0) {
+        DBBaterias.delete();
         _bateriasApi.forEach((element) {
-          insertBateria(element);
+          DBBaterias.insertBateria(element);
         });
       }
-    }
-
-    Future<List<Bateria>> _getBateriasSQLite() async {
-      final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('baterias');
-      return List.generate(
-        maps.length,
-        (i) {
-          return Bateria(
-            codigobateria: maps[i]['codigobateria'],
-            descripcion: maps[i]['descripcion'],
-            fechaalta: maps[i]['fechaalta'],
-            activa: maps[i]['activa'],
-            nombreyacimiento: maps[i]['nombreyacimiento'],
-          );
-        },
-      );
     }
 
     if (_hayInternet) {
       _insertBaterias();
     }
 
-    _baterias = await _getBateriasSQLite();
+    _baterias = await DBBaterias.baterias();
 
     if (_baterias.length > 0) {
       setState(() {
@@ -837,6 +759,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+//***************************************************************
+//************************* POZOS *******************************
+//***************************************************************
   Future<Null> _getPozos() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -855,72 +780,24 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
     _getTablaPozos();
-
     return;
   }
 
   void _getTablaPozos() async {
-    final Future<Database> database = openDatabase(
-      p.join(await getDatabasesPath(), 'pozos.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE pozos(codigopozo TEXT PRIMARY KEY,codigobateria TEXT, descripcion TEXT,fechaalta TEXT,activo INTEGER,ultimalectura TEXT,latitud TEXT, longitud TEXT,qrcode TEXT,observaciones TEXT,tipopozo TEXT,sistemaExtraccion TEXT,cuenca TEXT, idProvincia INTEGER,cota DOUBLE, profundidad DOUBLE, vidaUtil DOUBLE)",
-        );
-      },
-      version: 1,
-    );
-
-    Future<void> insertPozo(Pozo pozo) async {
-      final Database db = await database;
-      await db.insert(
-        'pozos',
-        pozo.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-
     void _insertPozos() async {
       if (_pozosApi.length > 0) {
+        DBPozos.delete();
         _pozosApi.forEach((element) {
-          insertPozo(element);
+          DBPozos.insertPozo(element);
         });
       }
-    }
-
-    Future<List<Pozo>> _getPozosSQLite() async {
-      final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('pozos');
-      return List.generate(
-        maps.length,
-        (i) {
-          return Pozo(
-            codigopozo: maps[i]['codigopozo'],
-            codigobateria: maps[i]['codigobateria'],
-            descripcion: maps[i]['descripcion'],
-            fechaalta: maps[i]['fechaalta'],
-            activo: maps[i]['activo'],
-            ultimalectura: maps[i]['ultimalectura'],
-            latitud: maps[i]['latitud'],
-            longitud: maps[i]['longitud'],
-            qrcode: maps[i]['qrcode'],
-            observaciones: maps[i]['observaciones'],
-            tipopozo: maps[i]['tipopozo'],
-            sistemaExtraccion: maps[i]['sistemaExtraccion'],
-            cuenca: maps[i]['cuenca'],
-            idProvincia: maps[i]['idProvincia'],
-            cota: maps[i]['cota'],
-            profundidad: maps[i]['profundidad'],
-            vidaUtil: maps[i]['vidaUtil'],
-          );
-        },
-      );
     }
 
     if (_hayInternet) {
       _insertPozos();
     }
 
-    _pozos = await _getPozosSQLite();
+    _pozos = await DBPozos.pozos();
 
     if (_pozos.length > 0) {
       setState(() {
@@ -929,6 +806,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+//***************************************************************
+//************************* POZOSFORMULAS ***********************
+//***************************************************************
   Future<Null> _getPozosFormulas() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -947,60 +827,24 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
     _getTablaPozosFormulas();
-
     return;
   }
 
   void _getTablaPozosFormulas() async {
-    final Future<Database> database = openDatabase(
-      p.join(await getDatabasesPath(), 'pozosformulas.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE pozosformulas(idformula INTEGER PRIMARY KEY,tiposistema TEXT, tipodatos TEXT,rangodesde INTEGER,rangohasta INTEGER)",
-        );
-      },
-      version: 1,
-    );
-
-    Future<void> insertPozoFormula(PozosFormula pozosformula) async {
-      final Database db = await database;
-      await db.insert(
-        'pozosformulas',
-        pozosformula.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-
     void _insertPozosFormulas() async {
       if (_pozosformulasApi.length > 0) {
+        DBPozosFormulas.delete();
         _pozosformulasApi.forEach((element) {
-          insertPozoFormula(element);
+          DBPozosFormulas.insertPozoFormula(element);
         });
       }
-    }
-
-    Future<List<PozosFormula>> _getPozosFormulasSQLite() async {
-      final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('pozosformulas');
-      return List.generate(
-        maps.length,
-        (i) {
-          return PozosFormula(
-            idformula: maps[i]['idformula'],
-            tiposistema: maps[i]['tiposistema'],
-            tipodatos: maps[i]['tipodatos'],
-            rangodesde: maps[i]['rangodesde'],
-            rangohasta: maps[i]['rangohasta'],
-          );
-        },
-      );
     }
 
     if (_hayInternet) {
       _insertPozosFormulas();
     }
 
-    _pozosformulas = await _getPozosFormulasSQLite();
+    _pozosformulas = await DBPozosFormulas.pozosformulas();
 
     if (_pozosformulas.length > 0) {
       setState(() {
@@ -1009,6 +853,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+//***************************************************************
+//************************* POZOSCONTROLES **********************
+//***************************************************************
   Future<Null> _getPozosControles() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -1027,151 +874,51 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
     _getTablaPozosControles();
-
     return;
   }
 
   void _getTablaPozosControles() async {
-    final Future<Database> database = openDatabase(
-      p.join(await getDatabasesPath(), 'pozoscontroles.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE pozoscontroles(idcontrol INTEGER PRIMARY KEY,codigopozo TEXT, idformula INTEGER,alarma TEXT,obligatorio TEXT)",
-        );
-      },
-      version: 1,
-    );
-
-    Future<void> insertPozoControle(PozosControle pozocontrole) async {
-      final Database db = await database;
-      await db.insert(
-        'pozoscontroles',
-        pozocontrole.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-
     void _insertPozosControles() async {
       if (_pozoscontrolesApi.length > 0) {
+        DBPozosControles.delete();
         _pozoscontrolesApi.forEach((element) {
-          insertPozoControle(element);
+          DBPozosControles.insertPozoControl(element);
         });
       }
-    }
-
-    Future<List<PozosControle>> _getPozosControlesSQLite() async {
-      final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('pozoscontroles');
-      return List.generate(
-        maps.length,
-        (i) {
-          return PozosControle(
-            idcontrol: maps[i]['idcontrol'],
-            codigopozo: maps[i]['codigopozo'],
-            idformula: maps[i]['idformula'],
-            alarma: maps[i]['alarma'],
-            obligatorio: maps[i]['obligatorio'],
-          );
-        },
-      );
     }
 
     if (_hayInternet) {
       _insertPozosControles();
     }
 
-    _pozoscontroles = await _getPozosControlesSQLite();
+    _pozoscontroles = await DBPozosControles.pozoscontroles();
 
     if (_pozoscontroles.length > 0) {
       setState(() {
         colorPozosControles = Colors.green;
       });
-
-      setState(() {
-        _showLoader = false;
-      });
     }
   }
 
-  Future<Null> _getControlDePozoEMBLLE() async {
-    _getTablaControlDePozoEMBLLES();
+//***************************************************************
+//******************* ControlDePozoEMBLLE  **********************
+//***************************************************************
+  Future<Null> _getMedicionesCab() async {
+    _getTablaMedicionesCab();
     return;
   }
 
-  void _getTablaControlDePozoEMBLLES() async {
-    final database = openDatabase(
-      p.join(await getDatabasesPath(), 'pozoemb.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE pozoemb(idControlPozo INTEGER PRIMARY KEY,bateria TEXT,pozo TEXT,fecha TEXT,ql INTEGER,qo INTEGER,qw INTEGER,qg INTEGER,wcLibre INTEGER,wcEmulc INTEGER,wcTotal INTEGER,sales INTEGER,gor INTEGER,t INTEGER,validacionControl TEXT,prTbg INTEGER,prLinea INTEGER,prCsg INTEGER,regimenOperacion INTEGER,aibCarrera INTEGER,bespip INTEGER,pcpTorque INTEGER,observaciones TEXT,validadoSupervisor INTEGER,userIdInput INTEGERuserIDValida INTEGER,caudalInstantaneo DOUBLE,caudalMedio DOUBLE,lecturaAcumulada INTEGER,presionBDP INTEGER,presionAntFiltro INTEGER,presionEC INTEGER,ingresoDatos TEXT,reenvio INTEGER,muestra TEXT,fechaCarga TEXT,idUserValidaMuestra INTEGER,idUserImputSoft INTEGER,volt INTEGER,amper INTEGER,temp INTEGER,fechaCargaAPP TEXT)",
-        );
-      },
-      version: 1,
-    );
+  void _getTablaMedicionesCab() async {
+    _medicionesCab = await DBMedicionesCabecera.medicionescabecera();
 
-    Future<List<ControlDePozoEMBLLE>> _getPozosEmbllesSQLite() async {
-      final Database db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('pozoemb');
-      return List.generate(
-        maps.length,
-        (i) {
-          return ControlDePozoEMBLLE(
-              idControlPozo: maps[i]['idControlPozo'],
-              bateria: maps[i]['bateria'],
-              pozo: maps[i]['pozo'],
-              fecha: maps[i]['fecha'],
-              ql: maps[i]['ql'],
-              qo: maps[i]['qo'],
-              qw: maps[i]['qw'],
-              qg: maps[i]['qg'],
-              wcLibre: maps[i]['wcLibre'],
-              wcEmulc: maps[i]['wcEmulc'],
-              wcTotal: maps[i]['wcTotal'],
-              sales: maps[i]['sales'],
-              gor: maps[i]['gor'],
-              t: maps[i]['t'],
-              validacionControl: maps[i]['validacionControl'],
-              prTbg: maps[i]['prTbg'],
-              prLinea: maps[i]['prLinea'],
-              prCsg: maps[i]['prCsg'],
-              regimenOperacion: maps[i]['regimenOperacion'],
-              aibCarrera: maps[i]['aibCarrera'],
-              bespip: maps[i]['bespip'],
-              pcpTorque: maps[i]['pcpTorque'],
-              observaciones: maps[i]['observaciones'],
-              validadoSupervisor: maps[i]['validadoSupervisor'],
-              userIdInput: maps[i]['userIdInput'],
-              userIDValida: maps[i]['userIDValida'],
-              caudalInstantaneo: maps[i]['caudalInstantaneo'],
-              caudalMedio: maps[i]['caudalMedio'],
-              lecturaAcumulada: maps[i]['lecturaAcumulada'],
-              presionBDP: maps[i]['presionBDP'],
-              presionAntFiltro: maps[i]['presionAntFiltro'],
-              presionEC: maps[i]['presionEC'],
-              ingresoDatos: maps[i]['ingresoDatos'],
-              reenvio: maps[i]['reenvio'],
-              muestra: maps[i]['muestra'],
-              fechaCarga: maps[i]['fechaCarga'],
-              idUserValidaMuestra: maps[i]['idUserValidaMuestra'],
-              idUserImputSoft: maps[i]['idUserImputSoft'],
-              volt: maps[i]['volt'],
-              amper: maps[i]['amper'],
-              temp: maps[i]['temp'],
-              fechaCargaAPP: maps[i]['fechaCargaAPP']);
-        },
-      );
-    }
-
-    _pozosemblles = await _getPozosEmbllesSQLite();
-
-    if (_pozosemblles.length > 0) {
+    if (_medicionesCab.length > 0) {
       setState(() {
-        colorControlDePozoEMBLLE = Colors.green;
-      });
-
-      setState(() {
-        _showLoader = false;
+        colorMedicionesCab = Colors.green;
       });
     }
+
+    setState(() {
+      _showLoader = false;
+    });
   }
 }
