@@ -52,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
   List<PozosControle> _pozoscontrolesApi = [];
   List<PozosControle> _pozoscontroles = [];
   List<MedicionCabecera> _medicionesCab = [];
+  List<MedicionCabecera> _medicionesCabCompleta = [];
 
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
@@ -64,14 +65,13 @@ class _LoginScreenState extends State<LoginScreen> {
       causanteC: '',
       habilitaPaqueteria: 0);
 
-  String _email = 'arivas';
+  String _email = 'test';
   String _emailError = '';
   bool _emailShowError = false;
   bool _hayInternet = false;
-  String _password = 'ari193';
+  String _password = 'test';
   String _passwordError = '';
   bool _passwordShowError = false;
-  bool _rememberme = true;
   bool _passwordShow = false;
 
   bool _showLoader = false;
@@ -264,31 +264,68 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _showButtons() {
     return Container(
       margin: EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Expanded(
-            child: ElevatedButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.login),
-                  SizedBox(
-                    width: 20,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.login),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text('Iniciar Sesión'),
+                    ],
                   ),
-                  Text('Iniciar Sesión'),
-                ],
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xFF9a6a2e),
-                minimumSize: Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF9a6a2e),
+                    minimumSize: Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  onPressed: () => _login(),
                 ),
               ),
-              onPressed: () => _login(),
-            ),
+            ],
           ),
+          SizedBox(
+            height: 15,
+          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: ElevatedButton(
+          //         child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             Icon(Icons.delete),
+          //             SizedBox(
+          //               width: 20,
+          //             ),
+          //             Text(
+          //               'Borrar mediciones locales',
+          //               style: TextStyle(color: Colors.white),
+          //             ),
+          //           ],
+          //         ),
+          //         style: ElevatedButton.styleFrom(
+          //           primary: Colors.red,
+          //           minimumSize: Size(double.infinity, 50),
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(5),
+          //           ),
+          //         ),
+          //         onPressed: () => _deleteMedicionesLocales(),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -298,6 +335,84 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _passwordShow = false;
     });
+
+    if (_areas.length == 0) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message:
+              "La tabla Areas local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      SystemNavigator.pop();
+      return;
+    }
+
+    if (_yacimientos.length == 0) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message:
+              "La tabla Yacimientos local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      SystemNavigator.pop();
+      return;
+    }
+
+    if (_baterias.length == 0) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message:
+              "La tabla Baterías local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      SystemNavigator.pop();
+      return;
+    }
+
+    if (_pozos.length == 0) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message:
+              "La tabla Pozos local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      SystemNavigator.pop();
+      return;
+    }
+
+    if (_pozosformulas.length == 0) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message:
+              "La tabla Pozos Formulas local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      SystemNavigator.pop();
+      return;
+    }
+
+    if (_pozoscontroles.length == 0) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message:
+              "La tabla Pozos Controles local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      SystemNavigator.pop();
+      return;
+    }
 
     if (!validateFields()) {
       return;
@@ -687,9 +802,39 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _getTablaMedicionesCab() async {
-    _medicionesCab = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCabCompleta.forEach((medicion) {
+      if (medicion.userIdInput == _usuarioLogueado.idUser) {
+        _medicionesCab.add(medicion);
+      }
+    });
+    _medicionesCab.sort((b, a) {
+      return a.fecha
+          .toString()
+          .toLowerCase()
+          .compareTo(b.fecha.toString().toLowerCase());
+    });
     setState(() {
       _showLoader = false;
     });
+  }
+
+  _deleteMedicionesLocales() async {
+    var response = await showAlertDialog(
+        context: context,
+        title: 'Confirmación',
+        message:
+            '¿Está seguro de borrar las mediciones locales que hay en este teléfono',
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: 'si', label: 'SI'),
+          AlertDialogAction(key: 'no', label: 'NO'),
+        ]);
+    if (response == 'no') {
+      return;
+    }
+    _medicionesCab.forEach((element) {
+      DBMedicionesCabecera.delete(element);
+    });
+    return;
   }
 }

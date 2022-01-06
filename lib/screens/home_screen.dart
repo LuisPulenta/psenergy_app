@@ -2,11 +2,15 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:psenergy_app/components/loader_component.dart';
 import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/helpers/constants.dart';
+import 'package:psenergy_app/helpers/dbmedicionescabecera_helper.dart';
 import 'package:psenergy_app/models/area.dart';
 import 'package:psenergy_app/models/bateria.dart';
+import 'package:psenergy_app/models/medicioncabecera.dart';
 import 'package:psenergy_app/models/pozo.dart';
 import 'package:psenergy_app/models/pozoscontrole.dart';
 import 'package:psenergy_app/models/pozosformula.dart';
@@ -56,10 +60,63 @@ class _HomeScreenState extends State<HomeScreen>
       causanteC: '',
       habilitaPaqueteria: 0);
 
+  String _password = '';
+  String _result2 = "no";
+  String _passwordError = '';
+  bool _passwordShowError = false;
+  bool _passwordShow = false;
+
+  MedicionCabecera medicionSelected = new MedicionCabecera(
+      idControlPozo: 0,
+      bateria: '',
+      pozo: '',
+      fecha: '',
+      ql: 0,
+      qo: 0,
+      qw: 0,
+      qg: 0,
+      wcLibre: 0,
+      wcEmulc: 0,
+      wcTotal: 0,
+      sales: 0,
+      gor: 0,
+      t: 0,
+      validacionControl: '',
+      prTbg: 0,
+      prLinea: 0,
+      prCsg: 0,
+      regimenOperacion: 0,
+      aibCarrera: 0,
+      bespip: 0,
+      pcpTorque: 0,
+      observaciones: '',
+      validadoSupervisor: 0,
+      userIdInput: 0,
+      userIDValida: 0,
+      caudalInstantaneo: 0,
+      caudalMedio: 0,
+      lecturaAcumulada: 0,
+      presionBDP: 0,
+      presionAntFiltro: 0,
+      presionEC: 0,
+      ingresoDatos: '',
+      reenvio: 0,
+      muestra: '',
+      fechaCarga: '',
+      idUserValidaMuestra: 0,
+      idUserImputSoft: 0,
+      volt: 0,
+      amper: 0,
+      temp: 0,
+      fechaCargaAPP: '',
+      enviado: 0);
+
   bool _showLoader = false;
   String _conectadodesde = '';
   String _validohasta = '';
   String _ultimaactualizacion = '';
+  List<MedicionCabecera> _medicionesCab = [];
+  List<MedicionCabecera> _medicionesCabCompleta = [];
 
   String _areaSelected = 'Seleccione un Área...';
   String _areaError = '';
@@ -161,217 +218,263 @@ class _HomeScreenState extends State<HomeScreen>
                   backgroundColor: Color(0xff9a6a2e),
                 ),
                 Center(
-                  child: Text("Chau"),
+                  child: _getContent(),
                 ),
               ],
             ),
-            Column(
-              children: [
-                AppBar(
-                  title: (Text("Información")),
-                  centerTitle: true,
-                  backgroundColor: Color(0xff9a6a2e),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(children: [
-                    Center(
-                      child: Text(
-                        _user.usrlogin.toUpperCase(),
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        _user.apellidonombre,
-                        style: TextStyle(
-                          fontSize: 25,
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  AppBar(
+                    title: (Text("Información")),
+                    centerTitle: true,
+                    backgroundColor: Color(0xff9a6a2e),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(children: [
+                      Center(
+                        child: Text(
+                          _user.usrlogin.toUpperCase(),
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            "Conectado desde:",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                      Center(
+                        child: Text(
+                          _user.apellidonombre,
+                          style: TextStyle(
+                            fontSize: 25,
                           ),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            _conectadodesde == ''
-                                ? ''
-                                : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_conectadodesde))}',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            "Válido hasta:",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            _validohasta == ''
-                                ? ''
-                                : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_validohasta))}',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            "Ultima actualización de Usuarios:",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            _ultimaactualizacion == ''
-                                ? ''
-                                : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_ultimaactualizacion))}',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            "Versión:",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Text(
-                            Constants.version,
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    ElevatedButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
                         children: [
-                          Icon(Icons.password),
-                          SizedBox(
-                            width: 15,
+                          Container(
+                            child: Text(
+                              "Conectado desde:",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          Text('ACTUALIZAR CONTRASEÑA'),
                         ],
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF9a6a2e),
-                        minimumSize: Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      onPressed: () => _actualizarPassword(),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    ElevatedButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Row(
                         children: [
-                          Icon(Icons.keyboard),
-                          SizedBox(
-                            width: 15,
+                          Container(
+                            child: Text(
+                              _conectadodesde == ''
+                                  ? ''
+                                  : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_conectadodesde))}',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
                           ),
-                          Text('CONTACTO KEYPRESS'),
                         ],
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF9a6a2e),
-                        minimumSize: Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+                      SizedBox(
+                        height: 15,
                       ),
-                      onPressed: () => _contacto(),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    ElevatedButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Row(
                         children: [
-                          Icon(Icons.exit_to_app),
-                          SizedBox(
-                            width: 15,
+                          Container(
+                            child: Text(
+                              "Válido hasta:",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          Text('CERRAR SESION'),
                         ],
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF9a6a2e),
-                        minimumSize: Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            child: Text(
+                              _validohasta == ''
+                                  ? ''
+                                  : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_validohasta))}',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      onPressed: () => _logOut(),
-                    ),
-                  ]),
-                ),
-              ],
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            child: Text(
+                              "Ultima actualización de Usuarios:",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            child: Text(
+                              _ultimaactualizacion == ''
+                                  ? ''
+                                  : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_ultimaactualizacion))}',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            child: Text(
+                              "Versión:",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            child: Text(
+                              Constants.version,
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      ElevatedButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.password),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text('ACTUALIZAR CONTRASEÑA'),
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF9a6a2e),
+                          minimumSize: Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        onPressed: () => _actualizarPassword(),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      ElevatedButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.delete),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text('BORRAR MEDICIONES LOCALES'),
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.red,
+                          minimumSize: Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        onPressed: () async {
+                          _password = '';
+                          _result2 = "no";
+                          await _borrarMedicionesLocales();
+                          if (_result2 == 'yes') {
+                            _medicionesCabCompleta =
+                                await DBMedicionesCabecera.medicionescabecera();
+                            _medicionesCab = [];
+                            _medicionesCabCompleta.forEach((medicion) {
+                              if (medicion.userIdInput == widget.user.idUser) {
+                                _medicionesCab.add(medicion);
+                              }
+                            });
+                            _medicionesCab.sort((b, a) {
+                              return a.fecha
+                                  .toString()
+                                  .toLowerCase()
+                                  .compareTo(b.fecha.toString().toLowerCase());
+                            });
+                          }
+                          setState(() {});
+                        },
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      ElevatedButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.keyboard),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text('CONTACTO KEYPRESS'),
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF9a6a2e),
+                          minimumSize: Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        onPressed: () => _contacto(),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      ElevatedButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.exit_to_app),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text('CERRAR SESION'),
+                          ],
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF9a6a2e),
+                          minimumSize: Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        onPressed: () => _logOut(),
+                      ),
+                    ]),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -463,6 +566,18 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _loadData() async {
     await _getAreas();
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCabCompleta.forEach((medicion) {
+      if (medicion.userIdInput == widget.user.idUser) {
+        _medicionesCab.add(medicion);
+      }
+    });
+    _medicionesCab.sort((b, a) {
+      return a.fecha
+          .toString()
+          .toLowerCase()
+          .compareTo(b.fecha.toString().toLowerCase());
+    });
   }
 
   Future<Null> _getAreas() async {
@@ -657,7 +772,7 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      margin: EdgeInsets.all(10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -710,7 +825,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _goQuestionPozo(Pozo pozo) async {
-    await Navigator.push(
+    String? result = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => MedicionScreen(
@@ -719,6 +834,319 @@ class _HomeScreenState extends State<HomeScreen>
                   pozosformulas: widget.pozosformulas,
                   pozoscontroles: widget.pozoscontroles,
                 )));
+    if (result == 'yes') {
+      _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+      _medicionesCab = [];
+      _medicionesCabCompleta.forEach((medicion) {
+        if (medicion.userIdInput == widget.user.idUser) {
+          _medicionesCab.add(medicion);
+        }
+      });
+      _medicionesCab.sort((b, a) {
+        return a.fecha
+            .toString()
+            .toLowerCase()
+            .compareTo(b.fecha.toString().toLowerCase());
+      });
+    }
+    setState(() {});
+  }
+
+  Widget _getContent() {
+    return _medicionesCab.length == 0 ? _noContent2() : _getListView();
+  }
+
+  Widget _getListView() {
+    return Container(
+      height: 550,
+      child: ListView(
+        scrollDirection: Axis.vertical,
+        children: _medicionesCab.map((e) {
+          return Card(
+            color: Color(0xFFC7C7C8),
+            shadowColor: Colors.white,
+            elevation: 10,
+            margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+            child: InkWell(
+              onTap: () {
+                medicionSelected = e;
+                _goInfoMedicion(e);
+              },
+              child: Container(
+                margin: EdgeInsets.all(0),
+                padding: EdgeInsets.all(0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            e.enviado == 1
+                                ? Icon(Icons.done_all, color: Colors.green)
+                                : e.enviado == 0
+                                    ? Icon(Icons.done, color: Colors.grey)
+                                    : Icon(Icons.done, color: Colors.red),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text("N° Med.: ",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF781f1e),
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                Text("Batería: ",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF781f1e),
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                e.fechaCargaAPP == ""
+                                    ? Container()
+                                    : Text("Fec. sub.:",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFF781f1e),
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(e.idControlPozo.toString(),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    )),
+                                Text(e.bateria,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    )),
+                                e.fechaCargaAPP == ""
+                                    ? Container()
+                                    : Text(
+                                        //e.fechaCargaAPP,
+                                        '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fechaCargaAPP!))}',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                        ))
+                              ],
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text("Fecha: ",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF781f1e),
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                Text("Pozo: ",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF781f1e),
+                                      fontWeight: FontWeight.bold,
+                                    ))
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                    '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fecha))}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    )),
+                                Text(e.pozo,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Future<void> _getMediciones() async {
+    setState(() {
+      _showLoader = true;
+    });
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCabCompleta.forEach((medicion) {
+      if (medicion.userIdInput == widget.user.idUser) {
+        _medicionesCab.add(medicion);
+      }
+    });
+    _medicionesCab.sort((b, a) {
+      return a.fecha
+          .toString()
+          .toLowerCase()
+          .compareTo(b.fecha.toString().toLowerCase());
+    });
+    setState(() {
+      _showLoader = false;
+    });
+  }
+
+  void _goInfoMedicion(MedicionCabecera e) {}
+
+  _borrarMedicionesLocales() async {
+    // context: context,
+    //     title: 'Error',
+    //     message: 'Verifica que estés conectado a Internet',
+    //     actions: <AlertDialogAction>[
+    //       AlertDialogAction(key: null, label: 'Aceptar'),
+    //     ]);
+
+    await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      "Atención!!",
+                      style: TextStyle(color: Colors.red, fontSize: 20),
+                    ),
+                  ],
+                ),
+                content: SizedBox(
+                  height: 150,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Para borrar las mediciones locales de su Usuario debe escribir su contraseña",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      Text(""),
+                      TextField(
+                        obscureText: !_passwordShow,
+                        decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'Contraseña...',
+                            labelText: 'Contraseña',
+                            errorText:
+                                _passwordShowError ? _passwordError : null,
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: _passwordShow
+                                  ? Icon(Icons.visibility)
+                                  : Icon(Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordShow = !_passwordShow;
+                                });
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                        onChanged: (value) {
+                          _password = value;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  ElevatedButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.delete),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text('BORRAR'),
+                      ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      minimumSize: Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_password.toLowerCase() !=
+                          widget.user.usrcontrasena.toLowerCase()) {
+                        _passwordShowError = true;
+                        _passwordError = 'Contraseña incorrecta';
+                        setState(() {});
+                      } else {
+                        _medicionesCab.forEach((element) {
+                          if (element.userIdInput == widget.user.idUser) {
+                            DBMedicionesCabecera.delete(element);
+                          }
+                        });
+                        _medicionesCab = [];
+                        setState(() {});
+                        _result2 = "yes";
+                        Navigator.pop(context, 'yes');
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.cancel),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text('CANCELAR'),
+                      ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF9a6a2e),
+                      minimumSize: Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    onPressed: () {
+                      _passwordShowError = false;
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+                shape: Border.all(
+                    color: Colors.red, width: 5, style: BorderStyle.solid),
+                backgroundColor: Colors.white,
+              );
+            },
+          );
+        });
   }
 }
 
@@ -728,6 +1156,21 @@ Widget _noContent() {
       margin: EdgeInsets.all(20),
       child: Text(
         '',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _noContent2() {
+  return Center(
+    child: Container(
+      margin: EdgeInsets.all(20),
+      child: Text(
+        'No hay mediciones cargadas',
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,

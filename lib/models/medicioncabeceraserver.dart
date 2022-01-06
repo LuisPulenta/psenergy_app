@@ -1,4 +1,4 @@
-class MedicionCabecera {
+class MedicionCabeceraServer {
   int idControlPozo = 0;
   String bateria = '';
   String pozo = '';
@@ -41,9 +41,8 @@ class MedicionCabecera {
   int? amper = 0;
   int? temp = 0;
   String fechaCargaAPP = '';
-  int? enviado = 0;
 
-  MedicionCabecera(
+  MedicionCabeceraServer(
       {required this.idControlPozo,
       required this.bateria,
       required this.pozo,
@@ -85,10 +84,9 @@ class MedicionCabecera {
       required this.volt,
       required this.amper,
       required this.temp,
-      required this.fechaCargaAPP,
-      required this.enviado});
+      required this.fechaCargaAPP});
 
-  MedicionCabecera.fromJson(Map<String, dynamic> json) {
+  MedicionCabeceraServer.fromJson(Map<String, dynamic> json) {
     idControlPozo = json['idControlPozo'];
     bateria = json['bateria'];
     pozo = json['pozo'];
@@ -131,7 +129,6 @@ class MedicionCabecera {
     amper = json['amper'];
     temp = json['temp'];
     fechaCargaAPP = json['fechaCargaAPP'];
-    enviado = json['enviado'];
   }
 
   Map<String, dynamic> toJson() {
@@ -178,7 +175,6 @@ class MedicionCabecera {
     data['amper'] = this.amper;
     data['temp'] = this.temp;
     data['fechaCargaAPP'] = this.fechaCargaAPP;
-    data['enviado'] = this.enviado;
     return data;
   }
 
@@ -226,7 +222,6 @@ class MedicionCabecera {
       'amper': amper,
       'temp': temp,
       'fechaCargaAPP': fechaCargaAPP,
-      'enviado': enviado,
     };
   }
 }

@@ -7,7 +7,7 @@ class DBMedicionesCabecera {
     return openDatabase(join(await getDatabasesPath(), 'medicionescabecera.db'),
         onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE medicionescabecera(idControlPozo INTEGER PRIMARY KEY,bateria TEXT,pozo TEXT,fecha TEXT,ql INTEGER,qo INTEGER,qw INTEGER,qg INTEGER,wcLibre INTEGER,wcEmulc INTEGER,wcTotal INTEGER,sales INTEGER,gor INTEGER,t INTEGER,validacionControl TEXT,prTbg INTEGER,prLinea INTEGER,prCsg INTEGER,regimenOperacion INTEGER,aibCarrera INTEGER,bespip INTEGER,pcpTorque INTEGER,observaciones TEXT,validadoSupervisor INTEGER,userIdInput INTEGERuserIDValida INTEGER,caudalInstantaneo DOUBLE,caudalMedio DOUBLE,lecturaAcumulada INTEGER,presionBDP INTEGER,presionAntFiltro INTEGER,presionEC INTEGER,ingresoDatos TEXT,reenvio INTEGER,muestra TEXT,fechaCarga TEXT,idUserValidaMuestra INTEGER,idUserImputSoft INTEGER,volt INTEGER,amper INTEGER,temp INTEGER,fechaCargaAPP TEXT)",
+        "CREATE TABLE medicionescabecera(idControlPozo INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,bateria TEXT,pozo TEXT,fecha TEXT,ql INTEGER,qo INTEGER,qw INTEGER,qg INTEGER,wcLibre INTEGER,wcEmulc INTEGER,wcTotal INTEGER,sales INTEGER,gor INTEGER,t INTEGER,validacionControl TEXT,prTbg INTEGER,prLinea INTEGER,prCsg INTEGER,regimenOperacion INTEGER,aibCarrera INTEGER,bespip INTEGER,pcpTorque INTEGER,observaciones TEXT,validadoSupervisor INTEGER,userIdInput INTEGER, userIDValida INTEGER,caudalInstantaneo DOUBLE,caudalMedio DOUBLE,lecturaAcumulada INTEGER,presionBDP INTEGER,presionAntFiltro INTEGER,presionEC INTEGER,ingresoDatos TEXT,reenvio INTEGER,muestra TEXT,fechaCarga TEXT,idUserValidaMuestra INTEGER,idUserImputSoft INTEGER,volt INTEGER,amper INTEGER,temp INTEGER,fechaCargaAPP TEXT,enviado INTEGER)",
       );
     }, version: 1);
   }
@@ -78,6 +78,7 @@ class DBMedicionesCabecera {
               amper: medicionescabMap[i]['amper'],
               temp: medicionescabMap[i]['temp'],
               fechaCargaAPP: medicionescabMap[i]['fechaCargaAPP'],
+              enviado: medicionescabMap[i]['enviado'],
             ));
   }
 }

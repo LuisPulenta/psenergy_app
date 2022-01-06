@@ -1,8 +1,16 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:psenergy_app/components/loader_component.dart';
+import 'package:psenergy_app/helpers/api_helper.dart';
+import 'package:psenergy_app/helpers/dbmedicionescabecera_helper.dart';
+import 'package:psenergy_app/models/medicioncabecera.dart';
+import 'package:psenergy_app/models/medicioncabeceraserver.dart';
 import 'package:psenergy_app/models/pozo.dart';
 import 'package:psenergy_app/models/pozoscontrole.dart';
 import 'package:psenergy_app/models/pozosformula.dart';
+import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/models/usuario.dart';
 
 class MedicionScreen extends StatefulWidget {
@@ -22,7 +30,7 @@ class MedicionScreen extends StatefulWidget {
 }
 
 class _MedicionScreenState extends State<MedicionScreen> {
-  Pozo _pozo = new Pozo(
+  Pozo _pozo = Pozo(
       codigopozo: '',
       codigobateria: '',
       descripcion: '',
@@ -42,7 +50,9 @@ class _MedicionScreenState extends State<MedicionScreen> {
       vidaUtil: 0.0);
 
   List<PozosControle> _pozoscontroles = [];
-
+  List<MedicionCabecera> _medicionesCab = [];
+  List<MedicionCabecera> _medicionesCabCompleta = [];
+  bool _showLoader = false;
   bool _mostrarRPM = false;
   bool _mostrarTorque = false;
   bool _mostrarGPM = false;
@@ -53,6 +63,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
   bool _mostrarVolt = false;
   bool _mostrarOrificio = false;
   bool _mostrarTemperatura = false;
+  int _idMedicion = 0;
 
   String _prtbg = '';
   String _prtbgError = '';
@@ -205,144 +216,153 @@ class _MedicionScreenState extends State<MedicionScreen> {
           backgroundColor: Color(0xff9a6a2e),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(
-                      (0xffe9dac2),
-                    ),
-                    Color(
-                      (0xffd3a735),
-                    ),
-                  ],
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text("Pozo: ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF781f1e),
-                              fontWeight: FontWeight.bold,
-                            )),
-                        Expanded(
-                          child: Text(_pozo.descripcion.toString(),
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(
+                          (0xffe9dac2),
+                        ),
+                        Color(
+                          (0xffd3a735),
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      color: Color(0xFF3c2920),
-                      height: 2,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
                       children: [
-                        Text("Tipo Pozo: ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF781f1e),
-                              fontWeight: FontWeight.bold,
-                            )),
-                        Expanded(
-                          child: Text(_pozo.tipopozo.toString(),
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
+                        Row(
+                          children: [
+                            Text("Pozo: ",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFF781f1e),
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            Expanded(
+                              child: Text(_pozo.descripcion.toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ],
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Divider(
+                          color: Color(0xFF3c2920),
+                          height: 2,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text("Tipo Pozo: ",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFF781f1e),
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            Expanded(
+                              child: Text(_pozo.tipopozo.toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Divider(
+                          color: Color(0xFF3c2920),
+                          height: 2,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Text("Fecha: ",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFF781f1e),
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            Expanded(
+                              child: Text(
+                                  '${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Divider(
+                          color: Color(0xFF3c2920),
+                          height: 2,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _showprtbg(),
+                        _showprlinea(),
+                        _showprcsg(),
+                        widget.pozo.tipopozo.toLowerCase() == 'productor'
+                            ? _showql()
+                            : Container(),
+                        widget.pozo.tipopozo.toLowerCase() == 'productor'
+                            ? _showqg()
+                            : Container(),
+                        widget.pozo.tipopozo.toLowerCase() == 'productor'
+                            ? _showtiempo()
+                            : Container(),
+                        widget.pozo.tipopozo.toLowerCase() != 'productor'
+                            ? _showcaudalinst()
+                            : Container(),
+                        widget.pozo.tipopozo.toLowerCase() != 'productor'
+                            ? _showlecturaacumulada()
+                            : Container(),
+                        widget.pozo.tipopozo.toLowerCase() != 'productor'
+                            ? _showpresionantesdelfiltro()
+                            : Container(),
+                        _mostrarRPM ? _showRPM() : Container(),
+                        _mostrarTorque ? _showTorque() : Container(),
+                        _mostrarGPM ? _showGPM() : Container(),
+                        _mostrarCarrera ? _showCarrera() : Container(),
+                        _mostrarFrecuencia ? _showFrecuencia() : Container(),
+                        _mostrarPip ? _showPip() : Container(),
+                        _mostrarAmp ? _showAmp() : Container(),
+                        _mostrarVolt ? _showVolt() : Container(),
+                        _mostrarOrificio ? _showOrificio() : Container(),
+                        _mostrarTemperatura ? _showTemperatura() : Container(),
+                        _showobservaciones(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _showButton(),
                       ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      color: Color(0xFF3c2920),
-                      height: 2,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Text("Fecha: ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF781f1e),
-                              fontWeight: FontWeight.bold,
-                            )),
-                        Expanded(
-                          child: Text(
-                              '${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      color: Color(0xFF3c2920),
-                      height: 2,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    _showprtbg(),
-                    _showprlinea(),
-                    _showprcsg(),
-                    widget.pozo.tipopozo.toLowerCase() == 'productor'
-                        ? _showql()
-                        : Container(),
-                    widget.pozo.tipopozo.toLowerCase() == 'productor'
-                        ? _showqg()
-                        : Container(),
-                    widget.pozo.tipopozo.toLowerCase() == 'productor'
-                        ? _showtiempo()
-                        : Container(),
-                    widget.pozo.tipopozo.toLowerCase() != 'productor'
-                        ? _showcaudalinst()
-                        : Container(),
-                    widget.pozo.tipopozo.toLowerCase() != 'productor'
-                        ? _showlecturaacumulada()
-                        : Container(),
-                    widget.pozo.tipopozo.toLowerCase() != 'productor'
-                        ? _showpresionantesdelfiltro()
-                        : Container(),
-                    _mostrarRPM ? _showRPM() : Container(),
-                    _mostrarTorque ? _showTorque() : Container(),
-                    _mostrarGPM ? _showGPM() : Container(),
-                    _mostrarCarrera ? _showCarrera() : Container(),
-                    _mostrarFrecuencia ? _showFrecuencia() : Container(),
-                    _mostrarPip ? _showPip() : Container(),
-                    _mostrarAmp ? _showAmp() : Container(),
-                    _mostrarVolt ? _showVolt() : Container(),
-                    _mostrarOrificio ? _showOrificio() : Container(),
-                    _mostrarTemperatura ? _showTemperatura() : Container(),
-                    _showobservaciones(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _showButton(),
-                  ],
-                ),
-              )),
+                  )),
+            ),
+            _showLoader
+                ? LoaderComponent(
+                    text: 'Por favor espere...',
+                  )
+                : Container(),
+          ],
         ));
   }
 
@@ -390,6 +410,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _prtbgController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Pr Tbg...',
@@ -454,6 +475,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _prlineaController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Pr Línea...',
@@ -518,6 +540,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _prcsgController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Pr Csg...',
@@ -582,6 +605,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _qlController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Ql...',
@@ -645,7 +669,8 @@ class _MedicionScreenState extends State<MedicionScreen> {
             ),
             Expanded(
               child: TextField(
-                controller: _qlController,
+                controller: _qgController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Qg...',
@@ -710,6 +735,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _tiempoController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Tiempo...',
@@ -774,6 +800,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _gpmController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa GPM...',
@@ -838,6 +865,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _carreraController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Carrera...',
@@ -902,6 +930,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _caudalinstController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Caudal Inst...',
@@ -966,6 +995,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _lecturaacumuladaController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Lectura Acumulada...',
@@ -1032,6 +1062,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _presionantesdelfiltroController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Presión antes del filtro...',
@@ -1164,13 +1195,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _rpmController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa RPM...',
                   errorText: _rpmShowError ? _rpmError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _rpm = value;
                 },
               ),
             ),
@@ -1224,13 +1256,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _torqueController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Torque...',
                   errorText: _torqueShowError ? _torqueError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _torque = value;
                 },
               ),
             ),
@@ -1284,13 +1317,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _gpmController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa GPM...',
                   errorText: _gpmShowError ? _gpmError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _gpm = value;
                 },
               ),
             ),
@@ -1344,13 +1378,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _carreraController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Carrera...',
                   errorText: _carreraShowError ? _carreraError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _carrera = value;
                 },
               ),
             ),
@@ -1404,13 +1439,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _frecuenciaController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Frecuencia...',
                   errorText: _frecuenciaShowError ? _frecuenciaError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _frecuencia = value;
                 },
               ),
             ),
@@ -1464,13 +1500,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _pipController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Pip...',
                   errorText: _pipShowError ? _pipError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _pip = value;
                 },
               ),
             ),
@@ -1524,13 +1561,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _ampController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Amp...',
                   errorText: _ampShowError ? _ampError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _amp = value;
                 },
               ),
             ),
@@ -1584,13 +1622,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _voltController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Volt...',
                   errorText: _voltShowError ? _voltError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _volt = value;
                 },
               ),
             ),
@@ -1644,13 +1683,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _orificioController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Orificio...',
                   errorText: _orificioShowError ? _orificioError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _orificio = value;
                 },
               ),
             ),
@@ -1704,13 +1744,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
             Expanded(
               child: TextField(
                 controller: _temperaturaController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   hintText: 'Ingresa Temperatura...',
                   errorText: _temperaturaShowError ? _temperaturaError : null,
                 ),
                 onChanged: (value) {
-                  _caudalinst = value;
+                  _temperatura = value;
                 },
               ),
             ),
@@ -1752,5 +1793,323 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
-  _save() {}
+  _save() async {
+    if (!validateFields()) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: 'No ha ingresado ninguna medición',
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+    _addRecord();
+  }
+
+  bool validateFields() {
+    bool isValid = true;
+    if (_prtbg == "" &&
+        _prlinea == "" &&
+        _prcsg == "" &&
+        _ql == "" &&
+        _qg == "" &&
+        _caudalinst == "" &&
+        _lecturaacumulada == "" &&
+        _presionantesdelfiltro == "" &&
+        _observaciones == "" &&
+        _tiempo == "" &&
+        _rpm == "" &&
+        _torque == "" &&
+        _gpm == "" &&
+        _carrera == "" &&
+        _frecuencia == "" &&
+        _pip == "" &&
+        _amp == "" &&
+        _volt == "" &&
+        _orificio == "" &&
+        _temperatura == "") {
+      isValid = false;
+    }
+    setState(() {});
+    return isValid;
+  }
+
+  void _addRecord() async {
+    setState(() {
+      _showLoader = true;
+    });
+
+//********************************************************************
+//********************* GRABA MEDICION EN TABLA LOCAL ****************
+//********************************************************************
+
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCab = [];
+    _medicionesCabCompleta.forEach((medicion) {
+      if (medicion.userIdInput == widget.user.idUser) {
+        _medicionesCab.add(medicion);
+      }
+    });
+    _medicionesCab.sort((b, a) {
+      return a.fecha
+          .toString()
+          .toLowerCase()
+          .compareTo(b.fecha.toString().toLowerCase());
+    });
+    if (_medicionesCabCompleta.length == 0) {
+      _idMedicion = 1;
+    } else {
+      _idMedicion = 0;
+      _medicionesCabCompleta.forEach((element) {
+        if (element.idControlPozo > _idMedicion) {
+          _idMedicion = element.idControlPozo;
+        }
+      });
+      _idMedicion = _idMedicion + 1;
+    }
+
+    MedicionCabecera medicionCabecera = MedicionCabecera(
+        idControlPozo: _idMedicion,
+        bateria: widget.pozo.codigobateria,
+        pozo: widget.pozo.codigopozo,
+        fecha: DateTime.now().toString(),
+        ql: _ql == "" ? 0 : int.parse(_ql),
+        qo: 0,
+        qw: 0,
+        qg: _qg == "" ? 0 : int.parse(_qg),
+        wcLibre: 0,
+        wcEmulc: 0,
+        wcTotal: 0,
+        sales: 0,
+        gor: 0,
+        t: _tiempo == "" ? 0 : int.parse(_tiempo),
+        validacionControl: '',
+        prTbg: _prtbg == "" ? 0 : int.parse(_prtbg),
+        prLinea: _prlinea == "" ? 0 : int.parse(_prlinea),
+        prCsg: _prcsg == "" ? 0 : int.parse(_prcsg),
+        regimenOperacion: _frecuencia == "" ? 0 : int.parse(_frecuencia),
+        aibCarrera: _carrera == "" ? 0 : int.parse(_carrera),
+        bespip: _pip == "" ? 0 : int.parse(_pip),
+        pcpTorque: _torque == "" ? 0 : int.parse(_torque),
+        observaciones: _observaciones,
+        validadoSupervisor: 0,
+        userIdInput: widget.user.idUser,
+        userIDValida: 0,
+        caudalInstantaneo: _caudalinst == "" ? 0 : double.parse(_caudalinst),
+        caudalMedio: 0,
+        lecturaAcumulada:
+            _lecturaacumulada == "" ? 0 : int.parse(_lecturaacumulada),
+        presionBDP: _prtbg == "" ? 0 : int.parse(_prtbg),
+        presionAntFiltro: _presionantesdelfiltro == ""
+            ? 0
+            : int.parse(_presionantesdelfiltro),
+        presionEC: _prcsg == "" ? 0 : int.parse(_prcsg),
+        ingresoDatos: 'APP',
+        reenvio: 0,
+        muestra: 'NO',
+        fechaCarga: DateTime.now().toString(),
+        idUserValidaMuestra: 0,
+        idUserImputSoft: 0,
+        volt: _volt == "" ? 0 : int.parse(_volt),
+        amper: _amp == "" ? 0 : int.parse(_amp),
+        temp: _temperatura == "" ? 0 : int.parse(_temperatura),
+        fechaCargaAPP: '',
+        enviado: 0);
+
+    DBMedicionesCabecera.insertMedicionCab(medicionCabecera);
+
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCab = [];
+    _medicionesCabCompleta.forEach((medicion) {
+      if (medicion.userIdInput == widget.user.idUser) {
+        _medicionesCab.add(medicion);
+      }
+    });
+    _medicionesCab.sort((b, a) {
+      return a.fecha
+          .toString()
+          .toLowerCase()
+          .compareTo(b.fecha.toString().toLowerCase());
+    });
+    setState(() {
+      _showLoader = false;
+    });
+
+//********************************************************************
+//************ RECORRE TABLA LOCAL PARA GRABAR EN SERVIDOR ***********
+//************ Y PONER ENVIADO = 1 EN TABLA LOCAL ********************
+//********************************************************************
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      _medicionesCab.forEach((medicion) {
+        if (medicion.enviado == 0) {
+          Map<String, dynamic> request = {
+            'idControlPozo': 0,
+            'bateria': medicion.bateria,
+            'pozo': medicion.pozo,
+            'fecha': medicion.fecha,
+            'ql': medicion.ql,
+            'qo': medicion.qo,
+            'qw': medicion.qw,
+            'qg': medicion.qg,
+            'wcLibre': medicion.wcLibre,
+            'wcEmulc': medicion.wcEmulc,
+            'wcTotal': medicion.wcTotal,
+            'sales': medicion.sales,
+            'gor': medicion.gor,
+            't': medicion.t,
+            'validacionControl': medicion.validacionControl,
+            'prTbg': medicion.prTbg,
+            'prLinea': medicion.prLinea,
+            'prCsg': medicion.prCsg,
+            'regimenOperacion': medicion.regimenOperacion,
+            'aibCarrera': medicion.aibCarrera,
+            'bespip': medicion.bespip,
+            'pcpTorque': medicion.pcpTorque,
+            'observaciones': medicion.observaciones,
+            'validadoSupervisor': medicion.validadoSupervisor,
+            'userIdInput': medicion.userIdInput,
+            'userIDValida': medicion.userIDValida,
+            'caudalInstantaneo': medicion.caudalInstantaneo,
+            'caudalMedio': medicion.caudalMedio,
+            'lecturaAcumulada': medicion.lecturaAcumulada,
+            'presionBDP': medicion.presionBDP,
+            'presionAntFiltro': medicion.presionAntFiltro,
+            'presionEC': medicion.presionEC,
+            'ingresoDatos': medicion.ingresoDatos,
+            'reenvio': medicion.reenvio,
+            'muestra': medicion.muestra,
+            'fechaCarga': DateTime.now().toString(),
+            'idUserValidaMuestra': medicion.idUserValidaMuestra,
+            'idUserImputSoft': medicion.idUserImputSoft,
+            'volt': medicion.volt,
+            'amper': medicion.amper,
+            'temp': medicion.temp,
+            'fechaCargaAPP': DateTime.now().toString(),
+          };
+
+          _addRecordServer(request);
+          _poneenviado1(medicion);
+        }
+      });
+    }
+    Navigator.pop(context, 'yes');
+  }
+
+  void _addRecordServer(request) async {
+    Response response = await ApiHelper.post(
+      '/api/ControlDePozoEMBLLES',
+      request,
+    );
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+  }
+
+  void _poneenviado1(MedicionCabecera medicion) {
+    MedicionCabecera medicioncab = MedicionCabecera(
+        idControlPozo: medicion.idControlPozo,
+        bateria: medicion.bateria,
+        pozo: medicion.pozo,
+        fecha: medicion.fecha,
+        ql: medicion.ql,
+        qo: medicion.qo,
+        qw: medicion.qw,
+        qg: medicion.qg,
+        wcLibre: medicion.wcLibre,
+        wcEmulc: medicion.wcEmulc,
+        wcTotal: medicion.wcTotal,
+        sales: medicion.sales,
+        gor: medicion.gor,
+        t: medicion.t,
+        validacionControl: medicion.validacionControl,
+        prTbg: medicion.prTbg,
+        prLinea: medicion.prLinea,
+        prCsg: medicion.prCsg,
+        regimenOperacion: medicion.regimenOperacion,
+        aibCarrera: medicion.aibCarrera,
+        bespip: medicion.bespip,
+        pcpTorque: medicion.pcpTorque,
+        observaciones: medicion.observaciones,
+        validadoSupervisor: medicion.validadoSupervisor,
+        userIdInput: medicion.userIdInput,
+        userIDValida: medicion.userIDValida,
+        caudalInstantaneo: medicion.caudalInstantaneo,
+        caudalMedio: medicion.caudalMedio,
+        lecturaAcumulada: medicion.lecturaAcumulada,
+        presionBDP: medicion.presionBDP,
+        presionAntFiltro: medicion.presionAntFiltro,
+        presionEC: medicion.presionEC,
+        ingresoDatos: medicion.ingresoDatos,
+        reenvio: medicion.reenvio,
+        muestra: medicion.muestra,
+        fechaCarga: DateTime.now().toIso8601String(),
+        idUserValidaMuestra: medicion.idUserValidaMuestra,
+        idUserImputSoft: medicion.idUserImputSoft,
+        volt: medicion.volt,
+        amper: medicion.amper,
+        temp: medicion.temp,
+        fechaCargaAPP: DateTime.now().toIso8601String(),
+        enviado: 1);
+    DBMedicionesCabecera.update(medicioncab);
+  }
+
+  void _poneenviado2(MedicionCabecera medicion) {
+    MedicionCabecera medicioncab = MedicionCabecera(
+        idControlPozo: medicion.idControlPozo,
+        bateria: medicion.bateria,
+        pozo: medicion.pozo,
+        fecha: medicion.fecha,
+        ql: medicion.ql,
+        qo: medicion.qo,
+        qw: medicion.qw,
+        qg: medicion.qg,
+        wcLibre: medicion.wcLibre,
+        wcEmulc: medicion.wcEmulc,
+        wcTotal: medicion.wcTotal,
+        sales: medicion.sales,
+        gor: medicion.gor,
+        t: medicion.t,
+        validacionControl: medicion.validacionControl,
+        prTbg: medicion.prTbg,
+        prLinea: medicion.prLinea,
+        prCsg: medicion.prCsg,
+        regimenOperacion: medicion.regimenOperacion,
+        aibCarrera: medicion.aibCarrera,
+        bespip: medicion.bespip,
+        pcpTorque: medicion.pcpTorque,
+        observaciones: medicion.observaciones,
+        validadoSupervisor: medicion.validadoSupervisor,
+        userIdInput: medicion.userIdInput,
+        userIDValida: medicion.userIDValida,
+        caudalInstantaneo: medicion.caudalInstantaneo,
+        caudalMedio: medicion.caudalMedio,
+        lecturaAcumulada: medicion.lecturaAcumulada,
+        presionBDP: medicion.presionBDP,
+        presionAntFiltro: medicion.presionAntFiltro,
+        presionEC: medicion.presionEC,
+        ingresoDatos: medicion.ingresoDatos,
+        reenvio: medicion.reenvio,
+        muestra: medicion.muestra,
+        fechaCarga: medicion.fechaCarga,
+        idUserValidaMuestra: medicion.idUserValidaMuestra,
+        idUserImputSoft: medicion.idUserImputSoft,
+        volt: medicion.volt,
+        amper: medicion.amper,
+        temp: medicion.temp,
+        fechaCargaAPP: medicion.fechaCargaAPP,
+        enviado: 2);
+    DBMedicionesCabecera.update(medicioncab);
+  }
 }
