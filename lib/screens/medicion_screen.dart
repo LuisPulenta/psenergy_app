@@ -16,12 +16,14 @@ import 'package:psenergy_app/models/usuario.dart';
 class MedicionScreen extends StatefulWidget {
   final Usuario user;
   final Pozo pozo;
+  final List<Pozo> pozos;
   final List<PozosFormula> pozosformulas;
   final List<PozosControle> pozoscontroles;
 
   MedicionScreen(
       {required this.user,
       required this.pozo,
+      required this.pozos,
       required this.pozosformulas,
       required this.pozoscontroles});
 
@@ -1991,8 +1993,35 @@ class _MedicionScreenState extends State<MedicionScreen> {
             'fechaCargaAPP': DateTime.now().toString(),
           };
 
+          widget.pozos.forEach((pozo) {
+            if (pozo.codigopozo == medicion.pozo) {
+              _pozo = pozo;
+            }
+          });
+
+          Map<String, dynamic> request2 = {
+            'codigopozo': _pozo.codigopozo,
+            'codigobateria': _pozo.codigobateria,
+            'descripcion': _pozo.descripcion,
+            'fechaalta': _pozo.fechaalta,
+            'activo': _pozo.activo,
+            'ultimalectura': _pozo.ultimalectura,
+            'latitud': _pozo.latitud,
+            'longitud': _pozo.longitud,
+            'qrcode': _pozo.qrcode,
+            'observaciones': _pozo.observaciones,
+            'tipopozo': _pozo.tipopozo,
+            'sistemaExtraccion': _pozo.sistemaExtraccion,
+            'cuenca': _pozo.cuenca,
+            'idProvincia': _pozo.idProvincia,
+            'cota': _pozo.cota,
+            'profundidad': _pozo.profundidad,
+            'vidaUtil': _pozo.vidaUtil,
+          };
+
           _addRecordServer(request);
           _poneenviado1(medicion);
+          _ponefechaultimalectura(request2);
         }
       });
     }
@@ -2004,6 +2033,22 @@ class _MedicionScreenState extends State<MedicionScreen> {
       '/api/ControlDePozoEMBLLES',
       request,
     );
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+  }
+
+  void _ponefechaultimalectura(request2) async {
+    Response response =
+        await ApiHelper.put('/api/Pozo/', _pozo.codigopozo, request2);
 
     if (!response.isSuccess) {
       await showAlertDialog(

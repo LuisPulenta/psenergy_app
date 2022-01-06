@@ -831,6 +831,7 @@ class _HomeScreenState extends State<HomeScreen>
             builder: (context) => MedicionScreen(
                   user: widget.user,
                   pozo: _pozoSelected,
+                  pozos: widget.pozos,
                   pozosformulas: widget.pozosformulas,
                   pozoscontroles: widget.pozoscontroles,
                 )));
