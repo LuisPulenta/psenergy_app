@@ -46,7 +46,7 @@ class ApiHelper {
       return Response(isSuccess: false, message: response.body);
     }
 
-    return Response(isSuccess: true);
+    return Response(isSuccess: true, result: response.body);
   }
 
   static Future<Response> delete(String controller, String id) async {

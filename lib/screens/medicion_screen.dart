@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +54,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
       vidaUtil: 0.0);
 
   List<PozosControle> _pozoscontroles = [];
+  List<PozosControle> _pozoscontrolesselected = [];
   List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
   bool _showLoader = false;
@@ -66,6 +69,8 @@ class _MedicionScreenState extends State<MedicionScreen> {
   bool _mostrarOrificio = false;
   bool _mostrarTemperatura = false;
   int _idMedicion = 0;
+  int _idCab = 0;
+  double _valor = 0;
 
   String _prtbg = '';
   String _prtbgError = '';
@@ -1876,24 +1881,24 @@ class _MedicionScreenState extends State<MedicionScreen> {
         bateria: widget.pozo.codigobateria,
         pozo: widget.pozo.codigopozo,
         fecha: DateTime.now().toString(),
-        ql: _ql == "" ? 0 : int.parse(_ql),
+        ql: _ql == "" ? 0 : double.parse(_ql),
         qo: 0,
         qw: 0,
-        qg: _qg == "" ? 0 : int.parse(_qg),
+        qg: _qg == "" ? 0 : double.parse(_qg),
         wcLibre: 0,
         wcEmulc: 0,
         wcTotal: 0,
         sales: 0,
         gor: 0,
-        t: _tiempo == "" ? 0 : int.parse(_tiempo),
+        t: _tiempo == "" ? 0 : double.parse(_tiempo),
         validacionControl: '',
-        prTbg: _prtbg == "" ? 0 : int.parse(_prtbg),
-        prLinea: _prlinea == "" ? 0 : int.parse(_prlinea),
-        prCsg: _prcsg == "" ? 0 : int.parse(_prcsg),
-        regimenOperacion: _frecuencia == "" ? 0 : int.parse(_frecuencia),
-        aibCarrera: _carrera == "" ? 0 : int.parse(_carrera),
-        bespip: _pip == "" ? 0 : int.parse(_pip),
-        pcpTorque: _torque == "" ? 0 : int.parse(_torque),
+        prTbg: _prtbg == "" ? 0 : double.parse(_prtbg),
+        prLinea: _prlinea == "" ? 0 : double.parse(_prlinea),
+        prCsg: _prcsg == "" ? 0 : double.parse(_prcsg),
+        regimenOperacion: _frecuencia == "" ? 0 : double.parse(_frecuencia),
+        aibCarrera: _carrera == "" ? 0 : double.parse(_carrera),
+        bespip: _pip == "" ? 0 : double.parse(_pip),
+        pcpTorque: _torque == "" ? 0 : double.parse(_torque),
         observaciones: _observaciones,
         validadoSupervisor: 0,
         userIdInput: widget.user.idUser,
@@ -1901,21 +1906,21 @@ class _MedicionScreenState extends State<MedicionScreen> {
         caudalInstantaneo: _caudalinst == "" ? 0 : double.parse(_caudalinst),
         caudalMedio: 0,
         lecturaAcumulada:
-            _lecturaacumulada == "" ? 0 : int.parse(_lecturaacumulada),
-        presionBDP: _prtbg == "" ? 0 : int.parse(_prtbg),
+            _lecturaacumulada == "" ? 0 : double.parse(_lecturaacumulada),
+        presionBDP: _prtbg == "" ? 0 : double.parse(_prtbg),
         presionAntFiltro: _presionantesdelfiltro == ""
             ? 0
-            : int.parse(_presionantesdelfiltro),
-        presionEC: _prcsg == "" ? 0 : int.parse(_prcsg),
+            : double.parse(_presionantesdelfiltro),
+        presionEC: _prcsg == "" ? 0 : double.parse(_prcsg),
         ingresoDatos: 'APP',
         reenvio: 0,
         muestra: 'NO',
         fechaCarga: DateTime.now().toString(),
         idUserValidaMuestra: 0,
         idUserImputSoft: 0,
-        volt: _volt == "" ? 0 : int.parse(_volt),
-        amper: _amp == "" ? 0 : int.parse(_amp),
-        temp: _temperatura == "" ? 0 : int.parse(_temperatura),
+        volt: _volt == "" ? 0 : double.parse(_volt),
+        amper: _amp == "" ? 0 : double.parse(_amp),
+        temp: _temperatura == "" ? 0 : double.parse(_temperatura),
         fechaCargaAPP: '',
         enviado: 0);
 
@@ -2019,16 +2024,18 @@ class _MedicionScreenState extends State<MedicionScreen> {
             'vidaUtil': _pozo.vidaUtil,
           };
 
-          _addRecordServer(request);
+          _addRecordServer(request, medicion);
           _poneenviado1(medicion);
           _ponefechaultimalectura(request2);
+          //_addRecordsDetallesServer(medicion);
         }
       });
     }
     Navigator.pop(context, 'yes');
   }
 
-  void _addRecordServer(request) async {
+  void _addRecordServer(request, medicion) async {
+    _idCab = 0;
     Response response = await ApiHelper.post(
       '/api/ControlDePozoEMBLLES',
       request,
@@ -2044,6 +2051,12 @@ class _MedicionScreenState extends State<MedicionScreen> {
           ]);
       return;
     }
+
+    var body = response.result;
+    var decodedJson = jsonDecode(body);
+    var medicioncab = MedicionCabecera.fromJson(decodedJson);
+    _idCab = medicioncab.idControlPozo;
+    _addRecordsDetallesServer(medicion);
   }
 
   void _ponefechaultimalectura(request2) async {
@@ -2156,5 +2169,69 @@ class _MedicionScreenState extends State<MedicionScreen> {
         fechaCargaAPP: medicion.fechaCargaAPP,
         enviado: 2);
     DBMedicionesCabecera.update(medicioncab);
+  }
+
+  void _addRecordsDetallesServer(MedicionCabecera medicion) async {
+    List<PozosControle> _pozoscontrolesselected = [];
+    widget.pozoscontroles.forEach((pozoscontrol) {
+      if (pozoscontrol.codigopozo == medicion.pozo) {
+        _pozoscontrolesselected.add(pozoscontrol);
+      }
+    });
+    if (_pozoscontrolesselected.length > 0) {
+      _pozoscontrolesselected.forEach((_pozocontrolselected) {
+        _pozocontrolselected.idformula == 1
+            ? _valor = (medicion.regimenOperacion)!.toDouble()
+            : _pozocontrolselected.idformula == 2
+                ? _valor = (medicion.pcpTorque)!.toDouble()
+                : _pozocontrolselected.idformula == 3
+                    ? _valor = (medicion.regimenOperacion)!.toDouble()
+                    : _pozocontrolselected.idformula == 4
+                        ? _valor = (medicion.aibCarrera)!.toDouble()
+                        : _pozocontrolselected.idformula == 5
+                            ? _valor = (medicion.regimenOperacion)!.toDouble()
+                            : _pozocontrolselected.idformula == 6
+                                ? _valor = (medicion.bespip)!.toDouble()
+                                : _pozocontrolselected.idformula == 7
+                                    ? _valor = (medicion.amper)!.toDouble()
+                                    : _pozocontrolselected.idformula == 8
+                                        ? _valor = (medicion.volt)!.toDouble()
+                                        : _pozocontrolselected.idformula == 9
+                                            ? _valor = (0.0).toDouble()
+                                            : _pozocontrolselected.idformula ==
+                                                    10
+                                                ? _valor =
+                                                    (medicion.temp)!.toDouble()
+                                                : _valor = (0.0).toDouble();
+
+        Map<String, dynamic> request3 = {
+          'idcontrolformula': 0,
+          'idcontrolcab': _idCab,
+          'idpozo': medicion.pozo,
+          'idformula': _pozocontrolselected.idformula,
+          'valor': _valor,
+          'fechaapp': DateTime.now().toString(),
+        };
+        if (_valor > 0) {
+          _grabadetalle(request3);
+        }
+      });
+    }
+  }
+
+  void _grabadetalle(Map<String, dynamic> request3) async {
+    Response response =
+        await ApiHelper.post('/api/ControlPozoValoresFormulas', request3);
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
   }
 }
