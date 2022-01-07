@@ -541,8 +541,12 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _actualizarPassword() async {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ChangePasswordScreen()));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ChangePasswordScreen(
+                  user: widget.user,
+                )));
   }
 
   void _logOut() async {

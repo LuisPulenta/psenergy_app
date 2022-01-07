@@ -80,13 +80,13 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _getUsuarios();
-    _getAreas();
-    _getYacimientos();
-    _getBaterias();
-    _getPozos();
-    _getPozosFormulas();
-    _getPozosControles();
-    _getMedicionesCab();
+    // _getAreas();
+    // _getYacimientos();
+    // _getBaterias();
+    // _getPozos();
+    // _getPozosFormulas();
+    // _getPozosControles();
+    // _getMedicionesCab();
   }
 
   @override
@@ -549,6 +549,7 @@ class _LoginScreenState extends State<LoginScreen> {
       SystemNavigator.pop();
       return;
     }
+    _getAreas();
   }
 
 //***************************************************************
@@ -590,6 +591,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _areas = await DBAreas.areas();
+    _getYacimientos();
   }
 
   //***************************************************************
@@ -631,6 +633,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _yacimientos = await DBYacimientos.yacimientos();
+    _getBaterias();
   }
 
 //***************************************************************
@@ -671,6 +674,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertBaterias();
     }
     _baterias = await DBBaterias.baterias();
+    _getPozos();
   }
 
 //***************************************************************
@@ -711,6 +715,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertPozos();
     }
     _pozos = await DBPozos.pozos();
+    _getPozosFormulas();
   }
 
 //***************************************************************
@@ -751,6 +756,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertPozosFormulas();
     }
     _pozosformulas = await DBPozosFormulas.pozosformulas();
+    _getPozosControles();
   }
 
 //***************************************************************
@@ -791,6 +797,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertPozosControles();
     }
     _pozoscontroles = await DBPozosControles.pozoscontroles();
+    _getMedicionesCab();
   }
 
 //***************************************************************

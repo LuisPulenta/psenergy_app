@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:psenergy_app/components/loader_component.dart';
 import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/models/response.dart';
+import 'package:psenergy_app/models/usuario.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  ChangePasswordScreen();
+  final Usuario user;
+  ChangePasswordScreen({required this.user});
 
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
@@ -207,29 +209,28 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool validateFields() {
     bool isValid = true;
 
-    if (_currentPassword.length < 6) {
+    if (_currentPassword.length < 1) {
       isValid = false;
       _currentPasswordShowError = true;
-      _currentPasswordError =
-          'Debes ingresar tu Contraseña actual de al menos 6 caracteres';
+      _currentPasswordError = 'Debes ingresar tu Contraseña actual';
     } else {
       _currentPasswordShowError = false;
     }
 
-    if (_newPassword.length < 6) {
+    if (_newPassword.length < 4) {
       isValid = false;
       _newPasswordShowError = true;
       _newPasswordError =
-          'Debes ingresar una Contraseña de al menos 6 caracteres';
+          'Debes ingresar una Contraseña de al menos 4 caracteres';
     } else {
       _newPasswordShowError = false;
     }
 
-    if (_confirmPassword.length < 6) {
+    if (_confirmPassword.length < 4) {
       isValid = false;
       _confirmPasswordShowError = true;
       _confirmPasswordError =
-          'Debes ingresar una Confirmación de Contraseña de al menos 6 caracteres';
+          'Debes ingresar una Confirmación de Contraseña de al menos 4 caracteres';
     } else {
       _confirmPasswordShowError = false;
     }
@@ -271,13 +272,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
 
     Map<String, dynamic> request = {
-      'oldPassword': _currentPassword,
-      'newPassword': _newPassword,
-      'confirm': _confirmPassword,
+      'idUser': widget.user.idUser,
+      'codigo': widget.user.codigo,
+      'apellidonombre': widget.user.apellidonombre,
+      'usrlogin': widget.user.usrlogin,
+      'usrcontrasena': _newPassword.toUpperCase(),
+      'perfil': widget.user.perfil,
+      'habilitadoWeb': widget.user.habilitadoWeb,
+      'causanteC': widget.user.causanteC,
+      'habilitaPaqueteria': widget.user.habilitaPaqueteria,
     };
 
-    Response response =
-        await ApiHelper.post('/api/Account/ChangePassword', request);
+    Response response = await ApiHelper.put(
+        '/api/Usuarios/', widget.user.idUser.toString(), request);
 
     setState(() {
       _showLoader = false;
@@ -294,6 +301,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return;
     }
 
+    widget.user.usrcontrasena = _newPassword;
     await showAlertDialog(
         context: context,
         title: 'Confirmación',
