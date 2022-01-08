@@ -175,296 +175,309 @@ class _HomeScreenState extends State<HomeScreen>
       //   centerTitle: true,
       //   backgroundColor: Color(0xff9a6a2e),
       // ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(
-                (0xffe9dac2),
-              ),
-              Color(
-                (0xffd3a735),
-              ),
-            ],
-          ),
-        ),
-        child: TabBarView(
-          controller: _tabController,
-          physics: AlwaysScrollableScrollPhysics(),
-          dragStartBehavior: DragStartBehavior.start,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                AppBar(
-                  title: (Text("Nueva medición")),
-                  centerTitle: true,
-                  backgroundColor: Color(0xff9a6a2e),
-                ),
-                _showAreas(),
-                _showYacimientos(),
-                _showBaterias(),
-                Expanded(
-                  child: _pozos.length == 0 ? _noContent() : _showPozos(),
-                )
-              ],
-            ),
-            Column(
-              children: [
-                AppBar(
-                  title: (Text("Ultimas mediciones")),
-                  centerTitle: true,
-                  backgroundColor: Color(0xff9a6a2e),
-                ),
-                Center(
-                  child: _getContent(),
-                ),
-              ],
-            ),
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  AppBar(
-                    title: (Text("Información")),
-                    centerTitle: true,
-                    backgroundColor: Color(0xff9a6a2e),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(
+                    (0xffe9dac2),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(children: [
-                      Center(
-                        child: Text(
-                          _user.usrlogin.toUpperCase(),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          _user.apellidonombre,
-                          style: TextStyle(
-                            fontSize: 25,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "Conectado desde:",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              _conectadodesde == ''
-                                  ? ''
-                                  : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_conectadodesde))}',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "Válido hasta:",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              _validohasta == ''
-                                  ? ''
-                                  : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_validohasta))}',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "Ultima actualización de Usuarios:",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              _ultimaactualizacion == ''
-                                  ? ''
-                                  : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_ultimaactualizacion))}',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "Versión:",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              Constants.version,
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      ElevatedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.password),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text('ACTUALIZAR CONTRASEÑA'),
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF9a6a2e),
-                          minimumSize: Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        onPressed: () => _actualizarPassword(),
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      ElevatedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.delete),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text('BORRAR MEDICIONES LOCALES'),
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
-                          minimumSize: Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        onPressed: () async {
-                          _password = 'TEST'; //TODO BORRAR
-                          _result2 = "no";
-                          await _borrarMedicionesLocales();
-                          if (_result2 == 'yes') {
-                            await _actualizaMedicionesCab();
-                          }
-                          setState(() {});
-                        },
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      ElevatedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.keyboard),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text('CONTACTO KEYPRESS'),
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF9a6a2e),
-                          minimumSize: Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        onPressed: () => _contacto(),
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      ElevatedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.exit_to_app),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text('CERRAR SESION'),
-                          ],
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF9a6a2e),
-                          minimumSize: Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        onPressed: () => _logOut(),
-                      ),
-                    ]),
+                  Color(
+                    (0xffd3a735),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+            child: TabBarView(
+              controller: _tabController,
+              physics: AlwaysScrollableScrollPhysics(),
+              dragStartBehavior: DragStartBehavior.start,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    AppBar(
+                      title: (Text("Nueva medición")),
+                      centerTitle: true,
+                      backgroundColor: Color(0xff9a6a2e),
+                    ),
+                    _showAreas(),
+                    _showYacimientos(),
+                    _showBaterias(),
+                    Expanded(
+                      child: _pozos.length == 0 ? _noContent() : _showPozos(),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    AppBar(
+                      title: (Text("Ultimas mediciones")),
+                      centerTitle: true,
+                      backgroundColor: Color(0xff9a6a2e),
+                    ),
+                    Center(
+                      child: _getContent(),
+                    ),
+                  ],
+                ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      AppBar(
+                        title: (Text("Información")),
+                        centerTitle: true,
+                        backgroundColor: Color(0xff9a6a2e),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(children: [
+                          Center(
+                            child: Text(
+                              _user.usrlogin.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              _user.apellidonombre,
+                              style: TextStyle(
+                                fontSize: 25,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  "Conectado desde:",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  _conectadodesde == ''
+                                      ? ''
+                                      : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_conectadodesde))}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  "Válido hasta:",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  _validohasta == ''
+                                      ? ''
+                                      : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_validohasta))}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  "Ultima actualización de Usuarios:",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  _ultimaactualizacion == ''
+                                      ? ''
+                                      : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_ultimaactualizacion))}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  "Versión:",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  Constants.version,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          ElevatedButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.password),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text('ACTUALIZAR CONTRASEÑA'),
+                              ],
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF9a6a2e),
+                              minimumSize: Size(double.infinity, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () => _actualizarPassword(),
+                          ),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          ElevatedButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.delete),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text('BORRAR MEDICIONES LOCALES'),
+                              ],
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.red,
+                              minimumSize: Size(double.infinity, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () async {
+                              _password = 'TEST'; //TODO BORRAR
+                              _result2 = "no";
+                              await _borrarMedicionesLocales();
+                              if (_result2 == 'yes') {
+                                await _actualizaMedicionesCab2();
+                              }
+                              setState(() {});
+                            },
+                          ),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          ElevatedButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.keyboard),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text('CONTACTO KEYPRESS'),
+                              ],
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF9a6a2e),
+                              minimumSize: Size(double.infinity, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () => _contacto(),
+                          ),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          ElevatedButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.exit_to_app),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text('CERRAR SESION'),
+                              ],
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF9a6a2e),
+                              minimumSize: Size(double.infinity, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () => _logOut(),
+                          ),
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _showLoader
+              ? LoaderComponent(
+                  text: 'Por favor espere...',
+                )
+              : Container(),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         child: TabBar(
@@ -816,8 +829,15 @@ class _HomeScreenState extends State<HomeScreen>
                   pozoscontroles: widget.pozoscontroles,
                 )));
     if (result == 'yes') {
+      setState(() {
+        _showLoader = true;
+      });
       await _actualizaMedicionesCab();
+      setState(() {
+        _showLoader = false;
+      });
     }
+
     setState(() {});
   }
 
@@ -1107,18 +1127,38 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _actualizaMedicionesCab() async {
-    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-    _medicionesCab = [];
-    _medicionesCabCompleta.forEach((medicion) {
-      if (medicion.userIdInput == widget.user.idUser) {
-        _medicionesCab.add(medicion);
-      }
+    return Future.delayed(Duration(seconds: 1), () async {
+      _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+      _medicionesCab = [];
+      _medicionesCabCompleta.forEach((medicion) {
+        if (medicion.userIdInput == widget.user.idUser) {
+          _medicionesCab.add(medicion);
+        }
+      });
+      _medicionesCab.sort((b, a) {
+        return a.idControlPozo
+            .toString()
+            .toLowerCase()
+            .compareTo(b.idControlPozo.toString().toLowerCase());
+      });
     });
-    _medicionesCab.sort((b, a) {
-      return a.idControlPozo
-          .toString()
-          .toLowerCase()
-          .compareTo(b.idControlPozo.toString().toLowerCase());
+  }
+
+  Future<void> _actualizaMedicionesCab2() async {
+    return Future.delayed(Duration(seconds: 0), () async {
+      _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+      _medicionesCab = [];
+      _medicionesCabCompleta.forEach((medicion) {
+        if (medicion.userIdInput == widget.user.idUser) {
+          _medicionesCab.add(medicion);
+        }
+      });
+      _medicionesCab.sort((b, a) {
+        return a.idControlPozo
+            .toString()
+            .toLowerCase()
+            .compareTo(b.idControlPozo.toString().toLowerCase());
+      });
     });
   }
 }
