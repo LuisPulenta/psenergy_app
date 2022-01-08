@@ -403,24 +403,11 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         ),
                         onPressed: () async {
-                          _password = '';
+                          _password = 'TEST'; //TODO BORRAR
                           _result2 = "no";
                           await _borrarMedicionesLocales();
                           if (_result2 == 'yes') {
-                            _medicionesCabCompleta =
-                                await DBMedicionesCabecera.medicionescabecera();
-                            _medicionesCab = [];
-                            _medicionesCabCompleta.forEach((medicion) {
-                              if (medicion.userIdInput == widget.user.idUser) {
-                                _medicionesCab.add(medicion);
-                              }
-                            });
-                            _medicionesCab.sort((b, a) {
-                              return a.fecha
-                                  .toString()
-                                  .toLowerCase()
-                                  .compareTo(b.fecha.toString().toLowerCase());
-                            });
+                            await _actualizaMedicionesCab();
                           }
                           setState(() {});
                         },
@@ -570,18 +557,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _loadData() async {
     await _getAreas();
-    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-    _medicionesCabCompleta.forEach((medicion) {
-      if (medicion.userIdInput == widget.user.idUser) {
-        _medicionesCab.add(medicion);
-      }
-    });
-    _medicionesCab.sort((b, a) {
-      return a.fecha
-          .toString()
-          .toLowerCase()
-          .compareTo(b.fecha.toString().toLowerCase());
-    });
+    await _actualizaMedicionesCab();
   }
 
   Future<Null> _getAreas() async {
@@ -840,19 +816,7 @@ class _HomeScreenState extends State<HomeScreen>
                   pozoscontroles: widget.pozoscontroles,
                 )));
     if (result == 'yes') {
-      _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-      _medicionesCab = [];
-      _medicionesCabCompleta.forEach((medicion) {
-        if (medicion.userIdInput == widget.user.idUser) {
-          _medicionesCab.add(medicion);
-        }
-      });
-      _medicionesCab.sort((b, a) {
-        return a.fecha
-            .toString()
-            .toLowerCase()
-            .compareTo(b.fecha.toString().toLowerCase());
-      });
+      await _actualizaMedicionesCab();
     }
     setState(() {});
   }
@@ -969,8 +933,7 @@ class _HomeScreenState extends State<HomeScreen>
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(
-                                    '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fecha))}',
+                                Text(e.fecha,
                                     style: TextStyle(
                                       fontSize: 12,
                                     )),
@@ -998,18 +961,7 @@ class _HomeScreenState extends State<HomeScreen>
     setState(() {
       _showLoader = true;
     });
-    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-    _medicionesCabCompleta.forEach((medicion) {
-      if (medicion.userIdInput == widget.user.idUser) {
-        _medicionesCab.add(medicion);
-      }
-    });
-    _medicionesCab.sort((b, a) {
-      return a.fecha
-          .toString()
-          .toLowerCase()
-          .compareTo(b.fecha.toString().toLowerCase());
-    });
+    await _actualizaMedicionesCab();
     setState(() {
       _showLoader = false;
     });
@@ -1152,6 +1104,22 @@ class _HomeScreenState extends State<HomeScreen>
             },
           );
         });
+  }
+
+  Future<void> _actualizaMedicionesCab() async {
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCab = [];
+    _medicionesCabCompleta.forEach((medicion) {
+      if (medicion.userIdInput == widget.user.idUser) {
+        _medicionesCab.add(medicion);
+      }
+    });
+    _medicionesCab.sort((b, a) {
+      return a.idControlPozo
+          .toString()
+          .toLowerCase()
+          .compareTo(b.idControlPozo.toString().toLowerCase());
+    });
   }
 }
 

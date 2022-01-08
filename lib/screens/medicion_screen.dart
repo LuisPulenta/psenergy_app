@@ -1850,20 +1850,8 @@ class _MedicionScreenState extends State<MedicionScreen> {
 //********************************************************************
 //********************* GRABA MEDICION EN TABLA LOCAL ****************
 //********************************************************************
+    await _actualizaMedicionesCab();
 
-    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-    _medicionesCab = [];
-    _medicionesCabCompleta.forEach((medicion) {
-      if (medicion.userIdInput == widget.user.idUser) {
-        _medicionesCab.add(medicion);
-      }
-    });
-    _medicionesCab.sort((b, a) {
-      return a.fecha
-          .toString()
-          .toLowerCase()
-          .compareTo(b.fecha.toString().toLowerCase());
-    });
     if (_medicionesCabCompleta.length == 0) {
       _idMedicion = 1;
     } else {
@@ -1880,7 +1868,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
         idControlPozo: _idMedicion,
         bateria: widget.pozo.codigobateria,
         pozo: widget.pozo.codigopozo,
-        fecha: DateTime.now().toString(),
+        fecha: DateTime.now().toString().substring(1, 10),
         ql: _ql == "" ? 0 : double.parse(_ql),
         qo: 0,
         qw: 0,
@@ -1926,19 +1914,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
 
     DBMedicionesCabecera.insertMedicionCab(medicionCabecera);
 
-    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-    _medicionesCab = [];
-    _medicionesCabCompleta.forEach((medicion) {
-      if (medicion.userIdInput == widget.user.idUser) {
-        _medicionesCab.add(medicion);
-      }
-    });
-    _medicionesCab.sort((b, a) {
-      return a.fecha
-          .toString()
-          .toLowerCase()
-          .compareTo(b.fecha.toString().toLowerCase());
-    });
+    await _actualizaMedicionesCab();
     setState(() {
       _showLoader = false;
     });
@@ -2004,29 +1980,8 @@ class _MedicionScreenState extends State<MedicionScreen> {
             }
           });
 
-          Map<String, dynamic> request2 = {
-            'codigopozo': _pozo.codigopozo,
-            'codigobateria': _pozo.codigobateria,
-            'descripcion': _pozo.descripcion,
-            'fechaalta': _pozo.fechaalta,
-            'activo': _pozo.activo,
-            'ultimalectura': _pozo.ultimalectura,
-            'latitud': _pozo.latitud,
-            'longitud': _pozo.longitud,
-            'qrcode': _pozo.qrcode,
-            'observaciones': _pozo.observaciones,
-            'tipopozo': _pozo.tipopozo,
-            'sistemaExtraccion': _pozo.sistemaExtraccion,
-            'cuenca': _pozo.cuenca,
-            'idProvincia': _pozo.idProvincia,
-            'cota': _pozo.cota,
-            'profundidad': _pozo.profundidad,
-            'vidaUtil': _pozo.vidaUtil,
-          };
-
           _addRecordServer(request, medicion);
-          _poneenviado1(medicion);
-          _ponefechaultimalectura(request2);
+
           //_addRecordsDetallesServer(medicion);
         }
       });
@@ -2042,21 +1997,15 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
 
     if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
+      _poneenviado2(medicion);
+    } else {
+      var body = response.result;
+      var decodedJson = jsonDecode(body);
+      var medicioncab = MedicionCabecera.fromJson(decodedJson);
+      _idCab = medicioncab.idControlPozo;
+      _addRecordsDetallesServer(medicion);
+      _poneenviado1(medicion);
     }
-
-    var body = response.result;
-    var decodedJson = jsonDecode(body);
-    var medicioncab = MedicionCabecera.fromJson(decodedJson);
-    _idCab = medicioncab.idControlPozo;
-    _addRecordsDetallesServer(medicion);
   }
 
   void _ponefechaultimalectura(request2) async {
@@ -2120,7 +2069,30 @@ class _MedicionScreenState extends State<MedicionScreen> {
         temp: medicion.temp,
         fechaCargaAPP: DateTime.now().toIso8601String(),
         enviado: 1);
+
     DBMedicionesCabecera.update(medicioncab);
+
+    Map<String, dynamic> request2 = {
+      'codigopozo': _pozo.codigopozo,
+      'codigobateria': _pozo.codigobateria,
+      'descripcion': _pozo.descripcion,
+      'fechaalta': _pozo.fechaalta,
+      'activo': _pozo.activo,
+      'ultimalectura': _pozo.ultimalectura,
+      'latitud': _pozo.latitud,
+      'longitud': _pozo.longitud,
+      'qrcode': _pozo.qrcode,
+      'observaciones': _pozo.observaciones,
+      'tipopozo': _pozo.tipopozo,
+      'sistemaExtraccion': _pozo.sistemaExtraccion,
+      'cuenca': _pozo.cuenca,
+      'idProvincia': _pozo.idProvincia,
+      'cota': _pozo.cota,
+      'profundidad': _pozo.profundidad,
+      'vidaUtil': _pozo.vidaUtil,
+    };
+
+    _ponefechaultimalectura(request2);
   }
 
   void _poneenviado2(MedicionCabecera medicion) {
@@ -2233,5 +2205,21 @@ class _MedicionScreenState extends State<MedicionScreen> {
           ]);
       return;
     }
+  }
+
+  Future<void> _actualizaMedicionesCab() async {
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCab = [];
+    _medicionesCabCompleta.forEach((medicion) {
+      if (medicion.userIdInput == widget.user.idUser) {
+        _medicionesCab.add(medicion);
+      }
+    });
+    _medicionesCab.sort((b, a) {
+      return a.idControlPozo
+          .toString()
+          .toLowerCase()
+          .compareTo(b.idControlPozo.toString().toLowerCase());
+    });
   }
 }

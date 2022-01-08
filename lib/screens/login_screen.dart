@@ -816,10 +816,10 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     });
     _medicionesCab.sort((b, a) {
-      return a.fecha
+      return a.idControlPozo
           .toString()
           .toLowerCase()
-          .compareTo(b.fecha.toString().toLowerCase());
+          .compareTo(b.idControlPozo.toString().toLowerCase());
     });
     setState(() {
       _showLoader = false;
