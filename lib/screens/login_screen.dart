@@ -444,7 +444,6 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString('conectadodesde', DateTime.now().toString());
     await prefs.setString(
         'validohasta', DateTime.now().add(new Duration(hours: 12)).toString());
-    await prefs.setString('ultimaactualizacion', DateTime.now().toString());
 
     Navigator.pushReplacement(
         context,
@@ -512,6 +511,8 @@ class _LoginScreenState extends State<LoginScreen> {
               .compareTo(b.idUser.toString().toLowerCase());
         });
         _hayInternet = true;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('ultimaactualizacion', DateTime.now().toString());
       }
     }
     _getTablaUsuarios();

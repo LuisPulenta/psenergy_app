@@ -925,7 +925,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fechaCargaAPP!))}',
                                         style: TextStyle(
                                           fontSize: 12,
-                                        ))
+                                        )),
                               ],
                             ),
                             SizedBox(
@@ -946,7 +946,15 @@ class _HomeScreenState extends State<HomeScreen>
                                       fontSize: 12,
                                       color: Color(0xFF781f1e),
                                       fontWeight: FontWeight.bold,
-                                    ))
+                                    )),
+                                e.fechaCargaAPP == ""
+                                    ? Container()
+                                    : Text("",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFF781f1e),
+                                          fontWeight: FontWeight.bold,
+                                        )),
                               ],
                             ),
                             Column(
@@ -960,7 +968,15 @@ class _HomeScreenState extends State<HomeScreen>
                                 Text(e.pozo,
                                     style: TextStyle(
                                       fontSize: 12,
-                                    ))
+                                    )),
+                                e.fechaCargaAPP == ""
+                                    ? Container()
+                                    : Text("",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFF781f1e),
+                                          fontWeight: FontWeight.bold,
+                                        )),
                               ],
                             ),
                           ],
@@ -1129,6 +1145,15 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> _actualizaMedicionesCab() async {
     return Future.delayed(Duration(seconds: 1), () async {
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+      _medicionesCabCompleta.forEach((medicion) {
+        if (DateTime.parse(medicion.fecha)
+            .isBefore(DateTime.now().add(Duration(days: -30)))) {
+          DBMedicionesCabecera.delete(medicion);
+        }
+      });
+
+      _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+
       _medicionesCab = [];
       _medicionesCabCompleta.forEach((medicion) {
         if (medicion.userIdInput == widget.user.idUser) {
@@ -1146,6 +1171,14 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _actualizaMedicionesCab2() async {
     return Future.delayed(Duration(seconds: 0), () async {
+      _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+      _medicionesCabCompleta.forEach((medicion) {
+        if (DateTime.parse(medicion.fecha)
+            .isBefore(DateTime.now().add(Duration(days: -30)))) {
+          DBMedicionesCabecera.delete(medicion);
+        }
+      });
+
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
       _medicionesCab = [];
       _medicionesCabCompleta.forEach((medicion) {

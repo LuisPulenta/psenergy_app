@@ -364,11 +364,11 @@ class _MedicionScreenState extends State<MedicionScreen> {
                     ),
                   )),
             ),
-            _showLoader
-                ? LoaderComponent(
-                    text: 'Por favor espere...',
-                  )
-                : Container(),
+            // _showLoader
+            //     ? LoaderComponent(
+            //         text: 'Por favor espere...',
+            //       )
+            //     : Container(),
           ],
         ));
   }
@@ -1868,7 +1868,8 @@ class _MedicionScreenState extends State<MedicionScreen> {
         idControlPozo: _idMedicion,
         bateria: widget.pozo.codigobateria,
         pozo: widget.pozo.codigopozo,
-        fecha: DateTime.now().toString().substring(1, 10),
+        fecha:
+            DateTime.now().add(Duration(days: 0)).toString().substring(0, 10),
         ql: _ql == "" ? 0 : double.parse(_ql),
         qo: 0,
         qw: 0,
@@ -2208,6 +2209,15 @@ class _MedicionScreenState extends State<MedicionScreen> {
   }
 
   Future<void> _actualizaMedicionesCab() async {
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+
+    _medicionesCabCompleta.forEach((medicion) {
+      if (DateTime.parse(medicion.fecha)
+          .isBefore(DateTime.now().add(Duration(days: -30)))) {
+        DBMedicionesCabecera.delete(medicion);
+      }
+    });
+
     _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
     _medicionesCab = [];
     _medicionesCabCompleta.forEach((medicion) {
