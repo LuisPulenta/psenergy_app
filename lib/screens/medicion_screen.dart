@@ -14,6 +14,8 @@ import 'package:psenergy_app/models/pozoscontrole.dart';
 import 'package:psenergy_app/models/pozosformula.dart';
 import 'package:psenergy_app/models/response.dart';
 import 'package:psenergy_app/models/usuario.dart';
+import 'package:psenergy_app/screens/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MedicionScreen extends StatefulWidget {
   final Usuario user;
@@ -71,6 +73,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
   int _idMedicion = 0;
   int _idCab = 0;
   double _valor = 0;
+  String _validohasta = '';
 
   String _prtbg = '';
   String _prtbgError = '';
@@ -176,6 +179,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
   @override
   void initState() {
     super.initState();
+    _getprefs();
     _pozo = widget.pozo;
     widget.pozoscontroles.forEach((pozoscontrol) {
       if (pozoscontrol.codigopozo == _pozo.codigopozo) {
@@ -1792,7 +1796,13 @@ class _MedicionScreenState extends State<MedicionScreen> {
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              onPressed: () => _save(),
+              onPressed: () {
+                if (DateTime.parse(_validohasta).isBefore(DateTime.now())) {
+                  _logOut();
+                } else {
+                  _save;
+                }
+              },
             ),
           ),
         ],
@@ -2231,5 +2241,16 @@ class _MedicionScreenState extends State<MedicionScreen> {
           .toLowerCase()
           .compareTo(b.idControlPozo.toString().toLowerCase());
     });
+  }
+
+  void _getprefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _validohasta = prefs.getString('validohasta').toString();
+    setState(() {});
+  }
+
+  void _logOut() async {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 }

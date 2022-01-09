@@ -443,7 +443,7 @@ class _LoginScreenState extends State<LoginScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('conectadodesde', DateTime.now().toString());
     await prefs.setString(
-        'validohasta', DateTime.now().add(new Duration(hours: 12)).toString());
+        'validohasta', DateTime.now().add(new Duration(minutes: 1)).toString());
 
     Navigator.pushReplacement(
         context,

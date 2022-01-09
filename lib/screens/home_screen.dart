@@ -779,7 +779,11 @@ class _HomeScreenState extends State<HomeScreen>
           child: InkWell(
             onTap: () {
               _pozoSelected = e;
-              _goQuestionPozo(e);
+              if (DateTime.parse(_validohasta).isBefore(DateTime.now())) {
+                _logOut();
+              } else {
+                _goQuestionPozo(e);
+              }
             },
             child: Container(
               margin: EdgeInsets.all(0),
