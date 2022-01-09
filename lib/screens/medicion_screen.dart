@@ -1800,7 +1800,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 if (DateTime.parse(_validohasta).isBefore(DateTime.now())) {
                   _logOut();
                 } else {
-                  _save;
+                  _save();
                 }
               },
             ),

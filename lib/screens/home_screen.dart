@@ -186,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen>
     _tabController = TabController(length: 3, vsync: this);
     _getprefs();
     _loadData();
+    _grabaMediciones();
   }
 
   @override
