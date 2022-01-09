@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/gestures.dart';
@@ -60,11 +62,32 @@ class _HomeScreenState extends State<HomeScreen>
       causanteC: '',
       habilitaPaqueteria: 0);
 
+  Pozo _pozo = Pozo(
+      codigopozo: '',
+      codigobateria: '',
+      descripcion: '',
+      fechaalta: '',
+      activo: 0,
+      ultimalectura: '',
+      latitud: '',
+      longitud: '',
+      qrcode: '',
+      observaciones: '',
+      tipopozo: '',
+      sistemaExtraccion: '',
+      cuenca: '',
+      idProvincia: 0,
+      cota: 0.0,
+      profundidad: 0.0,
+      vidaUtil: 0.0);
+
   String _password = '';
   String _result2 = "no";
   String _passwordError = '';
   bool _passwordShowError = false;
   bool _passwordShow = false;
+  int _idCab = 0;
+  double _valor = 0;
 
   MedicionCabecera medicionSelected = new MedicionCabecera(
       idControlPozo: 0,
@@ -760,12 +783,12 @@ class _HomeScreenState extends State<HomeScreen>
             },
             child: Container(
               margin: EdgeInsets.all(0),
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.all(10),
+                      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -846,149 +869,152 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _getListView() {
-    return Container(
-      height: 550,
-      child: ListView(
-        scrollDirection: Axis.vertical,
-        children: _medicionesCab.map((e) {
-          return Card(
-            color: Color(0xFFC7C7C8),
-            shadowColor: Colors.white,
-            elevation: 10,
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-            child: InkWell(
-              onTap: () {
-                medicionSelected = e;
-                _goInfoMedicion(e);
-              },
-              child: Container(
-                margin: EdgeInsets.all(0),
-                padding: EdgeInsets.all(0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            e.enviado == 1
-                                ? Icon(Icons.done_all, color: Colors.green)
-                                : e.enviado == 0
-                                    ? Icon(Icons.done, color: Colors.grey)
-                                    : Icon(Icons.done, color: Colors.red),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text("N° Med.: ",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF781f1e),
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                Text("Batería: ",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF781f1e),
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                e.fechaCargaAPP == ""
-                                    ? Container()
-                                    : Text("Fec. sub.:",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Color(0xFF781f1e),
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(e.idControlPozo.toString(),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    )),
-                                Text(e.bateria,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    )),
-                                e.fechaCargaAPP == ""
-                                    ? Container()
-                                    : Text(
-                                        //e.fechaCargaAPP,
-                                        '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fechaCargaAPP!))}',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                        )),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text("Fecha: ",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF781f1e),
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                Text("Pozo: ",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF781f1e),
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                e.fechaCargaAPP == ""
-                                    ? Container()
-                                    : Text("",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Color(0xFF781f1e),
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(e.fecha,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    )),
-                                Text(e.pozo,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    )),
-                                e.fechaCargaAPP == ""
-                                    ? Container()
-                                    : Text("",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Color(0xFF781f1e),
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                              ],
-                            ),
-                          ],
+    return RefreshIndicator(
+      onRefresh: _grabaMediciones,
+      child: Container(
+        height: 550,
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: _medicionesCab.map((e) {
+            return Card(
+              color: Color(0xFFe9dac2),
+              shadowColor: Colors.white,
+              elevation: 10,
+              margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+              child: InkWell(
+                onTap: () {
+                  medicionSelected = e;
+                  _goInfoMedicion(e);
+                },
+                child: Container(
+                  margin: EdgeInsets.all(0),
+                  padding: EdgeInsets.all(0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              e.enviado == 1
+                                  ? Icon(Icons.done_all, color: Colors.green)
+                                  : e.enviado == 0
+                                      ? Icon(Icons.done, color: Colors.grey)
+                                      : Icon(Icons.done, color: Colors.red),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("N° Med.: ",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF781f1e),
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  Text("Batería: ",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF781f1e),
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  e.fechaCargaAPP == ""
+                                      ? Container()
+                                      : Text("Fec. sub.:",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(e.idControlPozo.toString(),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      )),
+                                  Text(e.bateria,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      )),
+                                  e.fechaCargaAPP == ""
+                                      ? Container()
+                                      : Text(
+                                          //e.fechaCargaAPP,
+                                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fechaCargaAPP!))}',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Fecha: ",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF781f1e),
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  Text("Pozo: ",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF781f1e),
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  e.fechaCargaAPP == ""
+                                      ? Container()
+                                      : Text("",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(e.fecha,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      )),
+                                  Text(e.pozo,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      )),
+                                  e.fechaCargaAPP == ""
+                                      ? Container()
+                                      : Text("",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -1193,6 +1219,289 @@ class _HomeScreenState extends State<HomeScreen>
             .compareTo(b.idControlPozo.toString().toLowerCase());
       });
     });
+  }
+
+  Future<void> _grabaMediciones() async {
+    await _actualizaMedicionesCab();
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      _medicionesCab.forEach((medicion) {
+        if (medicion.enviado == 0) {
+          Map<String, dynamic> request = {
+            'idControlPozo': 0,
+            'bateria': medicion.bateria,
+            'pozo': medicion.pozo,
+            'fecha': medicion.fecha,
+            'ql': medicion.ql,
+            'qo': medicion.qo,
+            'qw': medicion.qw,
+            'qg': medicion.qg,
+            'wcLibre': medicion.wcLibre,
+            'wcEmulc': medicion.wcEmulc,
+            'wcTotal': medicion.wcTotal,
+            'sales': medicion.sales,
+            'gor': medicion.gor,
+            't': medicion.t,
+            'validacionControl': medicion.validacionControl,
+            'prTbg': medicion.prTbg,
+            'prLinea': medicion.prLinea,
+            'prCsg': medicion.prCsg,
+            'regimenOperacion': medicion.regimenOperacion,
+            'aibCarrera': medicion.aibCarrera,
+            'bespip': medicion.bespip,
+            'pcpTorque': medicion.pcpTorque,
+            'observaciones': medicion.observaciones,
+            'validadoSupervisor': medicion.validadoSupervisor,
+            'userIdInput': medicion.userIdInput,
+            'userIDValida': medicion.userIDValida,
+            'caudalInstantaneo': medicion.caudalInstantaneo,
+            'caudalMedio': medicion.caudalMedio,
+            'lecturaAcumulada': medicion.lecturaAcumulada,
+            'presionBDP': medicion.presionBDP,
+            'presionAntFiltro': medicion.presionAntFiltro,
+            'presionEC': medicion.presionEC,
+            'ingresoDatos': medicion.ingresoDatos,
+            'reenvio': medicion.reenvio,
+            'muestra': medicion.muestra,
+            'fechaCarga': DateTime.now().toString(),
+            'idUserValidaMuestra': medicion.idUserValidaMuestra,
+            'idUserImputSoft': medicion.idUserImputSoft,
+            'volt': medicion.volt,
+            'amper': medicion.amper,
+            'temp': medicion.temp,
+            'fechaCargaAPP': DateTime.now().toString(),
+          };
+
+          widget.pozos.forEach((pozo) {
+            if (pozo.codigopozo == medicion.pozo) {
+              _pozo = pozo;
+            }
+          });
+          _addRecordServer(request, medicion);
+        }
+      });
+      _actualizaMedicionesCab();
+      setState(() {});
+    }
+  }
+
+  void _addRecordServer(request, medicion) async {
+    _idCab = 0;
+    Response response = await ApiHelper.post(
+      '/api/ControlDePozoEMBLLES',
+      request,
+    );
+
+    if (!response.isSuccess) {
+      _poneenviado2(medicion);
+    } else {
+      var body = response.result;
+      var decodedJson = jsonDecode(body);
+      var medicioncab = MedicionCabecera.fromJson(decodedJson);
+      _idCab = medicioncab.idControlPozo;
+      _addRecordsDetallesServer(medicion);
+      _poneenviado1(medicion);
+    }
+  }
+
+  void _poneenviado1(MedicionCabecera medicion) {
+    MedicionCabecera medicioncab = MedicionCabecera(
+        idControlPozo: medicion.idControlPozo,
+        bateria: medicion.bateria,
+        pozo: medicion.pozo,
+        fecha: medicion.fecha,
+        ql: medicion.ql,
+        qo: medicion.qo,
+        qw: medicion.qw,
+        qg: medicion.qg,
+        wcLibre: medicion.wcLibre,
+        wcEmulc: medicion.wcEmulc,
+        wcTotal: medicion.wcTotal,
+        sales: medicion.sales,
+        gor: medicion.gor,
+        t: medicion.t,
+        validacionControl: medicion.validacionControl,
+        prTbg: medicion.prTbg,
+        prLinea: medicion.prLinea,
+        prCsg: medicion.prCsg,
+        regimenOperacion: medicion.regimenOperacion,
+        aibCarrera: medicion.aibCarrera,
+        bespip: medicion.bespip,
+        pcpTorque: medicion.pcpTorque,
+        observaciones: medicion.observaciones,
+        validadoSupervisor: medicion.validadoSupervisor,
+        userIdInput: medicion.userIdInput,
+        userIDValida: medicion.userIDValida,
+        caudalInstantaneo: medicion.caudalInstantaneo,
+        caudalMedio: medicion.caudalMedio,
+        lecturaAcumulada: medicion.lecturaAcumulada,
+        presionBDP: medicion.presionBDP,
+        presionAntFiltro: medicion.presionAntFiltro,
+        presionEC: medicion.presionEC,
+        ingresoDatos: medicion.ingresoDatos,
+        reenvio: medicion.reenvio,
+        muestra: medicion.muestra,
+        fechaCarga: DateTime.now().toIso8601String(),
+        idUserValidaMuestra: medicion.idUserValidaMuestra,
+        idUserImputSoft: medicion.idUserImputSoft,
+        volt: medicion.volt,
+        amper: medicion.amper,
+        temp: medicion.temp,
+        fechaCargaAPP: DateTime.now().toIso8601String(),
+        enviado: 1);
+
+    DBMedicionesCabecera.update(medicioncab);
+
+    Map<String, dynamic> request2 = {
+      'codigopozo': _pozo.codigopozo,
+      'codigobateria': _pozo.codigobateria,
+      'descripcion': _pozo.descripcion,
+      'fechaalta': _pozo.fechaalta,
+      'activo': _pozo.activo,
+      'ultimalectura': _pozo.ultimalectura,
+      'latitud': _pozo.latitud,
+      'longitud': _pozo.longitud,
+      'qrcode': _pozo.qrcode,
+      'observaciones': _pozo.observaciones,
+      'tipopozo': _pozo.tipopozo,
+      'sistemaExtraccion': _pozo.sistemaExtraccion,
+      'cuenca': _pozo.cuenca,
+      'idProvincia': _pozo.idProvincia,
+      'cota': _pozo.cota,
+      'profundidad': _pozo.profundidad,
+      'vidaUtil': _pozo.vidaUtil,
+    };
+
+    _ponefechaultimalectura(request2);
+  }
+
+  void _poneenviado2(MedicionCabecera medicion) {
+    MedicionCabecera medicioncab = MedicionCabecera(
+        idControlPozo: medicion.idControlPozo,
+        bateria: medicion.bateria,
+        pozo: medicion.pozo,
+        fecha: medicion.fecha,
+        ql: medicion.ql,
+        qo: medicion.qo,
+        qw: medicion.qw,
+        qg: medicion.qg,
+        wcLibre: medicion.wcLibre,
+        wcEmulc: medicion.wcEmulc,
+        wcTotal: medicion.wcTotal,
+        sales: medicion.sales,
+        gor: medicion.gor,
+        t: medicion.t,
+        validacionControl: medicion.validacionControl,
+        prTbg: medicion.prTbg,
+        prLinea: medicion.prLinea,
+        prCsg: medicion.prCsg,
+        regimenOperacion: medicion.regimenOperacion,
+        aibCarrera: medicion.aibCarrera,
+        bespip: medicion.bespip,
+        pcpTorque: medicion.pcpTorque,
+        observaciones: medicion.observaciones,
+        validadoSupervisor: medicion.validadoSupervisor,
+        userIdInput: medicion.userIdInput,
+        userIDValida: medicion.userIDValida,
+        caudalInstantaneo: medicion.caudalInstantaneo,
+        caudalMedio: medicion.caudalMedio,
+        lecturaAcumulada: medicion.lecturaAcumulada,
+        presionBDP: medicion.presionBDP,
+        presionAntFiltro: medicion.presionAntFiltro,
+        presionEC: medicion.presionEC,
+        ingresoDatos: medicion.ingresoDatos,
+        reenvio: medicion.reenvio,
+        muestra: medicion.muestra,
+        fechaCarga: medicion.fechaCarga,
+        idUserValidaMuestra: medicion.idUserValidaMuestra,
+        idUserImputSoft: medicion.idUserImputSoft,
+        volt: medicion.volt,
+        amper: medicion.amper,
+        temp: medicion.temp,
+        fechaCargaAPP: medicion.fechaCargaAPP,
+        enviado: 2);
+    DBMedicionesCabecera.update(medicioncab);
+  }
+
+  void _addRecordsDetallesServer(MedicionCabecera medicion) async {
+    List<PozosControle> _pozoscontrolesselected = [];
+    widget.pozoscontroles.forEach((pozoscontrol) {
+      if (pozoscontrol.codigopozo == medicion.pozo) {
+        _pozoscontrolesselected.add(pozoscontrol);
+      }
+    });
+    if (_pozoscontrolesselected.length > 0) {
+      _pozoscontrolesselected.forEach((_pozocontrolselected) {
+        _pozocontrolselected.idformula == 1
+            ? _valor = (medicion.regimenOperacion)!.toDouble()
+            : _pozocontrolselected.idformula == 2
+                ? _valor = (medicion.pcpTorque)!.toDouble()
+                : _pozocontrolselected.idformula == 3
+                    ? _valor = (medicion.regimenOperacion)!.toDouble()
+                    : _pozocontrolselected.idformula == 4
+                        ? _valor = (medicion.aibCarrera)!.toDouble()
+                        : _pozocontrolselected.idformula == 5
+                            ? _valor = (medicion.regimenOperacion)!.toDouble()
+                            : _pozocontrolselected.idformula == 6
+                                ? _valor = (medicion.bespip)!.toDouble()
+                                : _pozocontrolselected.idformula == 7
+                                    ? _valor = (medicion.amper)!.toDouble()
+                                    : _pozocontrolselected.idformula == 8
+                                        ? _valor = (medicion.volt)!.toDouble()
+                                        : _pozocontrolselected.idformula == 9
+                                            ? _valor = (0.0).toDouble()
+                                            : _pozocontrolselected.idformula ==
+                                                    10
+                                                ? _valor =
+                                                    (medicion.temp)!.toDouble()
+                                                : _valor = (0.0).toDouble();
+
+        Map<String, dynamic> request3 = {
+          'idcontrolformula': 0,
+          'idcontrolcab': _idCab,
+          'idpozo': medicion.pozo,
+          'idformula': _pozocontrolselected.idformula,
+          'valor': _valor,
+          'fechaapp': DateTime.now().toString(),
+        };
+        if (_valor > 0) {
+          _grabadetalle(request3);
+        }
+      });
+    }
+  }
+
+  void _ponefechaultimalectura(request2) async {
+    Response response =
+        await ApiHelper.put('/api/Pozo/', _pozo.codigopozo, request2);
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
+  }
+
+  void _grabadetalle(Map<String, dynamic> request3) async {
+    Response response =
+        await ApiHelper.post('/api/ControlPozoValoresFormulas', request3);
+
+    if (!response.isSuccess) {
+      await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: response.message,
+          actions: <AlertDialogAction>[
+            AlertDialogAction(key: null, label: 'Aceptar'),
+          ]);
+      return;
+    }
   }
 }
 
