@@ -65,11 +65,11 @@ class _LoginScreenState extends State<LoginScreen> {
       causanteC: '',
       habilitaPaqueteria: 0);
 
-  String _email = 'test';
+  String _email = '';
   String _emailError = '';
   bool _emailShowError = false;
   bool _hayInternet = false;
-  String _password = 'test';
+  String _password = '';
   String _passwordError = '';
   bool _passwordShowError = false;
   bool _passwordShow = false;
@@ -142,8 +142,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "v.1.2.1",
-                          style: TextStyle(fontSize: 20),
+                          Constants.version,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
                       ],
                     ),
@@ -443,7 +445,7 @@ class _LoginScreenState extends State<LoginScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('conectadodesde', DateTime.now().toString());
     await prefs.setString(
-        'validohasta', DateTime.now().add(new Duration(minutes: 1)).toString());
+        'validohasta', DateTime.now().add(new Duration(hours: 12)).toString());
 
     Navigator.pushReplacement(
         context,

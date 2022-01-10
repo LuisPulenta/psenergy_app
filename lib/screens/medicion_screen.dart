@@ -1879,7 +1879,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
         bateria: widget.pozo.codigobateria,
         pozo: widget.pozo.codigopozo,
         fecha:
-            DateTime.now().add(Duration(days: 0)).toString().substring(0, 10),
+            DateTime.now().add(Duration(days: -40)).toString().substring(0, 10),
         ql: _ql == "" ? 0 : double.parse(_ql),
         qo: 0,
         qw: 0,
@@ -2222,10 +2222,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
 
     _medicionesCabCompleta.forEach((medicion) {
-      if (DateTime.parse(medicion.fecha)
-          .isBefore(DateTime.now().add(Duration(days: -30)))) {
-        DBMedicionesCabecera.delete(medicion);
-      }
+      // if (DateTime.parse(medicion.fecha)
+      //     .isBefore(DateTime.now().add(Duration(days: -30)))) {
+      //   DBMedicionesCabecera.delete(medicion);
+      // }
     });
 
     _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();

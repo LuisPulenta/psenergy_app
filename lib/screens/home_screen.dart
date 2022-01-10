@@ -433,7 +433,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                             ),
                             onPressed: () async {
-                              _password = 'TEST'; //TODO BORRAR
+                              _password = '';
                               _result2 = "no";
                               await _borrarMedicionesLocales();
                               if (_result2 == 'yes') {
@@ -1204,10 +1204,10 @@ class _HomeScreenState extends State<HomeScreen>
     return Future.delayed(Duration(seconds: 0), () async {
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
       _medicionesCabCompleta.forEach((medicion) {
-        if (DateTime.parse(medicion.fecha)
-            .isBefore(DateTime.now().add(Duration(days: -30)))) {
-          DBMedicionesCabecera.delete(medicion);
-        }
+        // if (DateTime.parse(medicion.fecha)
+        //     .isBefore(DateTime.now().add(Duration(days: -30)))) {
+        //   DBMedicionesCabecera.delete(medicion);
+        // }
       });
 
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();

@@ -213,6 +213,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       isValid = false;
       _currentPasswordShowError = true;
       _currentPasswordError = 'Debes ingresar tu Contraseña actual';
+      setState(() {});
+      return isValid;
+    } else if (_currentPassword != widget.user.usrcontrasena) {
+      isValid = false;
+      _currentPasswordShowError = true;
+      _currentPasswordError = 'Contraseña incorrecta!';
+      setState(() {});
+      return isValid;
     } else {
       _currentPasswordShowError = false;
     }
@@ -222,6 +230,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       _newPasswordShowError = true;
       _newPasswordError =
           'Debes ingresar una Contraseña de al menos 4 caracteres';
+      setState(() {});
+      return isValid;
     } else {
       _newPasswordShowError = false;
     }
@@ -231,6 +241,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       _confirmPasswordShowError = true;
       _confirmPasswordError =
           'Debes ingresar una Confirmación de Contraseña de al menos 4 caracteres';
+      setState(() {});
+      return isValid;
     } else {
       _confirmPasswordShowError = false;
     }
@@ -241,6 +253,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       _confirmPasswordShowError = true;
       _newPasswordError = 'La contraseña y la confirmación no son iguales';
       _confirmPasswordError = 'La contraseña y la confirmación no son iguales';
+      setState(() {});
+      return isValid;
     } else {
       _newPasswordShowError = false;
       _confirmPasswordShowError = false;
