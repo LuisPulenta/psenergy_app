@@ -1178,7 +1178,8 @@ class _HomeScreenState extends State<HomeScreen>
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
       _medicionesCabCompleta.forEach((medicion) {
         if (DateTime.parse(medicion.fecha)
-            .isBefore(DateTime.now().add(Duration(days: -30)))) {
+                .isBefore(DateTime.now().add(Duration(days: -30))) &&
+            medicion.enviado != 0) {
           DBMedicionesCabecera.delete(medicion);
         }
       });
@@ -1204,10 +1205,11 @@ class _HomeScreenState extends State<HomeScreen>
     return Future.delayed(Duration(seconds: 0), () async {
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
       _medicionesCabCompleta.forEach((medicion) {
-        // if (DateTime.parse(medicion.fecha)
-        //     .isBefore(DateTime.now().add(Duration(days: -30)))) {
-        //   DBMedicionesCabecera.delete(medicion);
-        // }
+        if (DateTime.parse(medicion.fecha)
+                .isBefore(DateTime.now().add(Duration(days: -30))) &&
+            medicion.enviado != 0) {
+          DBMedicionesCabecera.delete(medicion);
+        }
       });
 
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
