@@ -338,83 +338,83 @@ class _LoginScreenState extends State<LoginScreen> {
       _passwordShow = false;
     });
 
-    if (_areas.length == 0) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message:
-              "La tabla Areas local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      SystemNavigator.pop();
-      return;
-    }
+    // if (_areas.length == 0) {
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Error',
+    //       message:
+    //           "La tabla Areas local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+    //       actions: <AlertDialogAction>[
+    //         AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   SystemNavigator.pop();
+    //   return;
+    // }
 
-    if (_yacimientos.length == 0) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message:
-              "La tabla Yacimientos local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      SystemNavigator.pop();
-      return;
-    }
+    // if (_yacimientos.length == 0) {
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Error',
+    //       message:
+    //           "La tabla Yacimientos local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+    //       actions: <AlertDialogAction>[
+    //         AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   SystemNavigator.pop();
+    //   return;
+    // }
 
-    if (_baterias.length == 0) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message:
-              "La tabla Baterías local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      SystemNavigator.pop();
-      return;
-    }
+    // if (_baterias.length == 0) {
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Error',
+    //       message:
+    //           "La tabla Baterías local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+    //       actions: <AlertDialogAction>[
+    //         AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   SystemNavigator.pop();
+    //   return;
+    // }
 
-    if (_pozos.length == 0) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message:
-              "La tabla Pozos local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      SystemNavigator.pop();
-      return;
-    }
+    // if (_pozos.length == 0) {
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Error',
+    //       message:
+    //           "La tabla Pozos local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+    //       actions: <AlertDialogAction>[
+    //         AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   SystemNavigator.pop();
+    //   return;
+    // }
 
-    if (_pozosformulas.length == 0) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message:
-              "La tabla Pozos Formulas local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      SystemNavigator.pop();
-      return;
-    }
+    // if (_pozosformulas.length == 0) {
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Error',
+    //       message:
+    //           "La tabla Pozos Formulas local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+    //       actions: <AlertDialogAction>[
+    //         AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   SystemNavigator.pop();
+    //   return;
+    // }
 
-    if (_pozoscontroles.length == 0) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message:
-              "La tabla Pozos Controles local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-          actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      SystemNavigator.pop();
-      return;
-    }
+    // if (_pozoscontroles.length == 0) {
+    //   await showAlertDialog(
+    //       context: context,
+    //       title: 'Error',
+    //       message:
+    //           "La tabla Pozos Controles local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
+    //       actions: <AlertDialogAction>[
+    //         AlertDialogAction(key: null, label: 'Aceptar'),
+    //       ]);
+    //   SystemNavigator.pop();
+    //   return;
+    // }
 
     if (!validateFields()) {
       return;
@@ -552,6 +552,7 @@ class _LoginScreenState extends State<LoginScreen> {
       SystemNavigator.pop();
       return;
     }
+
     _getAreas();
   }
 
