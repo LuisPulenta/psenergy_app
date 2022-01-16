@@ -180,6 +180,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
   void initState() {
     super.initState();
     _getprefs();
+
     _pozo = widget.pozo;
     widget.pozoscontroles.forEach((pozoscontrol) {
       if (pozoscontrol.codigopozo == _pozo.codigopozo) {
@@ -228,7 +229,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           centerTitle: true,
         ),
         body: Stack(
-          children: [
+          children: <Widget>[
             SingleChildScrollView(
               child: Container(
                   decoration: BoxDecoration(
@@ -248,9 +249,9 @@ class _MedicionScreenState extends State<MedicionScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
-                      children: [
+                      children: <Widget>[
                         Row(
-                          children: [
+                          children: <Widget>[
                             Text("Pozo: ",
                                 style: TextStyle(
                                   fontSize: 16,
@@ -276,7 +277,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
                           height: 10,
                         ),
                         Row(
-                          children: [
+                          children: <Widget>[
                             Text("Tipo Pozo: ",
                                 style: TextStyle(
                                   fontSize: 16,
@@ -302,7 +303,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
                           height: 10,
                         ),
                         Row(
-                          children: [
+                          children: <Widget>[
                             Text("Fecha: ",
                                 style: TextStyle(
                                   fontSize: 16,
@@ -401,43 +402,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.compress, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Pr Tgb:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _prtbgController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Pr Tbg...',
-                  errorText: _prtbgShowError ? _prtbgError : null,
-                ),
-                onChanged: (value) {
-                  _prtbg = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.compress, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Pr Tgb:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _prtbgController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Pr Tbg...',
+                errorText: _prtbgShowError ? _prtbgError : null,
               ),
+              onChanged: (value) {
+                _prtbg = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("kg/cm²"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("kg/cm²"),
+        ],
       ),
     );
   }
@@ -466,43 +465,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.compare_sharp, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Pr Línea:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _prlineaController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Pr Línea...',
-                  errorText: _prlineaShowError ? _prlineaError : null,
-                ),
-                onChanged: (value) {
-                  _prlinea = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.compare_sharp, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Pr Línea:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _prlineaController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Pr Línea...',
+                errorText: _prlineaShowError ? _prlineaError : null,
               ),
+              onChanged: (value) {
+                _prlinea = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("kg/cm²"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("kg/cm²"),
+        ],
       ),
     );
   }
@@ -531,43 +528,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.compare_arrows, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Pr Csg:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _prcsgController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Pr Csg...',
-                  errorText: _prcsgShowError ? _prcsgError : null,
-                ),
-                onChanged: (value) {
-                  _prcsg = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.compare_arrows, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Pr Csg:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _prcsgController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Pr Csg...',
+                errorText: _prcsgShowError ? _prcsgError : null,
               ),
+              onChanged: (value) {
+                _prcsg = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("kg/cm²"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("kg/cm²"),
+        ],
       ),
     );
   }
@@ -596,43 +591,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.water, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Ql:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _qlController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Ql...',
-                  errorText: _qlShowError ? _qlError : null,
-                ),
-                onChanged: (value) {
-                  _ql = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.water, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Ql:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _qlController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Ql...',
+                errorText: _qlShowError ? _qlError : null,
               ),
+              onChanged: (value) {
+                _ql = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("m³/d"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("m³/d"),
+        ],
       ),
     );
   }
@@ -661,43 +654,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.waves, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Qg:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _qgController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Qg...',
-                  errorText: _qgShowError ? _qgError : null,
-                ),
-                onChanged: (value) {
-                  _qg = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.waves, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Qg:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _qgController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Qg...',
+                errorText: _qgShowError ? _qgError : null,
               ),
+              onChanged: (value) {
+                _qg = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("m³/d"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("m³/d"),
+        ],
       ),
     );
   }
@@ -726,43 +717,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.hourglass_bottom, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Tiempo:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _tiempoController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Tiempo...',
-                  errorText: _tiempoShowError ? _tiempoError : null,
-                ),
-                onChanged: (value) {
-                  _tiempo = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.hourglass_bottom, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Tiempo:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _tiempoController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Tiempo...',
+                errorText: _tiempoShowError ? _tiempoError : null,
               ),
+              onChanged: (value) {
+                _tiempo = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("horas"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("horas"),
+        ],
       ),
     );
   }
@@ -791,43 +780,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.av_timer, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "GPM:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _gpmController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa GPM...',
-                  errorText: _gpmShowError ? _gpmError : null,
-                ),
-                onChanged: (value) {
-                  _gpm = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.av_timer, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "GPM:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _gpmController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa GPM...',
+                errorText: _gpmShowError ? _gpmError : null,
               ),
+              onChanged: (value) {
+                _gpm = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(""),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(""),
+        ],
       ),
     );
   }
@@ -856,43 +843,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.run_circle, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Carrera:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _carreraController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Carrera...',
-                  errorText: _carreraShowError ? _carreraError : null,
-                ),
-                onChanged: (value) {
-                  _carrera = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.run_circle, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Carrera:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _carreraController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Carrera...',
+                errorText: _carreraShowError ? _carreraError : null,
               ),
+              onChanged: (value) {
+                _carrera = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(""),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(""),
+        ],
       ),
     );
   }
@@ -921,43 +906,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.air, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Caudal Inst.:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _caudalinstController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Caudal Inst...',
-                  errorText: _caudalinstShowError ? _caudalinstError : null,
-                ),
-                onChanged: (value) {
-                  _caudalinst = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.air, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Caudal Inst.:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _caudalinstController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Caudal Inst...',
+                errorText: _caudalinstShowError ? _caudalinstError : null,
               ),
+              onChanged: (value) {
+                _caudalinst = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("m³/h"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("m³/h"),
+        ],
       ),
     );
   }
@@ -986,45 +969,42 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.add_task, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Lectura Acumulada.:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _lecturaacumuladaController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Lectura Acumulada...',
-                  errorText: _lecturaacumuladaShowError
-                      ? _lecturaacumuladaError
-                      : null,
-                ),
-                onChanged: (value) {
-                  _lecturaacumulada = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.add_task, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Lectura Acumulada.:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _lecturaacumuladaController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Lectura Acumulada...',
+                errorText:
+                    _lecturaacumuladaShowError ? _lecturaacumuladaError : null,
               ),
+              onChanged: (value) {
+                _lecturaacumulada = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("m³"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("m³"),
+        ],
       ),
     );
   }
@@ -1053,45 +1033,43 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.restore, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Presión antes del filtro:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _presionantesdelfiltroController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Presión antes del filtro...',
-                  errorText: _presionantesdelfiltroShowError
-                      ? _presionantesdelfiltroError
-                      : null,
-                ),
-                onChanged: (value) {
-                  _presionantesdelfiltro = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.restore, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Presión antes del filtro:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _presionantesdelfiltroController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Presión antes del filtro...',
+                errorText: _presionantesdelfiltroShowError
+                    ? _presionantesdelfiltroError
+                    : null,
               ),
+              onChanged: (value) {
+                _presionantesdelfiltro = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text("kg/cm³"),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text("kg/cm³"),
+        ],
       ),
     );
   }
@@ -1120,44 +1098,41 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.list, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Observaciones:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _observacionesController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Observaciones...',
-                  errorText:
-                      _observacionesShowError ? _observacionesError : null,
-                ),
-                onChanged: (value) {
-                  _observaciones = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.list, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Observaciones:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _observacionesController,
+              maxLines: 3,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Observaciones...',
+                errorText: _observacionesShowError ? _observacionesError : null,
               ),
+              onChanged: (value) {
+                _observaciones = value;
+              },
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(""),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(""),
+        ],
       ),
     );
   }
@@ -1186,39 +1161,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.speed, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "RPM:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _rpmController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa RPM...',
-                  errorText: _rpmShowError ? _rpmError : null,
-                ),
-                onChanged: (value) {
-                  _rpm = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.speed, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "RPM:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _rpmController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa RPM...',
+                errorText: _rpmShowError ? _rpmError : null,
               ),
+              onChanged: (value) {
+                _rpm = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1247,39 +1220,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.sync_disabled, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Torque:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _torqueController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Torque...',
-                  errorText: _torqueShowError ? _torqueError : null,
-                ),
-                onChanged: (value) {
-                  _torque = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.sync_disabled, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Torque:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _torqueController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Torque...',
+                errorText: _torqueShowError ? _torqueError : null,
               ),
+              onChanged: (value) {
+                _torque = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1308,39 +1279,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.speed, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "GPM:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _gpmController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa GPM...',
-                  errorText: _gpmShowError ? _gpmError : null,
-                ),
-                onChanged: (value) {
-                  _gpm = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.speed, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "GPM:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _gpmController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa GPM...',
+                errorText: _gpmShowError ? _gpmError : null,
               ),
+              onChanged: (value) {
+                _gpm = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1369,39 +1338,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.run_circle, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Carrera:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _carreraController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Carrera...',
-                  errorText: _carreraShowError ? _carreraError : null,
-                ),
-                onChanged: (value) {
-                  _carrera = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.run_circle, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Carrera:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _carreraController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Carrera...',
+                errorText: _carreraShowError ? _carreraError : null,
               ),
+              onChanged: (value) {
+                _carrera = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1430,39 +1397,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.bolt, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Frecuencia:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _frecuenciaController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Frecuencia...',
-                  errorText: _frecuenciaShowError ? _frecuenciaError : null,
-                ),
-                onChanged: (value) {
-                  _frecuencia = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.bolt, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Frecuencia:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _frecuenciaController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Frecuencia...',
+                errorText: _frecuenciaShowError ? _frecuenciaError : null,
               ),
+              onChanged: (value) {
+                _frecuencia = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1491,39 +1456,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.stacked_bar_chart, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Pip:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _pipController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Pip...',
-                  errorText: _pipShowError ? _pipError : null,
-                ),
-                onChanged: (value) {
-                  _pip = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.stacked_bar_chart, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Pip:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _pipController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Pip...',
+                errorText: _pipShowError ? _pipError : null,
               ),
+              onChanged: (value) {
+                _pip = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1552,39 +1515,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.motion_photos_auto, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Amp:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _ampController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Amp...',
-                  errorText: _ampShowError ? _ampError : null,
-                ),
-                onChanged: (value) {
-                  _amp = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.motion_photos_auto, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Amp:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _ampController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Amp...',
+                errorText: _ampShowError ? _ampError : null,
               ),
+              onChanged: (value) {
+                _amp = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1613,39 +1574,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.battery_charging_full, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Volt:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _voltController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Volt...',
-                  errorText: _voltShowError ? _voltError : null,
-                ),
-                onChanged: (value) {
-                  _volt = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.battery_charging_full, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Volt:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _voltController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Volt...',
+                errorText: _voltShowError ? _voltError : null,
               ),
+              onChanged: (value) {
+                _volt = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1674,39 +1633,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.circle, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Orificio:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _orificioController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Orificio...',
-                  errorText: _orificioShowError ? _orificioError : null,
-                ),
-                onChanged: (value) {
-                  _orificio = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.circle, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Orificio:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _orificioController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Orificio...',
+                errorText: _orificioShowError ? _orificioError : null,
               ),
+              onChanged: (value) {
+                _orificio = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1735,39 +1692,37 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 spreadRadius: 3)
           ]),
       padding: EdgeInsets.all(5),
-      child: Expanded(
-        child: Row(
-          children: [
-            Icon(Icons.thermostat, color: Color(0xFF781f1e)),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Temperatura:",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF781f1e)),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _temperaturaController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: 'Ingresa Temperatura...',
-                  errorText: _temperaturaShowError ? _temperaturaError : null,
-                ),
-                onChanged: (value) {
-                  _temperatura = value;
-                },
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.thermostat, color: Color(0xFF781f1e)),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Temperatura:",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF781f1e)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextField(
+              controller: _temperaturaController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                hintText: 'Ingresa Temperatura...',
+                errorText: _temperaturaShowError ? _temperaturaError : null,
               ),
+              onChanged: (value) {
+                _temperatura = value;
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1781,7 +1736,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
             child: ElevatedButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: <Widget>[
                   Icon(Icons.save),
                   SizedBox(
                     width: 20,
@@ -2247,11 +2202,54 @@ class _MedicionScreenState extends State<MedicionScreen> {
   void _getprefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _validohasta = prefs.getString('validohasta').toString();
+    //_carteles();
     setState(() {});
   }
 
   void _logOut() async {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+
+  void _carteles() async {
+    await showAlertDialog(
+        context: context,
+        title: 'Usuario',
+        message: widget.user.apellidonombre,
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: null, label: 'Aceptar'),
+        ]);
+
+    await showAlertDialog(
+        context: context,
+        title: 'Pozo',
+        message: widget.pozo.codigopozo,
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: null, label: 'Aceptar'),
+        ]);
+
+    await showAlertDialog(
+        context: context,
+        title: 'Pozos cantidad',
+        message: widget.pozos.length.toString(),
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: null, label: 'Aceptar'),
+        ]);
+
+    await showAlertDialog(
+        context: context,
+        title: 'Pozos Formulas',
+        message: widget.pozosformulas.length.toString(),
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: null, label: 'Aceptar'),
+        ]);
+
+    await showAlertDialog(
+        context: context,
+        title: 'Pozos Controles',
+        message: widget.pozoscontroles.length.toString(),
+        actions: <AlertDialogAction>[
+          AlertDialogAction(key: null, label: 'Aceptar'),
+        ]);
   }
 }

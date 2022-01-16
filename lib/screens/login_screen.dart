@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +55,15 @@ class _LoginScreenState extends State<LoginScreen> {
   List<PozosControle> _pozoscontroles = [];
   List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
+
+  // Color _colorUsuarios = Colors.grey;
+  // Color _colorAreas = Colors.grey;
+  // Color _colorYacimientos = Colors.grey;
+  // Color _colorBaterias = Colors.grey;
+  // Color _colorPozos = Colors.grey;
+  // Color _colorPozosFormulas = Colors.grey;
+  // Color _colorPozosControles = Colors.grey;
+  // Color _colorControlDePozoEMBLLE = Colors.grey;
 
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
@@ -175,6 +186,81 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         //_showRememberme(),
                         _showButtons(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        // Row(
+                        //   children: [
+                        //     Text("Usuarios: "),
+                        //     Icon(
+                        //       Icons.radio_button_checked,
+                        //       color: _colorUsuarios,
+                        //     )
+                        //   ],
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     Text("Areas: "),
+                        //     Icon(
+                        //       Icons.radio_button_checked,
+                        //       color: _colorAreas,
+                        //     )
+                        //   ],
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     Text("Yacimientos: "),
+                        //     Icon(
+                        //       Icons.radio_button_checked,
+                        //       color: _colorYacimientos,
+                        //     )
+                        //   ],
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     Text("Baterìas: "),
+                        //     Icon(
+                        //       Icons.radio_button_checked,
+                        //       color: _colorBaterias,
+                        //     )
+                        //   ],
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     Text("Pozos: "),
+                        //     Icon(
+                        //       Icons.radio_button_checked,
+                        //       color: _colorPozos,
+                        //     )
+                        //   ],
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     Text("Pozos Fórmulas: "),
+                        //     Icon(
+                        //       Icons.radio_button_checked,
+                        //       color: _colorPozosFormulas,
+                        //     )
+                        //   ],
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     Text("Pozos Controles: "),
+                        //     Icon(
+                        //       Icons.radio_button_checked,
+                        //       color: _colorPozosControles,
+                        //     )
+                        //   ],
+                        // ),
+                        // Row(
+                        //   children: [
+                        //     Text("ControlDePozoEMBLLE: "),
+                        //     Icon(
+                        //       Icons.radio_button_checked,
+                        //       color: _colorControlDePozoEMBLLE,
+                        //     )
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),
@@ -502,23 +588,48 @@ class _LoginScreenState extends State<LoginScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      Response response = await ApiHelper.getUsuarios();
+      try {
+        Response response =
+            await ApiHelper.getUsuarios().timeout(const Duration(seconds: 20));
 
-      if (response.isSuccess) {
-        _usuariosApi = response.result;
-        _usuariosApi.sort((a, b) {
-          return a.idUser
-              .toString()
-              .toLowerCase()
-              .compareTo(b.idUser.toString().toLowerCase());
-        });
-        _hayInternet = true;
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('ultimaactualizacion', DateTime.now().toString());
+        if (response.isSuccess) {
+          _usuariosApi = response.result;
+          _usuariosApi.sort((a, b) {
+            return a.idUser
+                .toString()
+                .toLowerCase()
+                .compareTo(b.idUser.toString().toLowerCase());
+          });
+          _hayInternet = true;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString(
+              'ultimaactualizacion', DateTime.now().toString());
+        }
+      } on TimeoutException catch (_) {
+        throw ('Tiempo de espera alcanzado');
+        await showAlertDialog(
+            context: context,
+            title: 'Aviso',
+            message: "El servidor no responde. Se utilizarán datos locales.",
+            actions: <AlertDialogAction>[
+              AlertDialogAction(key: null, label: 'Aceptar'),
+            ]);
+      } on SocketException {
+        throw ('Sin internet  o falla de servidor ');
+        await showAlertDialog(
+            context: context,
+            title: 'Aviso',
+            message: "No hay acceso a Internet. Se utilizarán datos locales.",
+            actions: <AlertDialogAction>[
+              AlertDialogAction(key: null, label: 'Aceptar'),
+            ]);
+      } on HttpException {
+        throw ("No se encontro esa peticion");
+      } on FormatException {
+        throw ("Formato erroneo ");
       }
     }
     _getTablaUsuarios();
-    return;
   }
 
   void _getTablaUsuarios() async {
@@ -552,6 +663,12 @@ class _LoginScreenState extends State<LoginScreen> {
       SystemNavigator.pop();
       return;
     }
+
+    // if (_usuarios.length > 0) {
+    //   setState(() {
+    //     _colorUsuarios = Colors.green;
+    //   });
+    // }
 
     _getAreas();
   }
@@ -595,6 +712,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _areas = await DBAreas.areas();
+
+    // if (_areas.length > 0) {
+    //   setState(() {
+    //     _colorAreas = Colors.green;
+    //   });
+    // }
+
     _getYacimientos();
   }
 
@@ -637,6 +761,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _yacimientos = await DBYacimientos.yacimientos();
+
+    // if (_yacimientos.length > 0) {
+    //   setState(() {
+    //     _colorYacimientos = Colors.green;
+    //   });
+    // }
     _getBaterias();
   }
 
@@ -678,6 +808,13 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertBaterias();
     }
     _baterias = await DBBaterias.baterias();
+
+    // if (_baterias.length > 0) {
+    //   setState(() {
+    //     _colorBaterias = Colors.green;
+    //   });
+    // }
+
     _getPozos();
   }
 
@@ -719,6 +856,12 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertPozos();
     }
     _pozos = await DBPozos.pozos();
+
+    // if (_pozos.length > 0) {
+    //   setState(() {
+    //     _colorPozos = Colors.green;
+    //   });
+    // }
     _getPozosFormulas();
   }
 
@@ -760,6 +903,13 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertPozosFormulas();
     }
     _pozosformulas = await DBPozosFormulas.pozosformulas();
+
+    // if (_pozosformulas.length > 0) {
+    //   setState(() {
+    //     _colorPozosFormulas = Colors.green;
+    //   });
+    // }
+
     _getPozosControles();
   }
 
@@ -801,6 +951,12 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertPozosControles();
     }
     _pozoscontroles = await DBPozosControles.pozoscontroles();
+
+    // if (_pozoscontroles.length > 0) {
+    //   setState(() {
+    //     _colorPozosControles = Colors.green;
+    //   });
+    // }
     _getMedicionesCab();
   }
 
@@ -825,7 +981,9 @@ class _LoginScreenState extends State<LoginScreen> {
           .toLowerCase()
           .compareTo(b.idControlPozo.toString().toLowerCase());
     });
+
     setState(() {
+      // _colorControlDePozoEMBLLE = Colors.green;
       _showLoader = false;
     });
   }
