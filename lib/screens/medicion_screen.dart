@@ -1187,7 +1187,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 errorText: _rpmShowError ? _rpmError : null,
               ),
               onChanged: (value) {
-                _rpm = value;
+                _frecuencia = value;
               },
             ),
           ),
@@ -1305,7 +1305,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
                 errorText: _gpmShowError ? _gpmError : null,
               ),
               onChanged: (value) {
-                _gpm = value;
+                _frecuencia = value;
               },
             ),
           ),
