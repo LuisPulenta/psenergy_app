@@ -1037,13 +1037,6 @@ class _HomeScreenState extends State<HomeScreen>
   void _goInfoMedicion(MedicionCabecera e) {}
 
   _borrarMedicionesLocales() async {
-    // context: context,
-    //     title: 'Error',
-    //     message: 'Verifica que estés conectado a Internet',
-    //     actions: <AlertDialogAction>[
-    //       AlertDialogAction(key: null, label: 'Aceptar'),
-    //     ]);
-
     await showDialog(
         barrierDismissible: false,
         context: context,

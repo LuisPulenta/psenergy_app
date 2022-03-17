@@ -610,7 +610,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           Expanded(
             child: TextField(
               controller: _qlController,
-              keyboardType: TextInputType.number,
+              //keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 fillColor: Colors.white,
                 hintText: 'Ingresa Ql...',
@@ -1835,46 +1835,57 @@ class _MedicionScreenState extends State<MedicionScreen> {
         pozo: widget.pozo.codigopozo,
         fecha:
             DateTime.now().add(Duration(days: 0)).toString().substring(0, 10),
-        ql: _ql == "" ? 0 : double.parse(_ql),
+        ql: _ql == "" ? 0 : double.parse(_ql.replaceAll(',', '.')),
         qo: 0,
         qw: 0,
-        qg: _qg == "" ? 0 : double.parse(_qg),
+        qg: _qg == "" ? 0 : double.parse(_qg.replaceAll(',', '.')),
         wcLibre: 0,
         wcEmulc: 0,
         wcTotal: 0,
         sales: 0,
         gor: 0,
-        t: _tiempo == "" ? 0 : double.parse(_tiempo),
+        t: _tiempo == "" ? 0 : double.parse(_tiempo.replaceAll(',', '.')),
         validacionControl: '',
-        prTbg: _prtbg == "" ? 0 : double.parse(_prtbg),
-        prLinea: _prlinea == "" ? 0 : double.parse(_prlinea),
-        prCsg: _prcsg == "" ? 0 : double.parse(_prcsg),
-        regimenOperacion: _frecuencia == "" ? 0 : double.parse(_frecuencia),
-        aibCarrera: _carrera == "" ? 0 : double.parse(_carrera),
-        bespip: _pip == "" ? 0 : double.parse(_pip),
-        pcpTorque: _torque == "" ? 0 : double.parse(_torque),
+        prTbg: _prtbg == "" ? 0 : double.parse(_prtbg.replaceAll(',', '.')),
+        prLinea:
+            _prlinea == "" ? 0 : double.parse(_prlinea.replaceAll(',', '.')),
+        prCsg: _prcsg == "" ? 0 : double.parse(_prcsg.replaceAll(',', '.')),
+        regimenOperacion: _frecuencia == ""
+            ? 0
+            : double.parse(_frecuencia.replaceAll(',', '.')),
+        aibCarrera:
+            _carrera == "" ? 0 : double.parse(_carrera.replaceAll(',', '.')),
+        bespip: _pip == "" ? 0 : double.parse(_pip.replaceAll(',', '.')),
+        pcpTorque:
+            _torque == "" ? 0 : double.parse(_torque.replaceAll(',', '.')),
         observaciones: _observaciones,
         validadoSupervisor: 0,
         userIdInput: widget.user.idUser,
         userIDValida: 0,
-        caudalInstantaneo: _caudalinst == "" ? 0 : double.parse(_caudalinst),
+        caudalInstantaneo: _caudalinst == ""
+            ? 0
+            : double.parse(_caudalinst.replaceAll(',', '.')),
         caudalMedio: 0,
-        lecturaAcumulada:
-            _lecturaacumulada == "" ? 0 : double.parse(_lecturaacumulada),
-        presionBDP: _prtbg == "" ? 0 : double.parse(_prtbg),
+        lecturaAcumulada: _lecturaacumulada == ""
+            ? 0
+            : double.parse(_lecturaacumulada.replaceAll(',', '.')),
+        presionBDP:
+            _prtbg == "" ? 0 : double.parse(_prtbg.replaceAll(',', '.')),
         presionAntFiltro: _presionantesdelfiltro == ""
             ? 0
-            : double.parse(_presionantesdelfiltro),
-        presionEC: _prcsg == "" ? 0 : double.parse(_prcsg),
+            : double.parse(_presionantesdelfiltro.replaceAll(',', '.')),
+        presionEC: _prcsg == "" ? 0 : double.parse(_prcsg.replaceAll(',', '.')),
         ingresoDatos: 'APP',
         reenvio: 0,
         muestra: 'NO',
         fechaCarga: DateTime.now().toString(),
         idUserValidaMuestra: 0,
         idUserImputSoft: 0,
-        volt: _volt == "" ? 0 : double.parse(_volt),
-        amper: _amp == "" ? 0 : double.parse(_amp),
-        temp: _temperatura == "" ? 0 : double.parse(_temperatura),
+        volt: _volt == "" ? 0 : double.parse(_volt.replaceAll(',', '.')),
+        amper: _amp == "" ? 0 : double.parse(_amp.replaceAll(',', '.')),
+        temp: _temperatura == ""
+            ? 0
+            : double.parse(_temperatura.replaceAll(',', '.')),
         fechaCargaAPP: '',
         enviado: 0);
 
