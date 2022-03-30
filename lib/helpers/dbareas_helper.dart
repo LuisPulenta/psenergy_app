@@ -1,4 +1,4 @@
-import 'package:psenergy_app/models/area.dart';
+import 'package:psenergy_app/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -7,7 +7,7 @@ class DBAreas {
     return openDatabase(join(await getDatabasesPath(), 'areas.db'),
         onCreate: (db, version) {
       return db.execute(
-         "CREATE TABLE areas(nombrearea TEXT)",
+        "CREATE TABLE areas(nombrearea TEXT)",
       );
     }, version: 1);
   }
@@ -24,8 +24,7 @@ class DBAreas {
 
   static Future<List<Area>> areas() async {
     Database database = await _openDBAreas();
-    final List<Map<String, dynamic>> areasMap =
-        await database.query("areas");
+    final List<Map<String, dynamic>> areasMap = await database.query("areas");
     return List.generate(
         areasMap.length,
         (i) => Area(

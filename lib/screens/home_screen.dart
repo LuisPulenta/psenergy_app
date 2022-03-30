@@ -1,28 +1,13 @@
 import 'dart:convert';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:psenergy_app/components/loader_component.dart';
-import 'package:psenergy_app/helpers/api_helper.dart';
-import 'package:psenergy_app/helpers/constants.dart';
-import 'package:psenergy_app/helpers/dbmedicionescabecera_helper.dart';
-import 'package:psenergy_app/models/area.dart';
-import 'package:psenergy_app/models/bateria.dart';
-import 'package:psenergy_app/models/medicioncabecera.dart';
-import 'package:psenergy_app/models/pozo.dart';
-import 'package:psenergy_app/models/pozoscontrole.dart';
-import 'package:psenergy_app/models/pozosformula.dart';
-import 'package:psenergy_app/models/response.dart';
-import 'package:psenergy_app/models/usuario.dart';
-import 'package:psenergy_app/models/yacimiento.dart';
-import 'package:psenergy_app/screens/change_password_screen.dart';
-import 'package:psenergy_app/screens/contacto_screen.dart';
-import 'package:psenergy_app/screens/login_screen.dart';
-import 'package:psenergy_app/screens/medicion_screen.dart';
+import 'package:psenergy_app/helpers/helpers.dart';
+import 'package:psenergy_app/models/models.dart';
+import 'package:psenergy_app/screens/screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -435,6 +420,7 @@ class _HomeScreenState extends State<HomeScreen>
                             onPressed: () async {
                               _password = '';
                               _result2 = "no";
+
                               await _borrarMedicionesLocales();
                               if (_result2 == 'yes') {
                                 await _actualizaMedicionesCab2();
@@ -952,7 +938,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       ? Container()
                                       : Text(
                                           //e.fechaCargaAPP,
-                                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fechaCargaAPP!))}',
+                                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fechaCargaAPP))}',
                                           style: TextStyle(
                                             fontSize: 12,
                                           )),

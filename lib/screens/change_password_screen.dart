@@ -2,9 +2,8 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:psenergy_app/components/loader_component.dart';
-import 'package:psenergy_app/helpers/api_helper.dart';
-import 'package:psenergy_app/models/response.dart';
-import 'package:psenergy_app/models/usuario.dart';
+import 'package:psenergy_app/helpers/helpers.dart';
+import 'package:psenergy_app/models/models.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final Usuario user;

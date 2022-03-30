@@ -1,4 +1,4 @@
-import 'package:psenergy_app/models/medicioncabecera.dart';
+import 'package:psenergy_app/models/models.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
