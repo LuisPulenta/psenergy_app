@@ -224,7 +224,48 @@ class _HomeScreenState extends State<HomeScreen>
                 Column(
                   children: [
                     AppBar(
-                      title: (Text("Ultimas mediciones")),
+                      title: (Text("Ultimas mediciones      ")),
+                      actions: [
+                        ElevatedButton(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.done,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                width: 0,
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.black,
+                              ),
+                              SizedBox(
+                                width: 0,
+                              ),
+                              Icon(
+                                Icons.done,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            minimumSize: Size(50, 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                          ),
+                          onPressed: () async {
+                            await _deRojoAGris();
+                            setState(() {});
+                          },
+                        ),
+                      ],
                       centerTitle: true,
                       backgroundColor: Color(0xff9a6a2e),
                     ),
@@ -1410,6 +1451,54 @@ class _HomeScreenState extends State<HomeScreen>
     DBMedicionesCabecera.update(medicioncab);
   }
 
+  void _poneenviado0(MedicionCabecera medicion) {
+    MedicionCabecera medicioncab = MedicionCabecera(
+        idControlPozo: medicion.idControlPozo,
+        bateria: medicion.bateria,
+        pozo: medicion.pozo,
+        fecha: medicion.fecha,
+        ql: medicion.ql,
+        qo: medicion.qo,
+        qw: medicion.qw,
+        qg: medicion.qg,
+        wcLibre: medicion.wcLibre,
+        wcEmulc: medicion.wcEmulc,
+        wcTotal: medicion.wcTotal,
+        sales: medicion.sales,
+        gor: medicion.gor,
+        t: medicion.t,
+        validacionControl: medicion.validacionControl,
+        prTbg: medicion.prTbg,
+        prLinea: medicion.prLinea,
+        prCsg: medicion.prCsg,
+        regimenOperacion: medicion.regimenOperacion,
+        aibCarrera: medicion.aibCarrera,
+        bespip: medicion.bespip,
+        pcpTorque: medicion.pcpTorque,
+        observaciones: medicion.observaciones,
+        validadoSupervisor: medicion.validadoSupervisor,
+        userIdInput: medicion.userIdInput,
+        userIDValida: medicion.userIDValida,
+        caudalInstantaneo: medicion.caudalInstantaneo,
+        caudalMedio: medicion.caudalMedio,
+        lecturaAcumulada: medicion.lecturaAcumulada,
+        presionBDP: medicion.presionBDP,
+        presionAntFiltro: medicion.presionAntFiltro,
+        presionEC: medicion.presionEC,
+        ingresoDatos: medicion.ingresoDatos,
+        reenvio: medicion.reenvio,
+        muestra: medicion.muestra,
+        fechaCarga: medicion.fechaCarga,
+        idUserValidaMuestra: medicion.idUserValidaMuestra,
+        idUserImputSoft: medicion.idUserImputSoft,
+        volt: medicion.volt,
+        amper: medicion.amper,
+        temp: medicion.temp,
+        fechaCargaAPP: medicion.fechaCargaAPP,
+        enviado: 0);
+    DBMedicionesCabecera.update(medicioncab);
+  }
+
   void _addRecordsDetallesServer(MedicionCabecera medicion) async {
     List<PozosControle> _pozoscontrolesselected = [];
     widget.pozoscontroles.forEach((pozoscontrol) {
@@ -1489,34 +1578,128 @@ class _HomeScreenState extends State<HomeScreen>
       return;
     }
   }
-}
 
-Widget _noContent() {
-  return Center(
-    child: Container(
-      margin: EdgeInsets.all(20),
-      child: Text(
-        '',
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+  _deRojoAGris() async {
+    await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      "Atención!!",
+                      style: TextStyle(color: Colors.red, fontSize: 20),
+                    ),
+                  ],
+                ),
+                content: SizedBox(
+                  height: 150,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Esta opción es SOLAMENTE para el caso de que Ud. está seguro que una medición que no haya sido subida al servidor y haya sido marcada con tilde ROJO, se vuelva a marcar con tilde GRIS para tratar de volver a subirla al Servidor.",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      Text(""),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  ElevatedButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.refresh),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text('ACEPTAR'),
+                        ],
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      onPressed: () {
+                        for (MedicionCabecera medicion in _medicionesCab) {
+                          if (medicion.enviado == 2) {
+                            _poneenviado0(medicion);
+                          }
+                        }
+
+                        setState(() {});
+                        Navigator.pop(context, 'yes');
+                      }),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.cancel),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text('CANCELAR'),
+                      ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF9a6a2e),
+                      minimumSize: Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+                shape: Border.all(
+                    color: Colors.red, width: 5, style: BorderStyle.solid),
+                backgroundColor: Colors.white,
+              );
+            },
+          );
+        });
+  }
+
+  Widget _noContent() {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.all(20),
+        child: Text(
+          '',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget _noContent2() {
-  return Center(
-    child: Container(
-      margin: EdgeInsets.all(20),
-      child: Text(
-        'No hay mediciones cargadas',
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+  Widget _noContent2() {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.all(20),
+        child: Text(
+          'No hay mediciones cargadas',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
