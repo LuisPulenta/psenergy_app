@@ -9,7 +9,7 @@ class DBBaterias {
       return db.execute(
         "CREATE TABLE baterias(codigobateria TEXT,descripcion TEXT, fechaalta TEXT,activa INTEGER,nombreyacimiento TEXT)",
       );
-    }, version: 1);
+    }, version: 2);
   }
 
   static Future<int> insertBateria(Bateria bateria) async {

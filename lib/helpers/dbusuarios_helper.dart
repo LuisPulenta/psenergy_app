@@ -9,7 +9,7 @@ class DBUsuarios {
       return db.execute(
         "CREATE TABLE usuarios(idUser INTEGER, codigo TEXT, apellidonombre TEXT, usrlogin TEXT, usrcontrasena TEXT,perfil  INTEGER,  habilitadoWeb INTEGER, causanteC TEXT, habilitaPaqueteria INTEGER)",
       );
-    }, version: 1);
+    }, version: 2);
   }
 
   static Future<int> insertUsuario(Usuario usuario) async {

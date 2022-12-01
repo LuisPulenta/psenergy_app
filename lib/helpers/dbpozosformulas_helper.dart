@@ -9,7 +9,7 @@ class DBPozosFormulas {
       return db.execute(
         "CREATE TABLE pozosformulas(idformula INTEGER,tiposistema TEXT, tipodatos TEXT,rangodesde INTEGER,rangohasta INTEGER)",
       );
-    }, version: 1);
+    }, version: 2);
   }
 
   static Future<int> insertPozoFormula(PozosFormula pozoformula) async {

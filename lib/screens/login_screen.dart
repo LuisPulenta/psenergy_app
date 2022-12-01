@@ -7,8 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:psenergy_app/helpers/helpers.dart';
 import 'package:psenergy_app/models/models.dart';
 import 'package:psenergy_app/components/loader_component.dart';
-import 'package:psenergy_app/screens/home_screen.dart';
+import 'package:psenergy_app/screens/screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:device_information/device_information.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,6 +20,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+//*****************************************************************************
+//************************** DEFINICION DE VARIABLES **************************
+//*****************************************************************************
+
   List<Usuario> _usuariosApi = [];
   List<Usuario> _usuarios = [];
   List<Area> _areasApi = [];
@@ -35,14 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
   List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
 
-  // Color _colorUsuarios = Colors.grey;
-  // Color _colorAreas = Colors.grey;
-  // Color _colorYacimientos = Colors.grey;
-  // Color _colorBaterias = Colors.grey;
-  // Color _colorPozos = Colors.grey;
-  // Color _colorPozosFormulas = Colors.grey;
-  // Color _colorPozosControles = Colors.grey;
-  // Color _colorControlDePozoEMBLLE = Colors.grey;
+  String _imeiNo = "";
 
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
@@ -55,40 +54,46 @@ class _LoginScreenState extends State<LoginScreen> {
       causanteC: '',
       habilitaPaqueteria: 0);
 
-  String _email = '';
+  // String _email = '';
+  // String _password = '';
+
+  String _email = 'TEST';
+  String _password = 'TEST';
+
   String _emailError = '';
   bool _emailShowError = false;
   bool _hayInternet = false;
-  String _password = '';
+
   String _passwordError = '';
   bool _passwordShowError = false;
   bool _passwordShow = false;
 
   bool _showLoader = false;
 
+//*****************************************************************************
+//************************** INIT STATE ***************************************
+//*****************************************************************************
+
   @override
   void initState() {
     super.initState();
     _getUsuarios();
-    // _getAreas();
-    // _getYacimientos();
-    // _getBaterias();
-    // _getPozos();
-    // _getPozosFormulas();
-    // _getPozosControles();
-    // _getMedicionesCab();
   }
+
+//*****************************************************************************
+//************************** PANTALLA *****************************************
+//*****************************************************************************
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffd3a735),
+      backgroundColor: const Color(0xffd3a735),
       body: Stack(
         children: <Widget>[
           Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 60),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.symmetric(vertical: 60),
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -111,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text(
                           "PS",
                           style: TextStyle(
@@ -133,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text(
                           Constants.version,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
@@ -143,103 +148,32 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               )),
           Transform.translate(
-            offset: Offset(0, -60),
+            offset: const Offset(0, -60),
             child: Center(
               child: SingleChildScrollView(
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 15,
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                       left: 20, right: 20, top: 260, bottom: 20),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 20),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         _showEmail(),
                         _showPassword(),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         //_showRememberme(),
                         _showButtons(),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        // Row(
-                        //   children: [
-                        //     Text("Usuarios: "),
-                        //     Icon(
-                        //       Icons.radio_button_checked,
-                        //       color: _colorUsuarios,
-                        //     )
-                        //   ],
-                        // ),
-                        // Row(
-                        //   children: [
-                        //     Text("Areas: "),
-                        //     Icon(
-                        //       Icons.radio_button_checked,
-                        //       color: _colorAreas,
-                        //     )
-                        //   ],
-                        // ),
-                        // Row(
-                        //   children: [
-                        //     Text("Yacimientos: "),
-                        //     Icon(
-                        //       Icons.radio_button_checked,
-                        //       color: _colorYacimientos,
-                        //     )
-                        //   ],
-                        // ),
-                        // Row(
-                        //   children: [
-                        //     Text("Baterìas: "),
-                        //     Icon(
-                        //       Icons.radio_button_checked,
-                        //       color: _colorBaterias,
-                        //     )
-                        //   ],
-                        // ),
-                        // Row(
-                        //   children: [
-                        //     Text("Pozos: "),
-                        //     Icon(
-                        //       Icons.radio_button_checked,
-                        //       color: _colorPozos,
-                        //     )
-                        //   ],
-                        // ),
-                        // Row(
-                        //   children: [
-                        //     Text("Pozos Fórmulas: "),
-                        //     Icon(
-                        //       Icons.radio_button_checked,
-                        //       color: _colorPozosFormulas,
-                        //     )
-                        //   ],
-                        // ),
-                        // Row(
-                        //   children: [
-                        //     Text("Pozos Controles: "),
-                        //     Icon(
-                        //       Icons.radio_button_checked,
-                        //       color: _colorPozosControles,
-                        //     )
-                        //   ],
-                        // ),
-                        // Row(
-                        //   children: [
-                        //     Text("ControlDePozoEMBLLE: "),
-                        //     Icon(
-                        //       Icons.radio_button_checked,
-                        //       color: _colorControlDePozoEMBLLE,
-                        //     )
-                        //   ],
-                        // ),
                       ],
                     ),
                   ),
@@ -257,16 +191,24 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//----------------------------------------------------------------------
+//---------------------------- _showLogo -------------------------------
+//----------------------------------------------------------------------
+
   Widget _showLogo() {
-    return Image(
-      image: AssetImage('assets/logo.png'),
+    return const Image(
+      image: const AssetImage('assets/logo.png'),
       width: 300,
     );
   }
 
+//----------------------------------------------------------------------
+//---------------------------- _showEmail ------------------------------
+//----------------------------------------------------------------------
+
   Widget _showEmail() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
@@ -275,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
             hintText: 'Usuario...',
             labelText: 'Usuario',
             errorText: _emailShowError ? _emailError : null,
-            prefixIcon: Icon(Icons.person),
+            prefixIcon: const Icon(Icons.person),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
         onChanged: (value) {
@@ -285,9 +227,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//----------------------------------------------------------------------
+//---------------------------- _showPassword ---------------------------
+//----------------------------------------------------------------------
+
   Widget _showPassword() {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: TextField(
         obscureText: !_passwordShow,
         decoration: InputDecoration(
@@ -296,11 +242,11 @@ class _LoginScreenState extends State<LoginScreen> {
             hintText: 'Contraseña...',
             labelText: 'Contraseña',
             errorText: _passwordShowError ? _passwordError : null,
-            prefixIcon: Icon(Icons.lock),
+            prefixIcon: const Icon(Icons.lock),
             suffixIcon: IconButton(
               icon: _passwordShow
-                  ? Icon(Icons.visibility)
-                  : Icon(Icons.visibility_off),
+                  ? const Icon(Icons.visibility)
+                  : const Icon(Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   _passwordShow = !_passwordShow;
@@ -316,21 +262,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // _showRememberme() {
-  //   return CheckboxListTile(
-  //     title: Text('Recordarme:'),
-  //     value: _rememberme,
-  //     onChanged: (value) {
-  //       setState(() {
-  //         _rememberme = value!;
-  //       });
-  //     },
-  //   );
-  // }
+//----------------------------------------------------------------------
+//---------------------------- _showButtons ----------------------------
+//----------------------------------------------------------------------
 
   Widget _showButtons() {
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      margin: const EdgeInsets.only(left: 20, right: 20),
       child: Column(
         children: [
           Row(
@@ -340,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       Icon(Icons.login),
                       SizedBox(
                         width: 20,
@@ -349,8 +287,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF9a6a2e),
-                    minimumSize: Size(double.infinity, 50),
+                    primary: const Color(0xFF9a6a2e),
+                    minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),
@@ -360,126 +298,22 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //   children: <Widget>[
-          //     Expanded(
-          //       child: ElevatedButton(
-          //         child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             Icon(Icons.delete),
-          //             SizedBox(
-          //               width: 20,
-          //             ),
-          //             Text(
-          //               'Borrar mediciones locales',
-          //               style: TextStyle(color: Colors.white),
-          //             ),
-          //           ],
-          //         ),
-          //         style: ElevatedButton.styleFrom(
-          //           primary: Colors.red,
-          //           minimumSize: Size(double.infinity, 50),
-          //           shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(5),
-          //           ),
-          //         ),
-          //         onPressed: () => _deleteMedicionesLocales(),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );
   }
 
+//----------------------------------------------------------------------
+//---------------------------- _login ----------------------------------
+//----------------------------------------------------------------------
+
   void _login() async {
     setState(() {
       _passwordShow = false;
     });
-
-    // if (_areas.length == 0) {
-    //   await showAlertDialog(
-    //       context: context,
-    //       title: 'Error',
-    //       message:
-    //           "La tabla Areas local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-    //       actions: <AlertDialogAction>[
-    //         AlertDialogAction(key: null, label: 'Aceptar'),
-    //       ]);
-    //   SystemNavigator.pop();
-    //   return;
-    // }
-
-    // if (_yacimientos.length == 0) {
-    //   await showAlertDialog(
-    //       context: context,
-    //       title: 'Error',
-    //       message:
-    //           "La tabla Yacimientos local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-    //       actions: <AlertDialogAction>[
-    //         AlertDialogAction(key: null, label: 'Aceptar'),
-    //       ]);
-    //   SystemNavigator.pop();
-    //   return;
-    // }
-
-    // if (_baterias.length == 0) {
-    //   await showAlertDialog(
-    //       context: context,
-    //       title: 'Error',
-    //       message:
-    //           "La tabla Baterías local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-    //       actions: <AlertDialogAction>[
-    //         AlertDialogAction(key: null, label: 'Aceptar'),
-    //       ]);
-    //   SystemNavigator.pop();
-    //   return;
-    // }
-
-    // if (_pozos.length == 0) {
-    //   await showAlertDialog(
-    //       context: context,
-    //       title: 'Error',
-    //       message:
-    //           "La tabla Pozos local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-    //       actions: <AlertDialogAction>[
-    //         AlertDialogAction(key: null, label: 'Aceptar'),
-    //       ]);
-    //   SystemNavigator.pop();
-    //   return;
-    // }
-
-    // if (_pozosformulas.length == 0) {
-    //   await showAlertDialog(
-    //       context: context,
-    //       title: 'Error',
-    //       message:
-    //           "La tabla Pozos Formulas local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-    //       actions: <AlertDialogAction>[
-    //         AlertDialogAction(key: null, label: 'Aceptar'),
-    //       ]);
-    //   SystemNavigator.pop();
-    //   return;
-    // }
-
-    // if (_pozoscontroles.length == 0) {
-    //   await showAlertDialog(
-    //       context: context,
-    //       title: 'Error',
-    //       message:
-    //           "La tabla Pozos Controles local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
-    //       actions: <AlertDialogAction>[
-    //         AlertDialogAction(key: null, label: 'Aceptar'),
-    //       ]);
-    //   SystemNavigator.pop();
-    //   return;
-    // }
 
     if (!validateFields()) {
       return;
@@ -493,7 +327,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
 
-    if (filteredUsuario.length == 0) {
+    if (filteredUsuario.isEmpty) {
       setState(() {
         _passwordShowError = true;
         _passwordError = 'Usuario o contraseña incorrectos';
@@ -503,10 +337,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     _usuarioLogueado = filteredUsuario[0];
 
-    // if (_rememberme) {
-    //   _storeUser(_usuarioLogueado);
-    // }
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('conectadodesde', DateTime.now().toString());
     await prefs.setString(
@@ -515,7 +345,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => HomeScreen(
+            builder: (context) => MenuScreen(
                   user: _usuarioLogueado,
                   areas: _areas,
                   yacimientos: _yacimientos,
@@ -525,6 +355,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   pozoscontroles: _pozoscontroles,
                 )));
   }
+
+//----------------------------------------------------------------------
+//---------------------------- validateFields --------------------------
+//----------------------------------------------------------------------
 
   bool validateFields() {
     bool isValid = true;
@@ -557,9 +391,10 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString('date', DateTime.now().toString());
   }
 
-//***************************************************************
-//*********************** USUARIOS ******************************
-//***************************************************************
+//----------------------------------------------------------------------
+//---------------------------- _getUsuarios ----------------------------
+//----------------------------------------------------------------------
+
   Future<Null> _getUsuarios() async {
     setState(() {
       _showLoader = true;
@@ -586,22 +421,8 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } on TimeoutException catch (_) {
         throw ('Tiempo de espera alcanzado');
-        await showAlertDialog(
-            context: context,
-            title: 'Aviso',
-            message: "El servidor no responde. Se utilizarán datos locales.",
-            actions: <AlertDialogAction>[
-              AlertDialogAction(key: null, label: 'Aceptar'),
-            ]);
       } on SocketException {
         throw ('Sin internet  o falla de servidor ');
-        await showAlertDialog(
-            context: context,
-            title: 'Aviso',
-            message: "No hay acceso a Internet. Se utilizarán datos locales.",
-            actions: <AlertDialogAction>[
-              AlertDialogAction(key: null, label: 'Aceptar'),
-            ]);
       } on HttpException {
         throw ("No se encontro esa peticion");
       } on FormatException {
@@ -613,7 +434,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaUsuarios() async {
     void _insertUsuarios() async {
-      if (_usuariosApi.length > 0) {
+      if (_usuariosApi.isNotEmpty) {
         DBUsuarios.delete();
         _usuariosApi.forEach((element) {
           DBUsuarios.insertUsuario(element);
@@ -627,7 +448,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     _usuarios = await DBUsuarios.usuarios();
 
-    if (_usuarios.length == 0) {
+    if (_usuarios.isEmpty) {
       setState(() {
         _showLoader = false;
       });
@@ -637,7 +458,7 @@ class _LoginScreenState extends State<LoginScreen> {
           message:
               "La tabla Usuarios local está vacía. Por favor arranque la App desde un lugar con acceso a Internet para poder conectarse al Servidor.",
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       SystemNavigator.pop();
       return;
@@ -652,9 +473,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _getAreas();
   }
 
-//***************************************************************
-//************************* AREAS *******************************
-//***************************************************************
+//----------------------------------------------------------------------
+//---------------------------- _getAreas -------------------------------
+//----------------------------------------------------------------------
+
   Future<Null> _getAreas() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -678,7 +500,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaAreas() async {
     void _insertAreas() async {
-      if (_areasApi.length > 0) {
+      if (_areasApi.isNotEmpty) {
         DBAreas.delete();
         _areasApi.forEach((element) {
           DBAreas.insertArea(element);
@@ -701,9 +523,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _getYacimientos();
   }
 
-  //***************************************************************
-  //********************** YACIMIENTOS ****************************
-  //***************************************************************
+//----------------------------------------------------------------------
+//---------------------------- _getYacimientos -------------------------
+//----------------------------------------------------------------------
+
   Future<Null> _getYacimientos() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -727,7 +550,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaYacimientos() async {
     void _insertYacimientos() async {
-      if (_yacimientosApi.length > 0) {
+      if (_yacimientosApi.isNotEmpty) {
         DBYacimientos.delete();
         _yacimientosApi.forEach((element) {
           DBYacimientos.insertYacimiento(element);
@@ -749,9 +572,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _getBaterias();
   }
 
-//***************************************************************
-//************************* BATERIAS ****************************
-//***************************************************************
+//----------------------------------------------------------------------
+//---------------------------- _getBaterias ----------------------------
+//----------------------------------------------------------------------
+
   Future<Null> _getBaterias() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -775,7 +599,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaBaterias() async {
     void _insertBaterias() async {
-      if (_bateriasApi.length > 0) {
+      if (_bateriasApi.isNotEmpty) {
         DBBaterias.delete();
         _bateriasApi.forEach((element) {
           DBBaterias.insertBateria(element);
@@ -797,9 +621,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _getPozos();
   }
 
-//***************************************************************
-//************************* POZOS *******************************
-//***************************************************************
+//----------------------------------------------------------------------
+//---------------------------- _getPozos -------------------------------
+//----------------------------------------------------------------------
+
   Future<Null> _getPozos() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -823,7 +648,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaPozos() async {
     void _insertPozos() async {
-      if (_pozosApi.length > 0) {
+      if (_pozosApi.isNotEmpty) {
         DBPozos.delete();
         _pozosApi.forEach((element) {
           DBPozos.insertPozo(element);
@@ -844,9 +669,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _getPozosFormulas();
   }
 
-//***************************************************************
-//************************* POZOSFORMULAS ***********************
-//***************************************************************
+//----------------------------------------------------------------------
+//---------------------------- _getPozosFormulas -----------------------
+//----------------------------------------------------------------------
+
   Future<Null> _getPozosFormulas() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -870,7 +696,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaPozosFormulas() async {
     void _insertPozosFormulas() async {
-      if (_pozosformulasApi.length > 0) {
+      if (_pozosformulasApi.isNotEmpty) {
         DBPozosFormulas.delete();
         _pozosformulasApi.forEach((element) {
           DBPozosFormulas.insertPozoFormula(element);
@@ -892,9 +718,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _getPozosControles();
   }
 
-//***************************************************************
-//************************* POZOSCONTROLES **********************
-//***************************************************************
+//----------------------------------------------------------------------
+//---------------------------- _getPozosControles ----------------------
+//----------------------------------------------------------------------
+
   Future<Null> _getPozosControles() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
@@ -918,7 +745,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getTablaPozosControles() async {
     void _insertPozosControles() async {
-      if (_pozoscontrolesApi.length > 0) {
+      if (_pozoscontrolesApi.isNotEmpty) {
         DBPozosControles.delete();
         _pozoscontrolesApi.forEach((element) {
           DBPozosControles.insertPozoControl(element);
@@ -931,17 +758,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     _pozoscontroles = await DBPozosControles.pozoscontroles();
 
-    // if (_pozoscontroles.length > 0) {
-    //   setState(() {
-    //     _colorPozosControles = Colors.green;
-    //   });
-    // }
     _getMedicionesCab();
   }
 
-//***************************************************************
-//******************* ControlDePozoEMBLLE  **********************
-//***************************************************************
+//----------------------------------------------------------------------
+//---------------------------- _getMedicionesCab -----------------------
+//----------------------------------------------------------------------
+
   Future<Null> _getMedicionesCab() async {
     _getTablaMedicionesCab();
     return;
@@ -974,8 +797,8 @@ class _LoginScreenState extends State<LoginScreen> {
         message:
             '¿Está seguro de borrar las mediciones locales que hay en este teléfono',
         actions: <AlertDialogAction>[
-          AlertDialogAction(key: 'si', label: 'SI'),
-          AlertDialogAction(key: 'no', label: 'NO'),
+          const AlertDialogAction(key: 'si', label: 'SI'),
+          const AlertDialogAction(key: 'no', label: 'NO'),
         ]);
     if (response == 'no') {
       return;
@@ -984,5 +807,82 @@ class _LoginScreenState extends State<LoginScreen> {
       DBMedicionesCabecera.delete(element);
     });
     return;
+  }
+
+//----------------------------------------------------------------------
+//---------------------------- initPlatformState -----------------------
+//----------------------------------------------------------------------
+
+  Future<void> initPlatformState() async {
+    late String imeiNo = '';
+
+    // Platform messages may fail,
+    // so we use a try/catch PlatformException.
+
+    var status = await Permission.phone.status;
+
+    if (status.isDenied) {
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              title: const Text('Aviso'),
+              content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const <Widget>[
+                    Text(
+                        'La App necesita que habilite el Permiso de acceso al teléfono para registrar el IMEI del celular con que se loguea.'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ]),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Ok')),
+              ],
+            );
+          });
+      openAppSettings();
+      //exit(0);
+    }
+
+    try {
+      imeiNo = await DeviceInformation.deviceIMEINumber;
+    } on PlatformException catch (e) {}
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _imeiNo = imeiNo;
+    });
+  }
+
+//----------------------------------------------------------------------
+//---------------------------- _postWebSesion -----------------------
+//----------------------------------------------------------------------
+
+  Future<void> _postWebSesion(WebSesion webSesion) async {
+    Map<String, dynamic> requestWebSesion = {
+      'nroConexion': webSesion.nroConexion,
+      'usuario': webSesion.usuario,
+      'iP': webSesion.iP,
+      'loginDate': webSesion.loginDate,
+      'loginTime': webSesion.loginTime,
+      'modulo': webSesion.modulo,
+      'logoutDate': webSesion.logoutDate,
+      'logoutTime': webSesion.logoutTime,
+      'conectAverage': webSesion.conectAverage,
+      'id_ws': webSesion.id_ws,
+      'version': webSesion.version,
+    };
+
+    await ApiHelper.post('/api/WebSesions/', requestWebSesion);
   }
 }

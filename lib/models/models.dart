@@ -10,3 +10,4 @@ export 'package:psenergy_app/models/pozosformula.dart';
 export 'package:psenergy_app/models/response.dart';
 export 'package:psenergy_app/models/usuario.dart';
 export 'package:psenergy_app/models/yacimiento.dart';
+export 'package:psenergy_app/models/web_sesion.dart';

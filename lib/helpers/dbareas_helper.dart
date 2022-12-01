@@ -9,7 +9,7 @@ class DBAreas {
       return db.execute(
         "CREATE TABLE areas(nombrearea TEXT)",
       );
-    }, version: 1);
+    }, version: 2);
   }
 
   static Future<int> insertArea(Area area) async {

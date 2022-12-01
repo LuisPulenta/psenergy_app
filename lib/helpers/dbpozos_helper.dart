@@ -9,7 +9,7 @@ class DBPozos {
       return db.execute(
         "CREATE TABLE pozos(codigopozo TEXT,codigobateria TEXT, descripcion TEXT,fechaalta TEXT,activo INTEGER,ultimalectura TEXT,latitud TEXT, longitud TEXT,qrcode TEXT,observaciones TEXT,tipopozo TEXT,sistemaExtraccion TEXT,cuenca TEXT, idProvincia INTEGER,cota DOUBLE, profundidad DOUBLE, vidaUtil DOUBLE)",
       );
-    }, version: 1);
+    }, version: 2);
   }
 
   static Future<int> insertPozo(Pozo pozo) async {

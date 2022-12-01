@@ -9,7 +9,7 @@ class DBYacimientos {
       return db.execute(
         "CREATE TABLE yacimientos(nombreyacimiento TEXT,fechaalta TEXT,area TEXT,activo INTEGER)",
       );
-    }, version: 1);
+    }, version: 2);
   }
 
   static Future<int> insertYacimiento(Yacimiento yacimiento) async {

@@ -9,7 +9,7 @@ class DBPozosControles {
       return db.execute(
         "CREATE TABLE pozoscontroles(idcontrol INTEGER,codigopozo TEXT, idformula INTEGER,alarma TEXT,obligatorio TEXT)",
       );
-    }, version: 1);
+    }, version: 2);
   }
 
   static Future<int> insertPozoControl(PozosControle pozocontrol) async {

@@ -9,7 +9,7 @@ class DBMedicionesCabecera {
       return db.execute(
         "CREATE TABLE medicionescabecera(idControlPozo INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,bateria TEXT,pozo TEXT,fecha TEXT,ql DOUBLE,qo DOUBLE,qw DOUBLE,qg DOUBLE,wcLibre DOUBLE,wcEmulc DOUBLE,wcTotal DOUBLE,sales DOUBLE,gor DOUBLE,t DOUBLE,validacionControl TEXT,prTbg DOUBLE,prLinea DOUBLE,prCsg DOUBLE,regimenOperacion DOUBLE,aibCarrera DOUBLE,bespip DOUBLE,pcpTorque DOUBLE,observaciones TEXT,validadoSupervisor INTEGER,userIdInput INTEGER, userIDValida INTEGER,caudalInstantaneo DOUBLE,caudalMedio DOUBLE,lecturaAcumulada DOUBLE,presionBDP DOUBLE,presionAntFiltro DOUBLE,presionEC DOUBLE,ingresoDatos TEXT,reenvio INTEGER,muestra TEXT,fechaCarga TEXT,idUserValidaMuestra INTEGER,idUserImputSoft INTEGER,volt DOUBLE,amper DOUBLE,temp DOUBLE,fechaCargaAPP TEXT,enviado INTEGER)",
       );
-    }, version: 1);
+    }, version: 2);
   }
 
   static Future<int> insertMedicionCab(MedicionCabecera medicioncab) async {
