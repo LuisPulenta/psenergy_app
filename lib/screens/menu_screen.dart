@@ -1,25 +1,16 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:psenergy_app/helpers/helpers.dart';
 import 'package:psenergy_app/models/models.dart';
 import 'package:psenergy_app/screens/screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuScreen extends StatefulWidget {
   final Usuario user;
-  final List<Area> areas;
-  final List<Yacimiento> yacimientos;
-  final List<Bateria> baterias;
-  final List<Pozo> pozos;
-  final List<PozosFormula> pozosformulas;
-  final List<PozosControle> pozoscontroles;
 
-  const MenuScreen(
-      {required this.user,
-      required this.areas,
-      required this.yacimientos,
-      required this.baterias,
-      required this.pozos,
-      required this.pozosformulas,
-      required this.pozoscontroles});
+  const MenuScreen({
+    required this.user,
+  });
 
   @override
   _MenuScreenState createState() => _MenuScreenState();
@@ -74,6 +65,13 @@ class _MenuScreenState extends State<MenuScreen> {
 //*****************************************************************************
 //************************** INIT STATE ***************************************
 //*****************************************************************************
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getDatos();
+  }
 
 //*****************************************************************************
 //************************** PANTALLA *****************************************
@@ -226,14 +224,8 @@ class _MenuScreenState extends State<MenuScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomeScreen(
+                        builder: (context) => AlertasScreen(
                               user: widget.user,
-                              areas: _areas,
-                              yacimientos: _yacimientos,
-                              baterias: _baterias,
-                              pozos: _pozos,
-                              pozosformulas: _pozosformulas,
-                              pozoscontroles: _pozoscontroles,
                             )));
               },
             ),
@@ -271,5 +263,67 @@ class _MenuScreenState extends State<MenuScreen> {
 
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+  }
+
+//----------------------------------------------------------------------
+//---------------------------- _getDatos ----------------------------
+//----------------------------------------------------------------------
+
+  Future<Null> _getDatos() async {
+    _areas = await DBAreas.areas();
+    _yacimientos = await DBYacimientos.yacimientos();
+    _baterias = await DBBaterias.baterias();
+    _pozos = await DBPozos.pozos();
+    _pozosformulas = await DBPozosFormulas.pozosformulas();
+    _pozoscontroles = await DBPozosControles.pozoscontroles();
+    await _getMedicionesCab();
+  }
+
+  //----------------------------------------------------------------------
+//---------------------------- _getMedicionesCab -----------------------
+//----------------------------------------------------------------------
+
+  Future<Null> _getMedicionesCab() async {
+    _getTablaMedicionesCab();
+    return;
+  }
+
+  void _getTablaMedicionesCab() async {
+    _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
+    _medicionesCabCompleta.forEach((medicion) {
+      if (medicion.userIdInput == _usuarioLogueado.idUser) {
+        _medicionesCab.add(medicion);
+      }
+    });
+    _medicionesCab.sort((b, a) {
+      return a.idControlPozo
+          .toString()
+          .toLowerCase()
+          .compareTo(b.idControlPozo.toString().toLowerCase());
+    });
+
+    setState(() {
+      // _colorControlDePozoEMBLLE = Colors.green;
+      _showLoader = false;
+    });
+  }
+
+  _deleteMedicionesLocales() async {
+    var response = await showAlertDialog(
+        context: context,
+        title: 'Confirmación',
+        message:
+            '¿Está seguro de borrar las mediciones locales que hay en este teléfono',
+        actions: <AlertDialogAction>[
+          const AlertDialogAction(key: 'si', label: 'SI'),
+          const AlertDialogAction(key: 'no', label: 'NO'),
+        ]);
+    if (response == 'no') {
+      return;
+    }
+    _medicionesCab.forEach((element) {
+      DBMedicionesCabecera.delete(element);
+    });
+    return;
   }
 }

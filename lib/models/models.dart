@@ -1,3 +1,4 @@
+export 'package:psenergy_app/models/alarma.dart';
 export 'package:psenergy_app/models/area.dart';
 export 'package:psenergy_app/models/bateria.dart';
 export 'package:psenergy_app/models/medicioncabecera.dart';

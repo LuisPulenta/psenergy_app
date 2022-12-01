@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
+import 'dart:convert';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:psenergy_app/screens/screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_information/device_information.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:psenergy_app/helpers/dbwebsesions_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -40,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
   List<PozosControle> _pozoscontroles = [];
   List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
+  List<WebSesion> _webSesionsdb = [];
 
   String _imeiNo = "";
 
@@ -342,17 +346,57 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString(
         'validohasta', DateTime.now().add(new Duration(hours: 12)).toString());
 
+    // Agregar registro a bd local websesion
+
+    Random r = Random();
+    int resultado = r.nextInt((99999999 - 10000000) + 1) + 10000000;
+    double hora = (DateTime.now().hour * 3600 +
+            DateTime.now().minute * 60 +
+            DateTime.now().second +
+            DateTime.now().millisecond * 0.001) *
+        100;
+
+    WebSesion webSesion = WebSesion(
+        nroConexion: resultado,
+        usuario: _usuarioLogueado.idUser.toString(),
+        iP: _imeiNo,
+        loginDate: DateTime.now().toString(),
+        loginTime: hora.round(),
+        modulo: 'App-${_usuarioLogueado.codigo}',
+        logoutDate: "",
+        logoutTime: 0,
+        conectAverage: 0,
+        id_ws: 0,
+        version: Constants.version);
+
+    DBWebSesions.insertWebSesion(webSesion);
+
+    // Agregar nroConexion a SharedPreferences
+
+    String wsesion = jsonEncode(webSesion);
+
+    String body = jsonEncode(_usuarioLogueado);
+
+    // Si hay internet
+    //    - Subir al servidor todos los registros de la bd local websesion
+    //    - borrar la bd local websesion
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      _webSesionsdb = await DBWebSesions.webSesions();
+
+      for (var _webSesion in _webSesionsdb) {
+        await _postWebSesion(_webSesion);
+      }
+      await DBWebSesions.delete();
+    }
+
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => MenuScreen(
                   user: _usuarioLogueado,
-                  areas: _areas,
-                  yacimientos: _yacimientos,
-                  baterias: _baterias,
-                  pozos: _pozos,
-                  pozosformulas: _pozosformulas,
-                  pozoscontroles: _pozoscontroles,
                 )));
   }
 

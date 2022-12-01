@@ -4,6 +4,7 @@ import 'package:psenergy_app/models/models.dart';
 import 'constants.dart';
 
 class ApiHelper {
+//------------------------------------------------------------------------------
   static Future<Response> put(
       String controller, String id, Map<String, dynamic> request) async {
     var url = Uri.parse('${Constants.apiUrl}$controller$id');
@@ -23,6 +24,7 @@ class ApiHelper {
     return Response(isSuccess: true);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> post(
       String controller, Map<String, dynamic> request) async {
     var url = Uri.parse('${Constants.apiUrl}$controller');
@@ -42,6 +44,7 @@ class ApiHelper {
     return Response(isSuccess: true, result: response.body);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> delete(String controller, String id) async {
     var url = Uri.parse('${Constants.apiUrl}$controller$id');
     var response = await http.delete(
@@ -59,6 +62,7 @@ class ApiHelper {
     return Response(isSuccess: true);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> getUsuarios() async {
     var url = Uri.parse('${Constants.apiUrl}/api/Usuarios');
     var response = await http.get(
@@ -84,6 +88,7 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> getAreas() async {
     var url = Uri.parse('${Constants.apiUrl}/api/Areas');
     var response = await http.get(
@@ -109,6 +114,7 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> getYacimientosByArea(
       Map<String, dynamic> request, String area) async {
     var url =
@@ -137,6 +143,7 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> getYacimientos() async {
     var url = Uri.parse('${Constants.apiUrl}/api/Yacimientos');
     var response = await http.get(
@@ -162,6 +169,7 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> getBaterias() async {
     var url = Uri.parse('${Constants.apiUrl}/api/Baterias');
     var response = await http.get(
@@ -187,6 +195,7 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> getPozos() async {
     var url = Uri.parse('${Constants.apiUrl}/api/Pozo');
     var response = await http.get(
@@ -212,6 +221,7 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> getPozosControles() async {
     var url = Uri.parse('${Constants.apiUrl}/api/PozosControles');
     var response = await http.get(
@@ -237,6 +247,7 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+//------------------------------------------------------------------------------
   static Future<Response> getPozosFormulas() async {
     var url = Uri.parse('${Constants.apiUrl}/api/PozosFormulas');
     var response = await http.get(
@@ -257,6 +268,32 @@ class ApiHelper {
     if (decodedJson != null) {
       for (var item in decodedJson) {
         list.add(PozosFormula.fromJson(item));
+      }
+    }
+    return Response(isSuccess: true, result: list);
+  }
+
+//------------------------------------------------------------------------------
+  static Future<Response> getAlarmas() async {
+    var url = Uri.parse('${Constants.apiUrl}/api/ControlDePozoAlarmas');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<Alarma> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(Alarma.fromJson(item));
       }
     }
     return Response(isSuccess: true, result: list);
