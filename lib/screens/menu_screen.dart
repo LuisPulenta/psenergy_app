@@ -206,7 +206,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     MaterialPageRoute(
                         builder: (context) => AlarmasScreen(
                               user: widget.user,
-                              alarmas: _alarmas,
                             )));
               },
             ),
@@ -258,6 +257,7 @@ class _MenuScreenState extends State<MenuScreen> {
     _pozosformulas = await DBPozosFormulas.pozosformulas();
     _pozoscontroles = await DBPozosControles.pozoscontroles();
     _alarmas = await DBAlarmas.alarma();
+
     await _getMedicionesCab();
   }
 

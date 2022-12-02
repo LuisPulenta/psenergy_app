@@ -7,12 +7,10 @@ import 'package:psenergy_app/screens/screens.dart';
 
 class AlarmasScreen extends StatefulWidget {
   final Usuario user;
-  final List<Alarma> alarmas;
 
   const AlarmasScreen({
     Key? key,
     required this.user,
-    required this.alarmas,
   }) : super(key: key);
 
   @override
@@ -47,6 +45,7 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
       vidaUtil: 0.0);
 
   List<Alarma> _alarmas = [];
+  List<Alarma> _alarmasDB = [];
   bool _showLoader = false;
   bool _isFiltered = false;
   String _search = '';
@@ -83,6 +82,7 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
   @override
   void initState() {
     super.initState();
+
     _getAlarmas();
   }
 
@@ -306,6 +306,26 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
                                     children: [
                                       const SizedBox(
                                         width: 100,
+                                        child: Text("Alarma: ",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF781f1e),
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                      ),
+                                      Expanded(
+                                        flex: 5,
+                                        child: Text(e.idalarma.toString(),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 100,
                                         child: Text("Batería: ",
                                             style: TextStyle(
                                               fontSize: 12,
@@ -408,8 +428,17 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
 //-----------------------------------------------------------------------
 
   Future<void> _getAlarmas() async {
+    _alarmasDB = await DBAlarmas.alarma();
+
     setState(() {
-      _alarmas = widget.alarmas;
+      _alarmas = [];
+
+      for (Alarma alarma in _alarmasDB) {
+        if (alarma.tag == 0) {
+          _alarmas.add(alarma);
+        }
+      }
+
       _alarmas.sort((a, b) {
         return a.bateria
             .toString()
@@ -417,6 +446,8 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
             .compareTo(b.bateria.toString().toLowerCase());
       });
     });
+
+    var c = 1234;
   }
 
 //*****************************************************************************

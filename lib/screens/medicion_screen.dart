@@ -37,6 +37,8 @@ class _MedicionScreenState extends State<MedicionScreen> {
 //************************** DEFINICION DE VARIABLES **************************
 //*****************************************************************************
 
+  List<Alarma> _alarmas = [];
+
   Pozo _pozo = Pozo(
       codigopozo: '',
       codigobateria: '',
@@ -1870,6 +1872,19 @@ class _MedicionScreenState extends State<MedicionScreen> {
 
     await _actualizaMedicionesCab();
     setState(() {});
+
+//---------------------- Si es de Alarma la marca con TAG=1 ------------------
+
+    if (widget.opcion == 2) {
+      _alarmas = await DBAlarmas.alarma();
+      for (var alarma in _alarmas) {
+        if (alarma.idalarma == widget.alarma) {
+          alarma.tag = 1;
+          DBAlarmas.update(alarma);
+        }
+      }
+      setState(() {});
+    }
 
 //********************************************************************
 //************ RECORRE TABLA LOCAL PARA GRABAR EN SERVIDOR ***********

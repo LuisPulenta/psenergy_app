@@ -930,6 +930,14 @@ class _HomeScreenState extends State<HomeScreen>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  e.alarma! > 0
+                                      ? const Text("Alarma: ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          ))
+                                      : Container(),
                                   const Text("N° Med.: ",
                                       style: TextStyle(
                                         fontSize: 12,
@@ -956,6 +964,12 @@ class _HomeScreenState extends State<HomeScreen>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  e.alarma! > 0
+                                      ? Text(e.alarma.toString(),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ))
+                                      : Container(),
                                   Text(e.idControlPozo.toString(),
                                       style: const TextStyle(
                                         fontSize: 12,
@@ -982,6 +996,14 @@ class _HomeScreenState extends State<HomeScreen>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  e.alarma! > 0
+                                      ? const Text(" ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          ))
+                                      : Container(),
                                   const Text("Fecha: ",
                                       style: TextStyle(
                                         fontSize: 12,
@@ -1008,6 +1030,14 @@ class _HomeScreenState extends State<HomeScreen>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  e.alarma! > 0
+                                      ? const Text(" ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          ))
+                                      : Container(),
                                   Text(e.fecha,
                                       style: const TextStyle(
                                         fontSize: 12,
@@ -1174,7 +1204,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _actualizaMedicionesCab() async {
-    return Future.delayed(const Duration(seconds: 1), () async {
+    return Future.delayed(const Duration(seconds: 0), () async {
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
       for (var medicion in _medicionesCabCompleta) {
         if (DateTime.parse(medicion.fecha)
@@ -1198,6 +1228,8 @@ class _HomeScreenState extends State<HomeScreen>
             .toLowerCase()
             .compareTo(b.idControlPozo.toString().toLowerCase());
       });
+
+      var a1 = 1;
     });
   }
 
@@ -1288,7 +1320,12 @@ class _HomeScreenState extends State<HomeScreen>
           _addRecordServer(request, medicion);
         }
       }
-      _actualizaMedicionesCab();
+      await _actualizaMedicionesCab();
+
+      var b = _medicionesCab;
+
+      var c = 1;
+
       setState(() {});
     }
   }
@@ -1672,15 +1709,31 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _noContent2() {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        child: const Text(
-          'No hay mediciones cargadas',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+    return Container(
+      margin: const EdgeInsets.all(20),
+      child: Center(
+        child: Column(
+          children: [
+            const Text(
+              'No hay mediciones cargadas. ',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {});
+              },
+              child: const Text(
+                'Toque para refrescar.',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
