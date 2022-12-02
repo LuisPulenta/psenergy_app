@@ -53,4 +53,20 @@ class Alarma {
     data['tag'] = tag;
     return data;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'idalarma': idalarma,
+      'fechacarga': fechacarga,
+      'provieneidcontrol': provieneidcontrol,
+      'pozo': pozo,
+      'bateria': bateria,
+      'idusuariocarga': idusuariocarga,
+      'idusuarioapp': idusuarioapp,
+      'fechaejecutada': fechaejecutada,
+      'nuevoidcontrol': nuevoidcontrol,
+      'observacion': observacion,
+      'tag': tag,
+    };
+  }
 }

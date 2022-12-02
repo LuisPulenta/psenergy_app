@@ -41,6 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
   List<PozosFormula> _pozosformulas = [];
   List<PozosControle> _pozoscontrolesApi = [];
   List<PozosControle> _pozoscontroles = [];
+  List<Alarma> _alarmasApi = [];
+  List<Alarma> _alarmas = [];
   List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
   List<WebSesion> _webSesionsdb = [];
@@ -801,6 +803,49 @@ class _LoginScreenState extends State<LoginScreen> {
       _insertPozosControles();
     }
     _pozoscontroles = await DBPozosControles.pozoscontroles();
+
+    _getAlarmas();
+  }
+
+//----------------------------------------------------------------------
+//---------------------------- _getAlarmas ----------------------
+//----------------------------------------------------------------------
+
+  Future<Null> _getAlarmas() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      Response response = await ApiHelper.getAlarmas();
+
+      if (response.isSuccess) {
+        _alarmasApi = response.result;
+        _alarmasApi.sort((a, b) {
+          return a.bateria
+              .toString()
+              .toLowerCase()
+              .compareTo(b.bateria.toString().toLowerCase());
+        });
+        _hayInternet = true;
+      }
+    }
+    _getTablaAlarmas();
+    return;
+  }
+
+  void _getTablaAlarmas() async {
+    void _insertAlarmas() async {
+      if (_alarmasApi.isNotEmpty) {
+        DBAlarmas.deleteall();
+        _alarmasApi.forEach((element) {
+          DBAlarmas.insertAlarma(element);
+        });
+      }
+    }
+
+    if (_hayInternet) {
+      _insertAlarmas();
+    }
+    _alarmas = await DBAlarmas.alarma();
 
     _getMedicionesCab();
   }

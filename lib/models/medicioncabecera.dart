@@ -42,6 +42,7 @@ class MedicionCabecera {
   double? temp = 0;
   String fechaCargaAPP = '';
   int? enviado = 0;
+  int? alarma = 0;
 
   MedicionCabecera(
       {required this.idControlPozo,
@@ -86,7 +87,8 @@ class MedicionCabecera {
       required this.amper,
       required this.temp,
       required this.fechaCargaAPP,
-      required this.enviado});
+      required this.enviado,
+      required this.alarma});
 
   MedicionCabecera.fromJson(Map<String, dynamic> json) {
     idControlPozo = json['idControlPozo'];
@@ -132,53 +134,55 @@ class MedicionCabecera {
     temp = json['temp'];
     fechaCargaAPP = json['fechaCargaAPP'];
     enviado = json['enviado'];
+    alarma = json['alarma'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idControlPozo'] = this.idControlPozo;
-    data['bateria'] = this.bateria;
-    data['pozo'] = this.pozo;
-    data['fecha'] = this.fecha;
-    data['ql'] = this.ql;
-    data['qo'] = this.qo;
-    data['qw'] = this.qw;
-    data['qg'] = this.qg;
-    data['wcLibre'] = this.wcLibre;
-    data['wcEmulc'] = this.wcEmulc;
-    data['wcTotal'] = this.wcTotal;
-    data['sales'] = this.sales;
-    data['gor'] = this.gor;
-    data['t'] = this.t;
-    data['validacionControl'] = this.validacionControl;
-    data['prTbg'] = this.prTbg;
-    data['prLinea'] = this.prLinea;
-    data['prCsg'] = this.prCsg;
-    data['regimenOperacion'] = this.regimenOperacion;
-    data['aibCarrera'] = this.aibCarrera;
-    data['bespip'] = this.bespip;
-    data['pcpTorque'] = this.pcpTorque;
-    data['observaciones'] = this.observaciones;
-    data['validadoSupervisor'] = this.validadoSupervisor;
-    data['userIdInput'] = this.userIdInput;
-    data['userIDValida'] = this.userIDValida;
-    data['caudalInstantaneo'] = this.caudalInstantaneo;
-    data['caudalMedio'] = this.caudalMedio;
-    data['lecturaAcumulada'] = this.lecturaAcumulada;
-    data['presionBDP'] = this.presionBDP;
-    data['presionAntFiltro'] = this.presionAntFiltro;
-    data['presionEC'] = this.presionEC;
-    data['ingresoDatos'] = this.ingresoDatos;
-    data['reenvio'] = this.reenvio;
-    data['muestra'] = this.muestra;
-    data['fechaCarga'] = this.fechaCarga;
-    data['idUserValidaMuestra'] = this.idUserValidaMuestra;
-    data['idUserImputSoft'] = this.idUserImputSoft;
-    data['volt'] = this.volt;
-    data['amper'] = this.amper;
-    data['temp'] = this.temp;
-    data['fechaCargaAPP'] = this.fechaCargaAPP;
-    data['enviado'] = this.enviado;
+    data['idControlPozo'] = idControlPozo;
+    data['bateria'] = bateria;
+    data['pozo'] = pozo;
+    data['fecha'] = fecha;
+    data['ql'] = ql;
+    data['qo'] = qo;
+    data['qw'] = qw;
+    data['qg'] = qg;
+    data['wcLibre'] = wcLibre;
+    data['wcEmulc'] = wcEmulc;
+    data['wcTotal'] = wcTotal;
+    data['sales'] = sales;
+    data['gor'] = gor;
+    data['t'] = t;
+    data['validacionControl'] = validacionControl;
+    data['prTbg'] = prTbg;
+    data['prLinea'] = prLinea;
+    data['prCsg'] = prCsg;
+    data['regimenOperacion'] = regimenOperacion;
+    data['aibCarrera'] = aibCarrera;
+    data['bespip'] = bespip;
+    data['pcpTorque'] = pcpTorque;
+    data['observaciones'] = observaciones;
+    data['validadoSupervisor'] = validadoSupervisor;
+    data['userIdInput'] = userIdInput;
+    data['userIDValida'] = userIDValida;
+    data['caudalInstantaneo'] = caudalInstantaneo;
+    data['caudalMedio'] = caudalMedio;
+    data['lecturaAcumulada'] = lecturaAcumulada;
+    data['presionBDP'] = presionBDP;
+    data['presionAntFiltro'] = presionAntFiltro;
+    data['presionEC'] = presionEC;
+    data['ingresoDatos'] = ingresoDatos;
+    data['reenvio'] = reenvio;
+    data['muestra'] = muestra;
+    data['fechaCarga'] = fechaCarga;
+    data['idUserValidaMuestra'] = idUserValidaMuestra;
+    data['idUserImputSoft'] = idUserImputSoft;
+    data['volt'] = volt;
+    data['amper'] = amper;
+    data['temp'] = temp;
+    data['fechaCargaAPP'] = fechaCargaAPP;
+    data['enviado'] = enviado;
+    data['alarma'] = alarma;
     return data;
   }
 
@@ -227,6 +231,7 @@ class MedicionCabecera {
       'temp': temp,
       'fechaCargaAPP': fechaCargaAPP,
       'enviado': enviado,
+      'alarma': alarma,
     };
   }
 }

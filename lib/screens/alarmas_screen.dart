@@ -4,26 +4,52 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:psenergy_app/components/loader_component.dart';
 import 'package:psenergy_app/helpers/api_helper.dart';
+import 'package:psenergy_app/helpers/helpers.dart';
 import 'dart:math';
 
 import 'package:psenergy_app/models/models.dart';
+import 'package:psenergy_app/screens/screens.dart';
 
-class AlertasScreen extends StatefulWidget {
+class AlarmasScreen extends StatefulWidget {
   final Usuario user;
+  final List<Alarma> alarmas;
 
-  const AlertasScreen({
+  const AlarmasScreen({
     Key? key,
     required this.user,
+    required this.alarmas,
   }) : super(key: key);
 
   @override
-  _AlertasScreenState createState() => _AlertasScreenState();
+  _AlarmasScreenState createState() => _AlarmasScreenState();
 }
 
-class _AlertasScreenState extends State<AlertasScreen> {
+class _AlarmasScreenState extends State<AlarmasScreen> {
 //*****************************************************************************
 //************************** DEFINICION DE VARIABLES **************************
 //*****************************************************************************
+
+  List<Pozo> _pozos = [];
+  List<PozosFormula> _pozosformulas = [];
+  List<PozosControle> _pozoscontroles = [];
+  Pozo _pozoSelected = new Pozo(
+      codigopozo: '',
+      codigobateria: '',
+      descripcion: '',
+      fechaalta: '',
+      activo: 0,
+      ultimalectura: '',
+      latitud: '',
+      longitud: '',
+      qrcode: '',
+      observaciones: '',
+      tipopozo: '',
+      sistemaExtraccion: '',
+      cuenca: '',
+      idProvincia: 0,
+      cota: 0.0,
+      profundidad: 0.0,
+      vidaUtil: 0.0);
 
   List<Alarma> _alarmas = [];
   bool _showLoader = false;
@@ -388,46 +414,7 @@ class _AlertasScreenState extends State<AlertasScreen> {
 
   Future<void> _getAlarmas() async {
     setState(() {
-      _showLoader = true;
-    });
-
-    var connectivityResult = await Connectivity().checkConnectivity();
-
-    if (connectivityResult == ConnectivityResult.none) {
-      setState(() {
-        _showLoader = false;
-      });
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: 'Verifica que estés conectado a Internet',
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
-
-    Response response = Response(isSuccess: false);
-
-    response = await ApiHelper.getAlarmas();
-
-    setState(() {
-      _showLoader = false;
-    });
-
-    if (!response.isSuccess) {
-      await showAlertDialog(
-          context: context,
-          title: 'Error',
-          message: response.message,
-          actions: <AlertDialogAction>[
-            const AlertDialogAction(key: null, label: 'Aceptar'),
-          ]);
-      return;
-    }
-
-    setState(() {
-      _alarmas = response.result;
+      _alarmas = widget.alarmas;
       _alarmas.sort((a, b) {
         return a.bateria
             .toString()
@@ -442,17 +429,42 @@ class _AlertasScreenState extends State<AlertasScreen> {
 //*****************************************************************************
 
   void _goAlarma(Alarma alarma) async {
-    // String? result = await Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => ObraInfoScreen(
-    //               user: widget.user,
-    //               obra: obra,
-    //               positionUser: widget.positionUser,
-    //             )));
-    // if (result == 'yes' || result != 'yes') {
-    //   _getObras();
-    //   setState(() {});
-    // }
+    _pozos = await DBPozos.pozos();
+    _pozosformulas = await DBPozosFormulas.pozosformulas();
+    _pozoscontroles = await DBPozosControles.pozoscontroles();
+
+    for (Pozo pozo in _pozos) {
+      if (pozo.codigopozo == alarma.pozo) {
+        _pozoSelected = pozo;
+      }
+    }
+
+    String? result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MedicionScreen(
+                  user: widget.user,
+                  pozo: _pozoSelected,
+                  pozos: _pozos,
+                  pozosformulas: _pozosformulas,
+                  pozoscontroles: _pozoscontroles,
+                  opcion: 2,
+                  alarma: alarma.idalarma!,
+                )));
+    if (result != 'xyz') {
+      _alarmas = [];
+      setState(() {
+        _showLoader = true;
+      });
+
+      await _getAlarmas();
+      setState(() {
+        _showLoader = false;
+      });
+    }
+
+    setState(() {});
+
+    var aaa = 123;
   }
 }

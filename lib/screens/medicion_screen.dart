@@ -14,19 +14,28 @@ class MedicionScreen extends StatefulWidget {
   final List<Pozo> pozos;
   final List<PozosFormula> pozosformulas;
   final List<PozosControle> pozoscontroles;
+  final int opcion;
+  final int alarma;
 
   MedicionScreen(
       {required this.user,
       required this.pozo,
       required this.pozos,
       required this.pozosformulas,
-      required this.pozoscontroles});
+      required this.pozoscontroles,
+      required this.opcion,
+      required this.alarma});
 
   @override
   _MedicionScreenState createState() => _MedicionScreenState();
 }
 
 class _MedicionScreenState extends State<MedicionScreen> {
+
+//*****************************************************************************
+//************************** DEFINICION DE VARIABLES **************************
+//*****************************************************************************
+
   Pozo _pozo = Pozo(
       codigopozo: '',
       codigobateria: '',
@@ -167,6 +176,11 @@ class _MedicionScreenState extends State<MedicionScreen> {
   bool _temperaturaShowError = false;
   TextEditingController _temperaturaController = TextEditingController();
 
+
+//****************************************************************
+//************************** INIT STATE **************************
+//****************************************************************
+
   @override
   void initState() {
     super.initState();
@@ -209,6 +223,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       }
     });
   }
+
+//****************************************************************
+//************************** PANTALLA ****************************
+//****************************************************************
 
   @override
   Widget build(BuildContext context) {
@@ -369,6 +387,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
         ));
   }
 
+  //****************************************************************
+//************************** _showprtbg **************************
+//****************************************************************
+
   Widget _showprtbg() {
     return Container(
       decoration: BoxDecoration(
@@ -431,6 +453,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showprlinea ************************
+//****************************************************************
 
   Widget _showprlinea() {
     return Container(
@@ -495,6 +521,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showprcsg **************************
+//****************************************************************
+
   Widget _showprcsg() {
     return Container(
       decoration: BoxDecoration(
@@ -557,6 +587,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showql *****************************
+//****************************************************************
 
   Widget _showql() {
     return Container(
@@ -621,6 +655,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showqg *****************************
+//****************************************************************
+
   Widget _showqg() {
     return Container(
       decoration: BoxDecoration(
@@ -683,6 +721,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showtiempo *************************
+//****************************************************************
 
   Widget _showtiempo() {
     return Container(
@@ -747,6 +789,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showgpm ****************************
+//****************************************************************
+
   Widget _showgpm() {
     return Container(
       decoration: BoxDecoration(
@@ -809,6 +855,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showcarrera ************************
+//****************************************************************
 
   Widget _showcarrera() {
     return Container(
@@ -873,6 +923,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showcaudalinst *********************
+//****************************************************************
+
   Widget _showcaudalinst() {
     return Container(
       decoration: BoxDecoration(
@@ -935,6 +989,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showlecturaacumulada ***************
+//****************************************************************
 
   Widget _showlecturaacumulada() {
     return Container(
@@ -999,6 +1057,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showpresionantesdelfiltro **********
+//****************************************************************
 
   Widget _showpresionantesdelfiltro() {
     return Container(
@@ -1065,6 +1127,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showobservaciones ******************
+//****************************************************************
+
   Widget _showobservaciones() {
     return Container(
       decoration: BoxDecoration(
@@ -1128,6 +1194,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showRPM ****************************
+//****************************************************************
+
   Widget _showRPM() {
     return Container(
       decoration: BoxDecoration(
@@ -1186,6 +1256,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showTorque *************************
+//****************************************************************
 
   Widget _showTorque() {
     return Container(
@@ -1246,6 +1320,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showGPM ****************************
+//****************************************************************
+
   Widget _showGPM() {
     return Container(
       decoration: BoxDecoration(
@@ -1304,6 +1382,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showCarrera ************************
+//****************************************************************
 
   Widget _showCarrera() {
     return Container(
@@ -1364,6 +1446,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showFrecuencia *********************
+//****************************************************************
+
   Widget _showFrecuencia() {
     return Container(
       decoration: BoxDecoration(
@@ -1422,6 +1508,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showPip ****************************
+//****************************************************************
 
   Widget _showPip() {
     return Container(
@@ -1482,6 +1572,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showAmp ****************************
+//****************************************************************
+
   Widget _showAmp() {
     return Container(
       decoration: BoxDecoration(
@@ -1540,6 +1634,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showVolt ***************************
+//****************************************************************
 
   Widget _showVolt() {
     return Container(
@@ -1600,6 +1698,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showOrificio ***********************
+//****************************************************************
+
   Widget _showOrificio() {
     return Container(
       decoration: BoxDecoration(
@@ -1658,6 +1760,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       ),
     );
   }
+
+//****************************************************************
+//************************** _showTemperatura ********************
+//****************************************************************
 
   Widget _showTemperatura() {
     return Container(
@@ -1718,6 +1824,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _showButton *************************
+//****************************************************************
+
   Widget _showButton() {
     return Container(
       child: Row(
@@ -1756,6 +1866,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     );
   }
 
+//****************************************************************
+//************************** _save *******************************
+//****************************************************************
+
   _save() async {
     if (!validateFields()) {
       await showAlertDialog(
@@ -1769,6 +1883,12 @@ class _MedicionScreenState extends State<MedicionScreen> {
     }
     _addRecord();
   }
+
+
+//****************************************************************
+//************************** validateFields **********************
+//****************************************************************
+
 
   bool validateFields() {
     bool isValid = true;
@@ -1798,14 +1918,16 @@ class _MedicionScreenState extends State<MedicionScreen> {
     return isValid;
   }
 
+//****************************************************************
+//************************** _addRecord **************************
+//****************************************************************
+
   void _addRecord() async {
     setState(() {
       _showLoader = true;
     });
 
-//********************************************************************
-//********************* GRABA MEDICION EN TABLA LOCAL ****************
-//********************************************************************
+//---------------------- GRABA MEDICION EN TABLA LOCAL ------------------
     await _actualizaMedicionesCab();
 
     if (_medicionesCabCompleta.length == 0) {
@@ -1878,7 +2000,8 @@ class _MedicionScreenState extends State<MedicionScreen> {
             ? 0
             : double.parse(_temperatura.replaceAll(',', '.')),
         fechaCargaAPP: '',
-        enviado: 0);
+        enviado: 0,
+        alarma: widget.opcion == 1 ? 0 : widget.alarma);
 
     DBMedicionesCabecera.insertMedicionCab(medicionCabecera);
 
@@ -1958,6 +2081,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     Navigator.pop(context, 'yes');
   }
 
+//****************************************************************
+//************************** _addRecordServer ********************
+//****************************************************************
+
   void _addRecordServer(request, medicion) async {
     _idCab = 0;
     Response response = await ApiHelper.post(
@@ -1977,6 +2104,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     }
   }
 
+//****************************************************************
+//************************** _ponefechaultimalectura *************
+//****************************************************************
+
   void _ponefechaultimalectura(request2) async {
     Response response =
         await ApiHelper.put('/api/Pozo/', _pozo.codigopozo, request2);
@@ -1992,6 +2123,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       return;
     }
   }
+
+//****************************************************************
+//************************** _poneenviado1 ***********************
+//****************************************************************
 
   void _poneenviado1(MedicionCabecera medicion) {
     MedicionCabecera medicioncab = MedicionCabecera(
@@ -2037,7 +2172,9 @@ class _MedicionScreenState extends State<MedicionScreen> {
         amper: medicion.amper,
         temp: medicion.temp,
         fechaCargaAPP: DateTime.now().toIso8601String(),
-        enviado: 1);
+        enviado: 1,
+        alarma: widget.opcion == 1 ? 0 : widget.alarma        
+        );
 
     DBMedicionesCabecera.update(medicioncab);
 
@@ -2063,6 +2200,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
 
     _ponefechaultimalectura(request2);
   }
+
+//****************************************************************
+//************************** _poneenviado2 ***********************
+//****************************************************************
 
   void _poneenviado2(MedicionCabecera medicion) {
     MedicionCabecera medicioncab = MedicionCabecera(
@@ -2108,9 +2249,14 @@ class _MedicionScreenState extends State<MedicionScreen> {
         amper: medicion.amper,
         temp: medicion.temp,
         fechaCargaAPP: medicion.fechaCargaAPP,
-        enviado: 2);
+        enviado: 2,
+        alarma: widget.opcion == 1 ? 0 : widget.alarma);
     DBMedicionesCabecera.update(medicioncab);
   }
+
+//****************************************************************
+//************************** _addRecordsDetallesServer ***********
+//****************************************************************
 
   void _addRecordsDetallesServer(MedicionCabecera medicion) async {
     List<PozosControle> _pozoscontrolesselected = [];
@@ -2160,6 +2306,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     }
   }
 
+//****************************************************************
+//************************** _grabadetalle ***********************
+//****************************************************************
+
   void _grabadetalle(Map<String, dynamic> request3) async {
     Response response =
         await ApiHelper.post('/api/ControlPozoValoresFormulas', request3);
@@ -2175,6 +2325,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
       return;
     }
   }
+
+//****************************************************************
+//************************** _actualizaMedicionesCab *************
+//****************************************************************
 
   Future<void> _actualizaMedicionesCab() async {
     _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
@@ -2202,6 +2356,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
     });
   }
 
+//****************************************************************
+//************************** _getprefs ***************************
+//****************************************************************
+
   void _getprefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _validohasta = prefs.getString('validohasta').toString();
@@ -2209,10 +2367,18 @@ class _MedicionScreenState extends State<MedicionScreen> {
     setState(() {});
   }
 
+//****************************************************************
+//************************** _logOut *****************************
+//****************************************************************
+
   void _logOut() async {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
+
+//****************************************************************
+//************************** _carteles ***************************
+//****************************************************************
 
   void _carteles() async {
     await showAlertDialog(

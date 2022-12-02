@@ -7,7 +7,7 @@ class DBMedicionesCabecera {
     return openDatabase(join(await getDatabasesPath(), 'medicionescabecera.db'),
         onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE medicionescabecera(idControlPozo INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,bateria TEXT,pozo TEXT,fecha TEXT,ql DOUBLE,qo DOUBLE,qw DOUBLE,qg DOUBLE,wcLibre DOUBLE,wcEmulc DOUBLE,wcTotal DOUBLE,sales DOUBLE,gor DOUBLE,t DOUBLE,validacionControl TEXT,prTbg DOUBLE,prLinea DOUBLE,prCsg DOUBLE,regimenOperacion DOUBLE,aibCarrera DOUBLE,bespip DOUBLE,pcpTorque DOUBLE,observaciones TEXT,validadoSupervisor INTEGER,userIdInput INTEGER, userIDValida INTEGER,caudalInstantaneo DOUBLE,caudalMedio DOUBLE,lecturaAcumulada DOUBLE,presionBDP DOUBLE,presionAntFiltro DOUBLE,presionEC DOUBLE,ingresoDatos TEXT,reenvio INTEGER,muestra TEXT,fechaCarga TEXT,idUserValidaMuestra INTEGER,idUserImputSoft INTEGER,volt DOUBLE,amper DOUBLE,temp DOUBLE,fechaCargaAPP TEXT,enviado INTEGER)",
+        "CREATE TABLE medicionescabecera(idControlPozo INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,bateria TEXT,pozo TEXT,fecha TEXT,ql DOUBLE,qo DOUBLE,qw DOUBLE,qg DOUBLE,wcLibre DOUBLE,wcEmulc DOUBLE,wcTotal DOUBLE,sales DOUBLE,gor DOUBLE,t DOUBLE,validacionControl TEXT,prTbg DOUBLE,prLinea DOUBLE,prCsg DOUBLE,regimenOperacion DOUBLE,aibCarrera DOUBLE,bespip DOUBLE,pcpTorque DOUBLE,observaciones TEXT,validadoSupervisor INTEGER,userIdInput INTEGER, userIDValida INTEGER,caudalInstantaneo DOUBLE,caudalMedio DOUBLE,lecturaAcumulada DOUBLE,presionBDP DOUBLE,presionAntFiltro DOUBLE,presionEC DOUBLE,ingresoDatos TEXT,reenvio INTEGER,muestra TEXT,fechaCarga TEXT,idUserValidaMuestra INTEGER,idUserImputSoft INTEGER,volt DOUBLE,amper DOUBLE,temp DOUBLE,fechaCargaAPP TEXT,enviado INTEGER,alarma INTEGER)",
       );
     }, version: 2);
   }
@@ -79,6 +79,7 @@ class DBMedicionesCabecera {
               temp: medicionescabMap[i]['temp'],
               fechaCargaAPP: medicionescabMap[i]['fechaCargaAPP'],
               enviado: medicionescabMap[i]['enviado'],
+              alarma: medicionescabMap[i]['alarma'],
             ));
   }
 }

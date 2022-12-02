@@ -1,5 +1,6 @@
 export 'package:psenergy_app/helpers/api_helper.dart';
 export 'package:psenergy_app/helpers/constants.dart';
+export 'package:psenergy_app/helpers/dbalarmas.dart';
 export 'package:psenergy_app/helpers/dbareas_helper.dart';
 export 'package:psenergy_app/helpers/dbbaterias_helper.dart';
 export 'package:psenergy_app/helpers/dbmedicionescabecera_helper.dart';

@@ -117,7 +117,8 @@ class _HomeScreenState extends State<HomeScreen>
       amper: 0,
       temp: 0,
       fechaCargaAPP: '',
-      enviado: 0);
+      enviado: 0,
+      alarma: 0);
 
   bool _showLoader = false;
   String _conectadodesde = '';
@@ -882,6 +883,8 @@ class _HomeScreenState extends State<HomeScreen>
                   pozos: widget.pozos,
                   pozosformulas: widget.pozosformulas,
                   pozoscontroles: widget.pozoscontroles,
+                  opcion: 1,
+                  alarma: 0,
                 )));
     if (result == 'yes') {
       setState(() {
@@ -1376,7 +1379,8 @@ class _HomeScreenState extends State<HomeScreen>
         amper: medicion.amper,
         temp: medicion.temp,
         fechaCargaAPP: DateTime.now().toIso8601String(),
-        enviado: 1);
+        enviado: 1,
+        alarma: 0);
 
     DBMedicionesCabecera.update(medicioncab);
 
@@ -1447,7 +1451,8 @@ class _HomeScreenState extends State<HomeScreen>
         amper: medicion.amper,
         temp: medicion.temp,
         fechaCargaAPP: medicion.fechaCargaAPP,
-        enviado: 2);
+        enviado: 2,
+        alarma: 0);
     DBMedicionesCabecera.update(medicioncab);
   }
 
@@ -1495,7 +1500,8 @@ class _HomeScreenState extends State<HomeScreen>
         amper: medicion.amper,
         temp: medicion.temp,
         fechaCargaAPP: medicion.fechaCargaAPP,
-        enviado: 0);
+        enviado: 0,
+        alarma: 0);
     DBMedicionesCabecera.update(medicioncab);
   }
 

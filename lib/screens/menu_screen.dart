@@ -38,6 +38,8 @@ class _MenuScreenState extends State<MenuScreen> {
   List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
 
+  List<Alarma> _alarmas = [];
+
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
       codigo: '',
@@ -217,15 +219,16 @@ class _MenuScreenState extends State<MenuScreen> {
                 Icons.warning,
                 color: Color(0xff0e4888),
               ),
-              title: const Text('Alertas',
+              title: const Text('Alarmas',
                   style: TextStyle(fontSize: 15, color: Color(0xff0e4888))),
               tileColor: const Color(0xff0e4888),
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AlertasScreen(
+                        builder: (context) => AlarmasScreen(
                               user: widget.user,
+                              alarmas: _alarmas,
                             )));
               },
             ),
@@ -276,6 +279,7 @@ class _MenuScreenState extends State<MenuScreen> {
     _pozos = await DBPozos.pozos();
     _pozosformulas = await DBPozosFormulas.pozosformulas();
     _pozoscontroles = await DBPozosControles.pozoscontroles();
+    _alarmas = await DBAlarmas.alarma();
     await _getMedicionesCab();
   }
 
