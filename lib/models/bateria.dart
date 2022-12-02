@@ -21,12 +21,12 @@ class Bateria {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['codigobateria'] = this.codigobateria;
-    data['descripcion'] = this.descripcion;
-    data['fechaalta'] = this.fechaalta;
-    data['activa'] = this.activa;
-    data['nombreyacimiento'] = this.nombreyacimiento;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['codigobateria'] = codigobateria;
+    data['descripcion'] = descripcion;
+    data['fechaalta'] = fechaalta;
+    data['activa'] = activa;
+    data['nombreyacimiento'] = nombreyacimiento;
     return data;
   }
 

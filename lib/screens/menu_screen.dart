@@ -1,4 +1,3 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:psenergy_app/helpers/helpers.dart';
 import 'package:psenergy_app/models/models.dart';
@@ -9,8 +8,9 @@ class MenuScreen extends StatefulWidget {
   final Usuario user;
 
   const MenuScreen({
+    Key? key,
     required this.user,
-  });
+  }) : super(key: key);
 
   @override
   _MenuScreenState createState() => _MenuScreenState();
@@ -21,26 +21,18 @@ class _MenuScreenState extends State<MenuScreen> {
 //************************** DEFINICION DE VARIABLES **************************
 //*****************************************************************************
 
-  List<Usuario> _usuariosApi = [];
-  List<Usuario> _usuarios = [];
-  List<Area> _areasApi = [];
   List<Area> _areas = [];
-  List<Yacimiento> _yacimientosApi = [];
   List<Yacimiento> _yacimientos = [];
-  List<Bateria> _bateriasApi = [];
   List<Bateria> _baterias = [];
-  List<Pozo> _pozosApi = [];
   List<Pozo> _pozos = [];
-  List<PozosFormula> _pozosformulasApi = [];
   List<PozosFormula> _pozosformulas = [];
-  List<PozosControle> _pozoscontrolesApi = [];
   List<PozosControle> _pozoscontroles = [];
-  List<MedicionCabecera> _medicionesCab = [];
+  final List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
 
   List<Alarma> _alarmas = [];
 
-  Usuario _usuarioLogueado = Usuario(
+  final Usuario _usuarioLogueado = Usuario(
       idUser: 0,
       codigo: '',
       apellidonombre: '',
@@ -51,26 +43,12 @@ class _MenuScreenState extends State<MenuScreen> {
       causanteC: '',
       habilitaPaqueteria: 0);
 
-  String _email = 'TEST';
-  String _password = 'TEST';
-
-  String _emailError = '';
-  bool _emailShowError = false;
-  bool _hayInternet = false;
-
-  String _passwordError = '';
-  bool _passwordShowError = false;
-  bool _passwordShow = false;
-
-  bool _showLoader = false;
-
 //*****************************************************************************
 //************************** INIT STATE ***************************************
 //*****************************************************************************
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getDatos();
   }
@@ -175,7 +153,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             fontWeight: FontWeight.bold)),
                       ),
                       Text(
-                        widget.user.apellidonombre!,
+                        widget.user.apellidonombre,
                         style: (const TextStyle(color: Colors.black)),
                       ),
                     ],
@@ -272,7 +250,7 @@ class _MenuScreenState extends State<MenuScreen> {
 //---------------------------- _getDatos ----------------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getDatos() async {
+  Future<void> _getDatos() async {
     _areas = await DBAreas.areas();
     _yacimientos = await DBYacimientos.yacimientos();
     _baterias = await DBBaterias.baterias();
@@ -287,18 +265,18 @@ class _MenuScreenState extends State<MenuScreen> {
 //---------------------------- _getMedicionesCab -----------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getMedicionesCab() async {
+  Future<void> _getMedicionesCab() async {
     _getTablaMedicionesCab();
     return;
   }
 
   void _getTablaMedicionesCab() async {
     _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-    _medicionesCabCompleta.forEach((medicion) {
+    for (var medicion in _medicionesCabCompleta) {
       if (medicion.userIdInput == _usuarioLogueado.idUser) {
         _medicionesCab.add(medicion);
       }
-    });
+    }
     _medicionesCab.sort((b, a) {
       return a.idControlPozo
           .toString()
@@ -308,26 +286,6 @@ class _MenuScreenState extends State<MenuScreen> {
 
     setState(() {
       // _colorControlDePozoEMBLLE = Colors.green;
-      _showLoader = false;
     });
-  }
-
-  _deleteMedicionesLocales() async {
-    var response = await showAlertDialog(
-        context: context,
-        title: 'Confirmación',
-        message:
-            '¿Está seguro de borrar las mediciones locales que hay en este teléfono',
-        actions: <AlertDialogAction>[
-          const AlertDialogAction(key: 'si', label: 'SI'),
-          const AlertDialogAction(key: 'no', label: 'NO'),
-        ]);
-    if (response == 'no') {
-      return;
-    }
-    _medicionesCab.forEach((element) {
-      DBMedicionesCabecera.delete(element);
-    });
-    return;
   }
 }

@@ -8,8 +8,8 @@ class Area {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['nombrearea'] = this.nombrearea;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['nombrearea'] = nombrearea;
     return data;
   }
 

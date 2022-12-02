@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:convert';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -30,20 +29,13 @@ class _LoginScreenState extends State<LoginScreen> {
   List<Usuario> _usuariosApi = [];
   List<Usuario> _usuarios = [];
   List<Area> _areasApi = [];
-  List<Area> _areas = [];
   List<Yacimiento> _yacimientosApi = [];
-  List<Yacimiento> _yacimientos = [];
   List<Bateria> _bateriasApi = [];
-  List<Bateria> _baterias = [];
   List<Pozo> _pozosApi = [];
-  List<Pozo> _pozos = [];
   List<PozosFormula> _pozosformulasApi = [];
-  List<PozosFormula> _pozosformulas = [];
   List<PozosControle> _pozoscontrolesApi = [];
-  List<PozosControle> _pozoscontroles = [];
   List<Alarma> _alarmasApi = [];
-  List<Alarma> _alarmas = [];
-  List<MedicionCabecera> _medicionesCab = [];
+  final List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
   List<WebSesion> _webSesionsdb = [];
 
@@ -113,45 +105,43 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              child: Container(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/logo.png",
-                      height: 100,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "PS",
-                          style: TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.yellow),
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/logo.png",
+                    height: 100,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "PS",
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.yellow),
+                      ),
+                      Text(
+                        "Energy",
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        Constants.version,
+                        style: const TextStyle(
+                          fontSize: 16,
                         ),
-                        Text(
-                          "Energy",
-                          style: TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          Constants.version,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               )),
           Transform.translate(
             offset: const Offset(0, -60),
@@ -189,22 +179,11 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Center(
             child: _showLoader
-                ? LoaderComponent(text: 'Por favor espere...')
+                ? const LoaderComponent(text: 'Por favor espere...')
                 : Container(),
           )
         ],
       ),
-    );
-  }
-
-//----------------------------------------------------------------------
-//---------------------------- _showLogo -------------------------------
-//----------------------------------------------------------------------
-
-  Widget _showLogo() {
-    return const Image(
-      image: const AssetImage('assets/logo.png'),
-      width: 300,
     );
   }
 
@@ -345,8 +324,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('conectadodesde', DateTime.now().toString());
-    await prefs.setString(
-        'validohasta', DateTime.now().add(new Duration(hours: 12)).toString());
+    await prefs.setString('validohasta',
+        DateTime.now().add(const Duration(hours: 12)).toString());
 
     // Agregar registro a bd local websesion
 
@@ -374,10 +353,6 @@ class _LoginScreenState extends State<LoginScreen> {
     DBWebSesions.insertWebSesion(webSesion);
 
     // Agregar nroConexion a SharedPreferences
-
-    String wsesion = jsonEncode(webSesion);
-
-    String body = jsonEncode(_usuarioLogueado);
 
     // Si hay internet
     //    - Subir al servidor todos los registros de la bd local websesion
@@ -430,18 +405,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return isValid;
   }
 
-  void _storeUser(String body) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isRemembered', true);
-    await prefs.setString('userBody', body);
-    await prefs.setString('date', DateTime.now().toString());
-  }
-
 //----------------------------------------------------------------------
 //---------------------------- _getUsuarios ----------------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getUsuarios() async {
+  Future<void> _getUsuarios() async {
     setState(() {
       _showLoader = true;
     });
@@ -482,9 +450,9 @@ class _LoginScreenState extends State<LoginScreen> {
     void _insertUsuarios() async {
       if (_usuariosApi.isNotEmpty) {
         DBUsuarios.delete();
-        _usuariosApi.forEach((element) {
+        for (var element in _usuariosApi) {
           DBUsuarios.insertUsuario(element);
-        });
+        }
       }
     }
 
@@ -523,7 +491,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //---------------------------- _getAreas -------------------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getAreas() async {
+  Future<void> _getAreas() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
@@ -548,17 +516,15 @@ class _LoginScreenState extends State<LoginScreen> {
     void _insertAreas() async {
       if (_areasApi.isNotEmpty) {
         DBAreas.delete();
-        _areasApi.forEach((element) {
+        for (var element in _areasApi) {
           DBAreas.insertArea(element);
-        });
+        }
       }
     }
 
     if (_hayInternet) {
       _insertAreas();
     }
-
-    _areas = await DBAreas.areas();
 
     // if (_areas.length > 0) {
     //   setState(() {
@@ -573,7 +539,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //---------------------------- _getYacimientos -------------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getYacimientos() async {
+  Future<void> _getYacimientos() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
@@ -598,17 +564,15 @@ class _LoginScreenState extends State<LoginScreen> {
     void _insertYacimientos() async {
       if (_yacimientosApi.isNotEmpty) {
         DBYacimientos.delete();
-        _yacimientosApi.forEach((element) {
+        for (var element in _yacimientosApi) {
           DBYacimientos.insertYacimiento(element);
-        });
+        }
       }
     }
 
     if (_hayInternet) {
       _insertYacimientos();
     }
-
-    _yacimientos = await DBYacimientos.yacimientos();
 
     // if (_yacimientos.length > 0) {
     //   setState(() {
@@ -622,7 +586,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //---------------------------- _getBaterias ----------------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getBaterias() async {
+  Future<void> _getBaterias() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
@@ -647,16 +611,15 @@ class _LoginScreenState extends State<LoginScreen> {
     void _insertBaterias() async {
       if (_bateriasApi.isNotEmpty) {
         DBBaterias.delete();
-        _bateriasApi.forEach((element) {
+        for (var element in _bateriasApi) {
           DBBaterias.insertBateria(element);
-        });
+        }
       }
     }
 
     if (_hayInternet) {
       _insertBaterias();
     }
-    _baterias = await DBBaterias.baterias();
 
     // if (_baterias.length > 0) {
     //   setState(() {
@@ -671,7 +634,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //---------------------------- _getPozos -------------------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getPozos() async {
+  Future<void> _getPozos() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
@@ -696,16 +659,15 @@ class _LoginScreenState extends State<LoginScreen> {
     void _insertPozos() async {
       if (_pozosApi.isNotEmpty) {
         DBPozos.delete();
-        _pozosApi.forEach((element) {
+        for (var element in _pozosApi) {
           DBPozos.insertPozo(element);
-        });
+        }
       }
     }
 
     if (_hayInternet) {
       _insertPozos();
     }
-    _pozos = await DBPozos.pozos();
 
     // if (_pozos.length > 0) {
     //   setState(() {
@@ -719,7 +681,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //---------------------------- _getPozosFormulas -----------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getPozosFormulas() async {
+  Future<void> _getPozosFormulas() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
@@ -744,16 +706,15 @@ class _LoginScreenState extends State<LoginScreen> {
     void _insertPozosFormulas() async {
       if (_pozosformulasApi.isNotEmpty) {
         DBPozosFormulas.delete();
-        _pozosformulasApi.forEach((element) {
+        for (var element in _pozosformulasApi) {
           DBPozosFormulas.insertPozoFormula(element);
-        });
+        }
       }
     }
 
     if (_hayInternet) {
       _insertPozosFormulas();
     }
-    _pozosformulas = await DBPozosFormulas.pozosformulas();
 
     // if (_pozosformulas.length > 0) {
     //   setState(() {
@@ -768,7 +729,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //---------------------------- _getPozosControles ----------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getPozosControles() async {
+  Future<void> _getPozosControles() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
@@ -793,16 +754,15 @@ class _LoginScreenState extends State<LoginScreen> {
     void _insertPozosControles() async {
       if (_pozoscontrolesApi.isNotEmpty) {
         DBPozosControles.delete();
-        _pozoscontrolesApi.forEach((element) {
+        for (var element in _pozoscontrolesApi) {
           DBPozosControles.insertPozoControl(element);
-        });
+        }
       }
     }
 
     if (_hayInternet) {
       _insertPozosControles();
     }
-    _pozoscontroles = await DBPozosControles.pozoscontroles();
 
     _getAlarmas();
   }
@@ -811,7 +771,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //---------------------------- _getAlarmas ----------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getAlarmas() async {
+  Future<void> _getAlarmas() async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
@@ -836,16 +796,15 @@ class _LoginScreenState extends State<LoginScreen> {
     void _insertAlarmas() async {
       if (_alarmasApi.isNotEmpty) {
         DBAlarmas.deleteall();
-        _alarmasApi.forEach((element) {
+        for (var element in _alarmasApi) {
           DBAlarmas.insertAlarma(element);
-        });
+        }
       }
     }
 
     if (_hayInternet) {
       _insertAlarmas();
     }
-    _alarmas = await DBAlarmas.alarma();
 
     _getMedicionesCab();
   }
@@ -854,18 +813,18 @@ class _LoginScreenState extends State<LoginScreen> {
 //---------------------------- _getMedicionesCab -----------------------
 //----------------------------------------------------------------------
 
-  Future<Null> _getMedicionesCab() async {
+  Future<void> _getMedicionesCab() async {
     _getTablaMedicionesCab();
     return;
   }
 
   void _getTablaMedicionesCab() async {
     _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-    _medicionesCabCompleta.forEach((medicion) {
+    for (var medicion in _medicionesCabCompleta) {
       if (medicion.userIdInput == _usuarioLogueado.idUser) {
         _medicionesCab.add(medicion);
       }
-    });
+    }
     _medicionesCab.sort((b, a) {
       return a.idControlPozo
           .toString()
@@ -877,25 +836,6 @@ class _LoginScreenState extends State<LoginScreen> {
       // _colorControlDePozoEMBLLE = Colors.green;
       _showLoader = false;
     });
-  }
-
-  _deleteMedicionesLocales() async {
-    var response = await showAlertDialog(
-        context: context,
-        title: 'Confirmación',
-        message:
-            '¿Está seguro de borrar las mediciones locales que hay en este teléfono',
-        actions: <AlertDialogAction>[
-          const AlertDialogAction(key: 'si', label: 'SI'),
-          const AlertDialogAction(key: 'no', label: 'NO'),
-        ]);
-    if (response == 'no') {
-      return;
-    }
-    _medicionesCab.forEach((element) {
-      DBMedicionesCabecera.delete(element);
-    });
-    return;
   }
 
 //----------------------------------------------------------------------
@@ -941,7 +881,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       imeiNo = await DeviceInformation.deviceIMEINumber;
-    } on PlatformException catch (e) {}
+    } on PlatformException {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

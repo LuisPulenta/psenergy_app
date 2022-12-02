@@ -57,24 +57,24 @@ class Pozo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['codigopozo'] = this.codigopozo;
-    data['codigobateria'] = this.codigobateria;
-    data['descripcion'] = this.descripcion;
-    data['fechaalta'] = this.fechaalta;
-    data['activo'] = this.activo;
-    data['ultimalectura'] = this.ultimalectura;
-    data['latitud'] = this.latitud;
-    data['longitud'] = this.longitud;
-    data['qrcode'] = this.qrcode;
-    data['observaciones'] = this.observaciones;
-    data['tipopozo'] = this.tipopozo;
-    data['sistemaExtraccion'] = this.sistemaExtraccion;
-    data['cuenca'] = this.cuenca;
-    data['idProvincia'] = this.idProvincia;
-    data['cota'] = this.cota;
-    data['profundidad'] = this.profundidad;
-    data['vidaUtil'] = this.vidaUtil;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['codigopozo'] = codigopozo;
+    data['codigobateria'] = codigobateria;
+    data['descripcion'] = descripcion;
+    data['fechaalta'] = fechaalta;
+    data['activo'] = activo;
+    data['ultimalectura'] = ultimalectura;
+    data['latitud'] = latitud;
+    data['longitud'] = longitud;
+    data['qrcode'] = qrcode;
+    data['observaciones'] = observaciones;
+    data['tipopozo'] = tipopozo;
+    data['sistemaExtraccion'] = sistemaExtraccion;
+    data['cuenca'] = cuenca;
+    data['idProvincia'] = idProvincia;
+    data['cota'] = cota;
+    data['profundidad'] = profundidad;
+    data['vidaUtil'] = vidaUtil;
     return data;
   }
 

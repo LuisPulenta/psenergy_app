@@ -1,12 +1,7 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:psenergy_app/components/loader_component.dart';
-import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/helpers/helpers.dart';
-import 'dart:math';
-
 import 'package:psenergy_app/models/models.dart';
 import 'package:psenergy_app/screens/screens.dart';
 
@@ -32,7 +27,7 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
   List<Pozo> _pozos = [];
   List<PozosFormula> _pozosformulas = [];
   List<PozosControle> _pozoscontroles = [];
-  Pozo _pozoSelected = new Pozo(
+  Pozo _pozoSelected = Pozo(
       codigopozo: '',
       codigobateria: '',
       descripcion: '',
@@ -100,8 +95,8 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF484848),
       appBar: AppBar(
-        backgroundColor: Color(0xff9a6a2e),
-        title: Text('Alarmas'),
+        backgroundColor: const Color(0xff9a6a2e),
+        title: const Text('Alarmas'),
         centerTitle: true,
         actions: <Widget>[
           _isFiltered
@@ -112,7 +107,7 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -128,7 +123,7 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
         ),
         child: Center(
           child: _showLoader
-              ? LoaderComponent(text: 'Por favor espere...')
+              ? const LoaderComponent(text: 'Por favor espere...')
               : _getContent(),
         ),
       ),
@@ -284,7 +279,7 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
       child: ListView(
         children: _alarmas.map((e) {
           return Card(
-            color: Color.fromARGB(255, 246, 246, 255),
+            color: const Color.fromARGB(255, 246, 246, 255),
             shadowColor: Colors.white,
             elevation: 10,
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -309,9 +304,9 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
                                 children: [
                                   Row(
                                     children: [
-                                      Container(
+                                      const SizedBox(
                                         width: 100,
-                                        child: const Text("Batería: ",
+                                        child: Text("Batería: ",
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Color(0xFF781f1e),
@@ -329,9 +324,9 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      Container(
+                                      const SizedBox(
                                         width: 100,
-                                        child: const Text("Pozo: ",
+                                        child: Text("Pozo: ",
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Color(0xFF781f1e),
@@ -349,9 +344,9 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      Container(
+                                      const SizedBox(
                                         width: 100,
-                                        child: const Text("Fecha: ",
+                                        child: Text("Fecha: ",
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Color(0xFF781f1e),
@@ -372,9 +367,9 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      Container(
+                                      const SizedBox(
                                         width: 100,
-                                        child: const Text("Observaciones: ",
+                                        child: Text("Observaciones: ",
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Color(0xFF781f1e),
@@ -464,7 +459,5 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
     }
 
     setState(() {});
-
-    var aaa = 123;
   }
 }

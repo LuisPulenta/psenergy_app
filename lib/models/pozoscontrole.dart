@@ -21,12 +21,12 @@ class PozosControle {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idcontrol'] = this.idcontrol;
-    data['codigopozo'] = this.codigopozo;
-    data['idformula'] = this.idformula;
-    data['alarma'] = this.alarma;
-    data['obligatorio'] = this.obligatorio;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['idcontrol'] = idcontrol;
+    data['codigopozo'] = codigopozo;
+    data['idformula'] = idformula;
+    data['alarma'] = alarma;
+    data['obligatorio'] = obligatorio;
     return data;
   }
 

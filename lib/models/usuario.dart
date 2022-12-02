@@ -33,16 +33,16 @@ class Usuario {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idUser'] = this.idUser;
-    data['codigo'] = this.codigo;
-    data['apellidonombre'] = this.apellidonombre;
-    data['usrlogin'] = this.usrlogin;
-    data['usrcontrasena'] = this.usrcontrasena;
-    data['perfil'] = this.perfil;
-    data['habilitadoWeb'] = this.habilitadoWeb;
-    data['causanteC'] = this.causanteC;
-    data['habilitaPaqueteria'] = this.habilitaPaqueteria;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['idUser'] = idUser;
+    data['codigo'] = codigo;
+    data['apellidonombre'] = apellidonombre;
+    data['usrlogin'] = usrlogin;
+    data['usrcontrasena'] = usrcontrasena;
+    data['perfil'] = perfil;
+    data['habilitadoWeb'] = habilitadoWeb;
+    data['causanteC'] = causanteC;
+    data['habilitaPaqueteria'] = habilitaPaqueteria;
     return data;
   }
 

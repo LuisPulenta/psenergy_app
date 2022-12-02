@@ -18,11 +18,11 @@ class Yacimiento {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['nombreyacimiento'] = this.nombreyacimiento;
-    data['fechaalta'] = this.fechaalta;
-    data['area'] = this.area;
-    data['activo'] = this.activo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['nombreyacimiento'] = nombreyacimiento;
+    data['fechaalta'] = fechaalta;
+    data['area'] = area;
+    data['activo'] = activo;
     return data;
   }
 

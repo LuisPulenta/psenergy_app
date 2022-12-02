@@ -19,14 +19,16 @@ class HomeScreen extends StatefulWidget {
   final List<PozosFormula> pozosformulas;
   final List<PozosControle> pozoscontroles;
 
-  HomeScreen(
-      {required this.user,
+  const HomeScreen(
+      {Key? key,
+      required this.user,
       required this.areas,
       required this.yacimientos,
       required this.baterias,
       required this.pozos,
       required this.pozosformulas,
-      required this.pozoscontroles});
+      required this.pozoscontroles})
+      : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -74,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen>
   int _idCab = 0;
   double _valor = 0;
 
-  MedicionCabecera medicionSelected = new MedicionCabecera(
+  MedicionCabecera medicionSelected = MedicionCabecera(
       idControlPozo: 0,
       bateria: '',
       pozo: '',
@@ -128,21 +130,21 @@ class _HomeScreenState extends State<HomeScreen>
   List<MedicionCabecera> _medicionesCabCompleta = [];
 
   String _areaSelected = 'Seleccione un Área...';
-  String _areaError = '';
-  bool _areaShowError = false;
+  final String _areaError = '';
+  final bool _areaShowError = false;
   List<Area> _areas = [];
 
   String _yacimientoSelected = 'Seleccione un Yacimiento...';
-  String _yacimientoError = '';
-  bool _yacimientoShowError = false;
+  final String _yacimientoError = '';
+  final bool _yacimientoShowError = false;
   List<Yacimiento> _yacimientos = [];
 
   String _bateriaSelected = 'Seleccione una Batería...';
-  String _bateriaError = '';
-  bool _bateriaShowError = false;
+  final String _bateriaError = '';
+  final bool _bateriaShowError = false;
   List<Bateria> _baterias = [];
 
-  Pozo _pozoSelected = new Pozo(
+  Pozo _pozoSelected = Pozo(
       codigopozo: '',
       codigobateria: '',
       descripcion: '',
@@ -162,11 +164,10 @@ class _HomeScreenState extends State<HomeScreen>
       vidaUtil: 0.0);
   List<Pozo> _pozos = [];
 
-  String Titulo = "Nueva medición";
+  String titulo = "Nueva medición";
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _user = widget.user;
     _tabController = TabController(length: 3, vsync: this);
@@ -178,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffe9dac2),
+      backgroundColor: const Color(0xffe9dac2),
       // appBar: AppBar(
       //   //title: (Text("PSEnergy App")),
       //   title: (Text(Titulo)),
@@ -188,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen>
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -204,33 +205,33 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             child: TabBarView(
               controller: _tabController,
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               dragStartBehavior: DragStartBehavior.start,
               children: <Widget>[
                 Column(
                   children: <Widget>[
                     AppBar(
-                      title: (Text("Nueva medición")),
+                      title: (const Text("Nueva medición")),
                       centerTitle: true,
-                      backgroundColor: Color(0xff9a6a2e),
+                      backgroundColor: const Color(0xff9a6a2e),
                     ),
                     _showAreas(),
                     _showYacimientos(),
                     _showBaterias(),
                     Expanded(
-                      child: _pozos.length == 0 ? _noContent() : _showPozos(),
+                      child: _pozos.isEmpty ? _noContent() : _showPozos(),
                     )
                   ],
                 ),
                 Column(
                   children: [
                     AppBar(
-                      title: (Text("Ultimas mediciones      ")),
+                      title: (const Text("Ultimas mediciones      ")),
                       actions: [
                         ElevatedButton(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                            children: const [
                               Icon(
                                 Icons.done,
                                 color: Colors.red,
@@ -256,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.white,
-                            minimumSize: Size(50, 10),
+                            minimumSize: const Size(50, 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
                             ),
@@ -268,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                       ],
                       centerTitle: true,
-                      backgroundColor: Color(0xff9a6a2e),
+                      backgroundColor: const Color(0xff9a6a2e),
                     ),
                     Center(
                       child: _getContent(),
@@ -279,9 +280,9 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Column(
                     children: [
                       AppBar(
-                        title: (Text("Información")),
+                        title: (const Text("Información")),
                         centerTitle: true,
-                        backgroundColor: Color(0xff9a6a2e),
+                        backgroundColor: const Color(0xff9a6a2e),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
@@ -289,139 +290,122 @@ class _HomeScreenState extends State<HomeScreen>
                           Center(
                             child: Text(
                               _user.usrlogin.toUpperCase(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 30, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Center(
                             child: Text(
                               _user.apellidonombre,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 25,
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Row(
-                            children: [
-                              Container(
-                                child: Text(
-                                  "Conectado desde:",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                            children: const [
+                              Text(
+                                "Conectado desde:",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              Container(
-                                child: Text(
-                                  _conectadodesde == ''
-                                      ? ''
-                                      : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_conectadodesde))}',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
+                              Text(
+                                _conectadodesde == ''
+                                    ? ''
+                                    : DateFormat('dd/MM/yyyy HH:mm').format(
+                                        DateTime.parse(_conectadodesde)),
+                                style: const TextStyle(
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Row(
-                            children: [
-                              Container(
-                                child: Text(
-                                  "Válido hasta:",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                            children: const [
+                              Text(
+                                "Válido hasta:",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              Container(
-                                child: Text(
-                                  _validohasta == ''
-                                      ? ''
-                                      : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_validohasta))}',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
+                              Text(
+                                _validohasta == ''
+                                    ? ''
+                                    : DateFormat('dd/MM/yyyy HH:mm')
+                                        .format(DateTime.parse(_validohasta)),
+                                style: const TextStyle(
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Row(
-                            children: [
-                              Container(
-                                child: Text(
-                                  "Ultima actualización de Usuarios:",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                            children: const [
+                              Text(
+                                "Ultima actualización de Usuarios:",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              Container(
-                                child: Text(
-                                  _ultimaactualizacion == ''
-                                      ? ''
-                                      : '${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.parse(_ultimaactualizacion))}',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
+                              Text(
+                                _ultimaactualizacion == ''
+                                    ? ''
+                                    : DateFormat('dd/MM/yyyy HH:mm').format(
+                                        DateTime.parse(_ultimaactualizacion)),
+                                style: const TextStyle(
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Row(
-                            children: [
-                              Container(
-                                child: Text(
-                                  "Versión:",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                            children: const [
+                              Text(
+                                "Versión:",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              Container(
-                                child: Text(
-                                  Constants.version,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
+                              Text(
+                                Constants.version,
+                                style: const TextStyle(
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           ElevatedButton(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
+                              children: const [
                                 Icon(Icons.password),
                                 SizedBox(
                                   width: 15,
@@ -430,21 +414,21 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: Color(0xFF9a6a2e),
-                              minimumSize: Size(double.infinity, 50),
+                              primary: const Color(0xFF9a6a2e),
+                              minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
                             onPressed: () => _actualizarPassword(),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           ElevatedButton(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
+                              children: const [
                                 Icon(Icons.delete),
                                 SizedBox(
                                   width: 15,
@@ -454,7 +438,7 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                             style: ElevatedButton.styleFrom(
                               primary: Colors.red,
-                              minimumSize: Size(double.infinity, 50),
+                              minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
@@ -470,13 +454,13 @@ class _HomeScreenState extends State<HomeScreen>
                               setState(() {});
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           ElevatedButton(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
+                              children: const [
                                 Icon(Icons.keyboard),
                                 SizedBox(
                                   width: 15,
@@ -485,21 +469,21 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: Color(0xFF9a6a2e),
-                              minimumSize: Size(double.infinity, 50),
+                              primary: const Color(0xFF9a6a2e),
+                              minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
                             onPressed: () => _contacto(),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           ElevatedButton(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
+                              children: const [
                                 Icon(Icons.exit_to_app),
                                 SizedBox(
                                   width: 15,
@@ -508,8 +492,8 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: Color(0xFF9a6a2e),
-                              minimumSize: Size(double.infinity, 50),
+                              primary: const Color(0xFF9a6a2e),
+                              minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
@@ -525,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           _showLoader
-              ? LoaderComponent(
+              ? const LoaderComponent(
                   text: 'Por favor espere...',
                 )
               : Container(),
@@ -537,17 +521,17 @@ class _HomeScreenState extends State<HomeScreen>
             // indicator: BoxDecoration(
             //     color: Colors.orange,
             //     border: Border.all(width: 5, color: Colors.yellow)),
-            indicatorColor: Color(0xff9a6a2e),
+            indicatorColor: const Color(0xff9a6a2e),
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorWeight: 5,
             // isScrollable: false,
-            labelColor: Color(0xff9a6a2e),
+            labelColor: const Color(0xff9a6a2e),
             unselectedLabelColor: Colors.grey,
-            labelPadding: EdgeInsets.all(10),
+            labelPadding: const EdgeInsets.all(10),
             tabs: <Widget>[
               Tab(
                 child: Column(
-                  children: [
+                  children: const [
                     Icon(Icons.add_circle),
                     SizedBox(
                       width: 5,
@@ -561,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               Tab(
                 child: Column(
-                  children: [
+                  children: const [
                     Icon(Icons.cloud_upload),
                     SizedBox(
                       width: 5,
@@ -575,7 +559,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               Tab(
                 child: Column(
-                  children: [
+                  children: const [
                     Icon(Icons.person),
                     SizedBox(
                       width: 5,
@@ -603,12 +587,12 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _logOut() async {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
   void _contacto() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ContactoScreen()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const ContactoScreen()));
   }
 
   void _getprefs() async {
@@ -616,7 +600,6 @@ class _HomeScreenState extends State<HomeScreen>
     _conectadodesde = prefs.getString('conectadodesde').toString();
     _validohasta = prefs.getString('validohasta').toString();
     _ultimaactualizacion = prefs.getString('ultimaactualizacion').toString();
-    var a = 123;
     setState(() {});
   }
 
@@ -625,7 +608,7 @@ class _HomeScreenState extends State<HomeScreen>
     await _actualizaMedicionesCab();
   }
 
-  Future<Null> _getAreas() async {
+  Future<void> _getAreas() async {
     setState(() {
       _areas = widget.areas;
     });
@@ -633,9 +616,9 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _showAreas() {
     return Container(
-      padding: EdgeInsets.all(10),
-      child: _areas.length == 0
-          ? Text('Cargando áreas...')
+      padding: const EdgeInsets.all(10),
+      child: _areas.isEmpty
+          ? const Text('Cargando áreas...')
           : DropdownButtonFormField(
               items: _getComboAreas(),
               value: _areaSelected,
@@ -661,27 +644,27 @@ class _HomeScreenState extends State<HomeScreen>
 
   List<DropdownMenuItem<String>> _getComboAreas() {
     List<DropdownMenuItem<String>> list = [];
-    list.add(DropdownMenuItem(
+    list.add(const DropdownMenuItem(
       child: Text('Seleccione un Área...'),
       value: 'Seleccione un Área...',
       //value: 0,
     ));
 
-    _areas.forEach((area) {
+    for (var area in _areas) {
       list.add(DropdownMenuItem(
         child: Text(area.nombrearea),
         value: area.nombrearea,
       ));
-    });
+    }
 
     return list;
   }
 
   Widget _showYacimientos() {
     return Container(
-      padding: EdgeInsets.all(10),
-      child: _yacimientos.length == 0
-          ? Text('')
+      padding: const EdgeInsets.all(10),
+      child: _yacimientos.isEmpty
+          ? const Text('')
           : DropdownButtonFormField(
               items: _getComboYacimientos(),
               value: _yacimientoSelected,
@@ -705,22 +688,22 @@ class _HomeScreenState extends State<HomeScreen>
 
   List<DropdownMenuItem<String>> _getComboYacimientos() {
     List<DropdownMenuItem<String>> list = [];
-    list.add(DropdownMenuItem(
+    list.add(const DropdownMenuItem(
       child: Text('Seleccione un Yacimiento...'),
       value: 'Seleccione un Yacimiento...',
     ));
 
-    _yacimientos.forEach((yacimiento) {
+    for (var yacimiento in _yacimientos) {
       list.add(DropdownMenuItem(
         child: Text(yacimiento.nombreyacimiento),
         value: yacimiento.nombreyacimiento,
       ));
-    });
+    }
 
     return list;
   }
 
-  Future<Null> _getYacimientos(String area) async {
+  Future<void> _getYacimientos(String area) async {
     List<Yacimiento> filteredYacimientos = [];
     for (var yacimiento in widget.yacimientos) {
       if (yacimiento.area == _areaSelected) {
@@ -734,9 +717,9 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _showBaterias() {
     return Container(
-      padding: EdgeInsets.all(10),
-      child: _baterias.length == 0
-          ? Text('')
+      padding: const EdgeInsets.all(10),
+      child: _baterias.isEmpty
+          ? const Text('')
           : DropdownButtonFormField(
               items: _getComboBaterias(),
               value: _bateriaSelected,
@@ -758,22 +741,22 @@ class _HomeScreenState extends State<HomeScreen>
 
   List<DropdownMenuItem<String>> _getComboBaterias() {
     List<DropdownMenuItem<String>> list = [];
-    list.add(DropdownMenuItem(
+    list.add(const DropdownMenuItem(
       child: Text('Seleccione una Batería...'),
       value: 'Seleccione una Batería...',
     ));
 
-    _baterias.forEach((bateria) {
+    for (var bateria in _baterias) {
       list.add(DropdownMenuItem(
         child: Text(bateria.descripcion),
         value: bateria.codigobateria,
       ));
-    });
+    }
 
     return list;
   }
 
-  Future<Null> _getBaterias(String yacimiento) async {
+  Future<void> _getBaterias(String yacimiento) async {
     List<Bateria> filteredBaterias = [];
     for (var bateria in widget.baterias) {
       if (bateria.nombreyacimiento == _yacimientoSelected) {
@@ -785,7 +768,7 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  Future<Null> _getPozos(String bateria) async {
+  Future<void> _getPozos(String bateria) async {
     List<Pozo> filteredPozos = [];
     for (var pozo in widget.pozos) {
       if (pozo.codigobateria == _bateriaSelected) {
@@ -801,10 +784,10 @@ class _HomeScreenState extends State<HomeScreen>
     return ListView(
       children: _pozos.map((e) {
         return Card(
-          color: Color(0xFFe9dac2),
+          color: const Color(0xFFe9dac2),
           shadowColor: Colors.white,
           elevation: 10,
-          margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+          margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           child: InkWell(
             onTap: () {
               _pozoSelected = e;
@@ -815,13 +798,13 @@ class _HomeScreenState extends State<HomeScreen>
               }
             },
             child: Container(
-              margin: EdgeInsets.all(0),
-              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+              margin: const EdgeInsets.all(0),
+              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -830,7 +813,7 @@ class _HomeScreenState extends State<HomeScreen>
                               children: [
                                 Row(
                                   children: [
-                                    Text("Pozo: ",
+                                    const Text("Pozo: ",
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Color(0xFF781f1e),
@@ -838,11 +821,11 @@ class _HomeScreenState extends State<HomeScreen>
                                         )),
                                     Expanded(
                                       child: Text(e.descripcion.toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 12,
                                           )),
                                     ),
-                                    Text("Tipo Pozo: ",
+                                    const Text("Tipo Pozo: ",
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Color(0xFF781f1e),
@@ -850,7 +833,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         )),
                                     Expanded(
                                       child: Text(e.tipopozo.toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 12,
                                           )),
                                     ),
@@ -863,7 +846,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
                   ),
-                  Icon(Icons.arrow_forward_ios),
+                  const Icon(Icons.arrow_forward_ios),
                 ],
               ),
             ),
@@ -900,57 +883,60 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _getContent() {
-    return _medicionesCab.length == 0 ? _noContent2() : _getListView();
+    return _medicionesCab.isEmpty ? _noContent2() : _getListView();
   }
 
   Widget _getListView() {
     return RefreshIndicator(
       onRefresh: _grabaMediciones,
-      child: Container(
+      child: SizedBox(
         height: 550,
         child: ListView(
           scrollDirection: Axis.vertical,
           children: _medicionesCab.map((e) {
             return Card(
-              color: Color(0xFFe9dac2),
+              color: const Color(0xFFe9dac2),
               shadowColor: Colors.white,
               elevation: 10,
-              margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+              margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
               child: InkWell(
                 onTap: () {
                   medicionSelected = e;
                   _goInfoMedicion(e);
                 },
                 child: Container(
-                  margin: EdgeInsets.all(0),
-                  padding: EdgeInsets.all(0),
+                  margin: const EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
                   child: Row(
                     children: [
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               e.enviado == 1
-                                  ? Icon(Icons.done_all, color: Colors.green)
+                                  ? const Icon(Icons.done_all,
+                                      color: Colors.green)
                                   : e.enviado == 0
-                                      ? Icon(Icons.done, color: Colors.grey)
-                                      : Icon(Icons.done, color: Colors.red),
-                              SizedBox(
+                                      ? const Icon(Icons.done,
+                                          color: Colors.grey)
+                                      : const Icon(Icons.done,
+                                          color: Colors.red),
+                              const SizedBox(
                                 width: 15,
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text("N° Med.: ",
+                                  const Text("N° Med.: ",
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Color(0xFF781f1e),
                                         fontWeight: FontWeight.bold,
                                       )),
-                                  Text("Batería: ",
+                                  const Text("Batería: ",
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Color(0xFF781f1e),
@@ -958,7 +944,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       )),
                                   e.fechaCargaAPP == ""
                                       ? Container()
-                                      : Text("Fec. sub.:",
+                                      : const Text("Fec. sub.:",
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Color(0xFF781f1e),
@@ -971,37 +957,38 @@ class _HomeScreenState extends State<HomeScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(e.idControlPozo.toString(),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                       )),
                                   Text(e.bateria,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                       )),
                                   e.fechaCargaAPP == ""
                                       ? Container()
                                       : Text(
                                           //e.fechaCargaAPP,
-                                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(e.fechaCargaAPP))}',
-                                          style: TextStyle(
+                                          DateFormat('dd/MM/yyyy').format(
+                                              DateTime.parse(e.fechaCargaAPP)),
+                                          style: const TextStyle(
                                             fontSize: 12,
                                           )),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 15,
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text("Fecha: ",
+                                  const Text("Fecha: ",
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Color(0xFF781f1e),
                                         fontWeight: FontWeight.bold,
                                       )),
-                                  Text("Pozo: ",
+                                  const Text("Pozo: ",
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Color(0xFF781f1e),
@@ -1009,7 +996,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       )),
                                   e.fechaCargaAPP == ""
                                       ? Container()
-                                      : Text("",
+                                      : const Text("",
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Color(0xFF781f1e),
@@ -1022,16 +1009,16 @@ class _HomeScreenState extends State<HomeScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(e.fecha,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                       )),
                                   Text(e.pozo,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                       )),
                                   e.fechaCargaAPP == ""
                                       ? Container()
-                                      : Text("",
+                                      : const Text("",
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Color(0xFF781f1e),
@@ -1054,16 +1041,6 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Future<void> _getMediciones() async {
-    setState(() {
-      _showLoader = true;
-    });
-    await _actualizaMedicionesCab();
-    setState(() {
-      _showLoader = false;
-    });
-  }
-
   void _goInfoMedicion(MedicionCabecera e) {}
 
   _borrarMedicionesLocales() async {
@@ -1076,7 +1053,7 @@ class _HomeScreenState extends State<HomeScreen>
               return AlertDialog(
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+                  children: const [
                     Text(
                       "Atención!!",
                       style: TextStyle(color: Colors.red, fontSize: 20),
@@ -1087,11 +1064,11 @@ class _HomeScreenState extends State<HomeScreen>
                   height: 150,
                   child: Column(
                     children: [
-                      Text(
+                      const Text(
                         "Para borrar las mediciones locales de su Usuario debe escribir su contraseña",
                         style: TextStyle(fontSize: 14),
                       ),
-                      Text(""),
+                      const Text(""),
                       TextField(
                         obscureText: !_passwordShow,
                         decoration: InputDecoration(
@@ -1101,11 +1078,11 @@ class _HomeScreenState extends State<HomeScreen>
                             labelText: 'Contraseña',
                             errorText:
                                 _passwordShowError ? _passwordError : null,
-                            prefixIcon: Icon(Icons.lock),
+                            prefixIcon: const Icon(Icons.lock),
                             suffixIcon: IconButton(
                               icon: _passwordShow
-                                  ? Icon(Icons.visibility)
-                                  : Icon(Icons.visibility_off),
+                                  ? const Icon(Icons.visibility)
+                                  : const Icon(Icons.visibility_off),
                               onPressed: () {
                                 setState(() {
                                   _passwordShow = !_passwordShow;
@@ -1125,7 +1102,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ElevatedButton(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Icon(Icons.delete),
                         SizedBox(
                           width: 15,
@@ -1135,7 +1112,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.red,
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -1147,11 +1124,11 @@ class _HomeScreenState extends State<HomeScreen>
                         _passwordError = 'Contraseña incorrecta';
                         setState(() {});
                       } else {
-                        _medicionesCab.forEach((element) {
+                        for (var element in _medicionesCab) {
                           if (element.userIdInput == widget.user.idUser) {
                             DBMedicionesCabecera.delete(element);
                           }
-                        });
+                        }
                         _medicionesCab = [];
                         setState(() {});
                         _result2 = "yes";
@@ -1159,13 +1136,13 @@ class _HomeScreenState extends State<HomeScreen>
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   ElevatedButton(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Icon(Icons.cancel),
                         SizedBox(
                           width: 15,
@@ -1174,8 +1151,8 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF9a6a2e),
-                      minimumSize: Size(double.infinity, 50),
+                      primary: const Color(0xFF9a6a2e),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -1197,24 +1174,24 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _actualizaMedicionesCab() async {
-    return Future.delayed(Duration(seconds: 1), () async {
+    return Future.delayed(const Duration(seconds: 1), () async {
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-      _medicionesCabCompleta.forEach((medicion) {
+      for (var medicion in _medicionesCabCompleta) {
         if (DateTime.parse(medicion.fecha)
-                .isBefore(DateTime.now().add(Duration(days: -30))) &&
+                .isBefore(DateTime.now().add(const Duration(days: -30))) &&
             medicion.enviado != 0) {
           DBMedicionesCabecera.delete(medicion);
         }
-      });
+      }
 
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
 
       _medicionesCab = [];
-      _medicionesCabCompleta.forEach((medicion) {
+      for (var medicion in _medicionesCabCompleta) {
         if (medicion.userIdInput == widget.user.idUser) {
           _medicionesCab.add(medicion);
         }
-      });
+      }
       _medicionesCab.sort((b, a) {
         return a.idControlPozo
             .toString()
@@ -1225,23 +1202,23 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _actualizaMedicionesCab2() async {
-    return Future.delayed(Duration(seconds: 0), () async {
+    return Future.delayed(const Duration(seconds: 0), () async {
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
-      _medicionesCabCompleta.forEach((medicion) {
+      for (var medicion in _medicionesCabCompleta) {
         if (DateTime.parse(medicion.fecha)
-                .isBefore(DateTime.now().add(Duration(days: -30))) &&
+                .isBefore(DateTime.now().add(const Duration(days: -30))) &&
             medicion.enviado != 0) {
           DBMedicionesCabecera.delete(medicion);
         }
-      });
+      }
 
       _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
       _medicionesCab = [];
-      _medicionesCabCompleta.forEach((medicion) {
+      for (var medicion in _medicionesCabCompleta) {
         if (medicion.userIdInput == widget.user.idUser) {
           _medicionesCab.add(medicion);
         }
-      });
+      }
       _medicionesCab.sort((b, a) {
         return a.idControlPozo
             .toString()
@@ -1256,7 +1233,7 @@ class _HomeScreenState extends State<HomeScreen>
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      _medicionesCab.forEach((medicion) {
+      for (var medicion in _medicionesCab) {
         if (medicion.enviado == 0) {
           Map<String, dynamic> request = {
             'idControlPozo': 0,
@@ -1303,14 +1280,14 @@ class _HomeScreenState extends State<HomeScreen>
             'fechaCargaAPP': DateTime.now().toString(),
           };
 
-          widget.pozos.forEach((pozo) {
+          for (var pozo in widget.pozos) {
             if (pozo.codigopozo == medicion.pozo) {
               _pozo = pozo;
             }
-          });
+          }
           _addRecordServer(request, medicion);
         }
-      });
+      }
       _actualizaMedicionesCab();
       setState(() {});
     }
@@ -1507,13 +1484,13 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _addRecordsDetallesServer(MedicionCabecera medicion) async {
     List<PozosControle> _pozoscontrolesselected = [];
-    widget.pozoscontroles.forEach((pozoscontrol) {
+    for (var pozoscontrol in widget.pozoscontroles) {
       if (pozoscontrol.codigopozo == medicion.pozo) {
         _pozoscontrolesselected.add(pozoscontrol);
       }
-    });
-    if (_pozoscontrolesselected.length > 0) {
-      _pozoscontrolesselected.forEach((_pozocontrolselected) {
+    }
+    if (_pozoscontrolesselected.isNotEmpty) {
+      for (var _pozocontrolselected in _pozoscontrolesselected) {
         _pozocontrolselected.idformula == 1
             ? _valor = (medicion.regimenOperacion)!.toDouble()
             : _pozocontrolselected.idformula == 2
@@ -1549,7 +1526,7 @@ class _HomeScreenState extends State<HomeScreen>
         if (_valor > 0) {
           _grabadetalle(request3);
         }
-      });
+      }
     }
   }
 
@@ -1563,7 +1540,7 @@ class _HomeScreenState extends State<HomeScreen>
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -1579,7 +1556,7 @@ class _HomeScreenState extends State<HomeScreen>
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -1595,7 +1572,7 @@ class _HomeScreenState extends State<HomeScreen>
               return AlertDialog(
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+                  children: const [
                     Text(
                       "Atención!!",
                       style: TextStyle(color: Colors.red, fontSize: 20),
@@ -1605,7 +1582,7 @@ class _HomeScreenState extends State<HomeScreen>
                 content: SizedBox(
                   height: 150,
                   child: Column(
-                    children: [
+                    children: const [
                       Text(
                         "Esta opción es SOLAMENTE para el caso de que Ud. está seguro que una medición que no haya sido subida al servidor y haya sido marcada con tilde ROJO, se vuelva a marcar con tilde GRIS para tratar de volver a subirla al Servidor.",
                         style: TextStyle(fontSize: 14),
@@ -1618,7 +1595,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ElevatedButton(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: const [
                           Icon(Icons.refresh),
                           SizedBox(
                             width: 15,
@@ -1628,7 +1605,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.red,
-                        minimumSize: Size(double.infinity, 50),
+                        minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
@@ -1643,13 +1620,13 @@ class _HomeScreenState extends State<HomeScreen>
                         setState(() {});
                         Navigator.pop(context, 'yes');
                       }),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   ElevatedButton(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Icon(Icons.cancel),
                         SizedBox(
                           width: 15,
@@ -1658,8 +1635,8 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF9a6a2e),
-                      minimumSize: Size(double.infinity, 50),
+                      primary: const Color(0xFF9a6a2e),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -1682,8 +1659,8 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _noContent() {
     return Center(
       child: Container(
-        margin: EdgeInsets.all(20),
-        child: Text(
+        margin: const EdgeInsets.all(20),
+        child: const Text(
           '',
           style: TextStyle(
             fontSize: 16,
@@ -1697,8 +1674,8 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _noContent2() {
     return Center(
       child: Container(
-        margin: EdgeInsets.all(20),
-        child: Text(
+        margin: const EdgeInsets.all(20),
+        child: const Text(
           'No hay mediciones cargadas',
           style: TextStyle(
             fontSize: 16,

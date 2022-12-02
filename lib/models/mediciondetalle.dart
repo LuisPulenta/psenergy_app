@@ -24,13 +24,13 @@ class MedicionDetalle {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idcontrolformula'] = this.idcontrolformula;
-    data['idcontrolcab'] = this.idcontrolcab;
-    data['idpozo'] = this.idpozo;
-    data['idformula'] = this.idformula;
-    data['valor'] = this.valor;
-    data['fechaapp'] = this.fechaapp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['idcontrolformula'] = idcontrolformula;
+    data['idcontrolcab'] = idcontrolcab;
+    data['idpozo'] = idpozo;
+    data['idformula'] = idformula;
+    data['valor'] = valor;
+    data['fechaapp'] = fechaapp;
     return data;
   }
 

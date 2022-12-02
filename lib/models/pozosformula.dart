@@ -21,12 +21,12 @@ class PozosFormula {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idformula'] = this.idformula;
-    data['tiposistema'] = this.tiposistema;
-    data['tipodatos'] = this.tipodatos;
-    data['rangodesde'] = this.rangodesde;
-    data['rangohasta'] = this.rangohasta;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['idformula'] = idformula;
+    data['tiposistema'] = tiposistema;
+    data['tipodatos'] = tipodatos;
+    data['rangodesde'] = rangodesde;
+    data['rangohasta'] = rangohasta;
     return data;
   }
 
