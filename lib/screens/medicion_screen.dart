@@ -1968,6 +1968,39 @@ class _MedicionScreenState extends State<MedicionScreen> {
       request,
     );
 
+    if (response.isSuccess) {
+      var body = response.result;
+
+      var decodedJson = jsonDecode(body);
+
+      var medicioncab = MedicionCabecera.fromJson(decodedJson);
+
+      int nuevoidControlPozo = medicioncab.idControlPozo;
+
+//------------------- Actualiza Tabla ControlDePozoAlarmas ----------------
+      Map<String, dynamic> request2 = {
+        'IDALARMA': medicion.alarma,
+        'FECHACARGA': '',
+        'PROVIENEIDCONTROL': 0,
+        'POZO': '',
+        'BATERIA': '',
+        'IDUSUARIOCARGA': 0,
+        'IDUSUARIOAPP': widget.user.idUser,
+        'FECHAEJECUTADA': DateTime.now().toString(),
+        'NUEVOIDCONTROL': nuevoidControlPozo,
+        'OBSERVACION': '',
+        'TAG': 1,
+      };
+
+      if (medicion.alarma > 0) {
+        Response response2 = await ApiHelper.put(
+          '/api/ControlDePozoAlarmas/',
+          medicion.alarma.toString(),
+          request2,
+        );
+      }
+    }
+
     if (!response.isSuccess) {
       _poneenviado2(medicion);
     } else {
