@@ -52,11 +52,11 @@ class _LoginScreenState extends State<LoginScreen> {
       causanteC: '',
       habilitaPaqueteria: 0);
 
-  // String _email = '';
-  // String _password = '';
+  String _email = '';
+  String _password = '';
 
-  String _email = 'TEST';
-  String _password = 'TEST';
+  //String _email = 'TEST';
+  //String _password = 'TEST';
 
   String _emailError = '';
   bool _emailShowError = false;
