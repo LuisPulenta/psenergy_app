@@ -1,6 +1,7 @@
 export 'package:psenergy_app/screens/alarmas_screen.dart';
 export 'package:psenergy_app/screens/change_password_screen.dart';
 export 'package:psenergy_app/screens/contacto_screen.dart';
+export 'package:psenergy_app/screens/datos_screen.dart';
 export 'package:psenergy_app/screens/home_screen.dart';
 export 'package:psenergy_app/screens/login_screen.dart';
 export 'package:psenergy_app/screens/medicion_screen.dart';

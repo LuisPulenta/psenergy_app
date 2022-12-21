@@ -21,6 +21,7 @@ class _MenuScreenState extends State<MenuScreen> {
 //************************** DEFINICION DE VARIABLES **************************
 //*****************************************************************************
 
+  List<Usuario> _usuarios = [];
   List<Area> _areas = [];
   List<Yacimiento> _yacimientos = [];
   List<Bateria> _baterias = [];
@@ -215,6 +216,39 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             ListTile(
               leading: const Icon(
+                Icons.storage,
+                color: Color(0xff0e4888),
+              ),
+              title: const Text('Datos de la App',
+                  style: TextStyle(fontSize: 15, color: Color(0xff0e4888))),
+              tileColor: const Color(0xff0e4888),
+              onTap: () async {
+                String? result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DatosScreen(
+                              usuarios: _usuarios,
+                              areas: _areas,
+                              yacimientos: _yacimientos,
+                              baterias: _baterias,
+                              pozos: _pozos,
+                              pozosformulas: _pozosformulas,
+                              pozoscontroles: _pozoscontroles,
+                              medicionesCab: _medicionesCab,
+                              alarmas: _alarmas,
+                            )));
+                if (result == 'Yes' || result != 'Yes') {
+                  _getDatos();
+                  setState(() {});
+                }
+              },
+            ),
+            const Divider(
+              color: Color(0xff0e4888),
+              height: 1,
+            ),
+            ListTile(
+              leading: const Icon(
                 Icons.logout,
                 color: Color(0xff0e4888),
               ),
@@ -250,6 +284,7 @@ class _MenuScreenState extends State<MenuScreen> {
 //----------------------------------------------------------------------
 
   Future<void> _getDatos() async {
+    _usuarios = await DBUsuarios.usuarios();
     _areas = await DBAreas.areas();
     _yacimientos = await DBYacimientos.yacimientos();
     _baterias = await DBBaterias.baterias();

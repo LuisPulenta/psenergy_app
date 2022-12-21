@@ -215,9 +215,27 @@ class _HomeScreenState extends State<HomeScreen>
                       centerTitle: true,
                       backgroundColor: const Color(0xff9a6a2e),
                     ),
-                    _showAreas(),
-                    _showYacimientos(),
-                    _showBaterias(),
+                    widget.areas.isNotEmpty
+                        ? _showAreas()
+                        : const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                                'No hay áreas cargadas en el Sistema. Asegúrese de tener Internet y volver a conectarse para actualizar los Datos de la App necesarios para su funcionamiento.'),
+                          ),
+                    widget.yacimientos.isNotEmpty
+                        ? _showYacimientos()
+                        : const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                                'No hay yacimientos cargados en el Sistema. Asegúrese de tener Internet y volver a conectarse para actualizar los Datos de la App necesarios para su funcionamiento.'),
+                          ),
+                    widget.baterias.isNotEmpty
+                        ? _showBaterias()
+                        : const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                                'No hay baterías cargadas en el Sistema. Asegúrese de tener Internet y volver a conectarse para actualizar los Datos de la App necesarios para su funcionamiento.'),
+                          ),
                     Expanded(
                       child: _pozos.isEmpty ? _noContent() : _showPozos(),
                     )
@@ -887,187 +905,237 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _getListView() {
-    return RefreshIndicator(
-      onRefresh: _grabaMediciones,
-      child: SizedBox(
-        height: 550,
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          children: _medicionesCab.map((e) {
-            return Card(
-              color: const Color(0xFFe9dac2),
-              shadowColor: Colors.white,
-              elevation: 10,
-              margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-              child: InkWell(
-                onTap: () {
-                  medicionSelected = e;
-                  _goInfoMedicion(e);
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(0),
-                  padding: const EdgeInsets.all(0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              e.enviado == 1
-                                  ? const Icon(Icons.done_all,
-                                      color: Colors.green)
-                                  : e.enviado == 0
-                                      ? const Icon(Icons.done,
-                                          color: Colors.grey)
-                                      : const Icon(Icons.done,
-                                          color: Colors.red),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  e.alarma! > 0
-                                      ? const Text("Alarma: ",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF781f1e),
-                                            fontWeight: FontWeight.bold,
-                                          ))
-                                      : Container(),
-                                  const Text("N° Med.: ",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF781f1e),
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  const Text("Batería: ",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF781f1e),
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  e.fechaCargaAPP == ""
-                                      ? Container()
-                                      : const Text("Fec. sub.:",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF781f1e),
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  e.alarma! > 0
-                                      ? Text(e.alarma.toString(),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                          ))
-                                      : Container(),
-                                  Text(e.idControlPozo.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      )),
-                                  Text(e.bateria,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      )),
-                                  e.fechaCargaAPP == ""
-                                      ? Container()
-                                      : Text(
-                                          //e.fechaCargaAPP,
-                                          DateFormat('dd/MM/yyyy').format(
-                                              DateTime.parse(e.fechaCargaAPP)),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                          )),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  e.alarma! > 0
-                                      ? const Text(" ",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF781f1e),
-                                            fontWeight: FontWeight.bold,
-                                          ))
-                                      : Container(),
-                                  const Text("Fecha: ",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF781f1e),
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  const Text("Pozo: ",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF781f1e),
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  e.fechaCargaAPP == ""
-                                      ? Container()
-                                      : const Text("",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF781f1e),
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  e.alarma! > 0
-                                      ? const Text(" ",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF781f1e),
-                                            fontWeight: FontWeight.bold,
-                                          ))
-                                      : Container(),
-                                  Text(e.fecha,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      )),
-                                  Text(e.pozo,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      )),
-                                  e.fechaCargaAPP == ""
-                                      ? Container()
-                                      : const Text("",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF781f1e),
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
+    return Column(
+      children: [
+        const SizedBox(
+          height: 5,
         ),
-      ),
+        Row(
+          children: const [
+            Padding(
+              padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+              child: Icon(Icons.done_all, color: Colors.green),
+            ),
+            Text('Med. enviada al Servidor'),
+          ],
+        ),
+        Row(
+          children: const [
+            Padding(
+              padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+              child: Icon(Icons.done, color: Colors.grey),
+            ),
+            Text('Med. grabada local sin enviar al Servidor'),
+          ],
+        ),
+        Row(
+          children: const [
+            Padding(
+              padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+              child: Icon(Icons.done, color: Colors.red),
+            ),
+            Text('Med. que no se puede enviar al Servidor'),
+          ],
+        ),
+        RefreshIndicator(
+          onRefresh: _grabaMediciones,
+          child: SizedBox(
+            height: 550,
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              children: _medicionesCab.map((e) {
+                return Card(
+                  color: const Color(0xFFe9dac2),
+                  shadowColor: Colors.white,
+                  elevation: 10,
+                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                  child: InkWell(
+                    onTap: () {
+                      medicionSelected = e;
+                      _goInfoMedicion(e);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(0),
+                      padding: const EdgeInsets.all(0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  e.enviado == 1
+                                      ? const Icon(Icons.done_all,
+                                          color: Colors.green)
+                                      : e.enviado == 0
+                                          ? const Icon(Icons.done,
+                                              color: Colors.grey)
+                                          : const Icon(Icons.done,
+                                              color: Colors.red),
+                                  const SizedBox(
+                                    width: 15,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      e.alarma! > 0
+                                          ? const Text("Alarma: ",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xFF781f1e),
+                                                fontWeight: FontWeight.bold,
+                                              ))
+                                          : Container(),
+                                      const Text("N° Med.: ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      const Text("Batería: ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      const Text("Usuario: ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      e.fechaCargaAPP == ""
+                                          ? Container()
+                                          : const Text("Fec. sub.:",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xFF781f1e),
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      e.alarma! > 0
+                                          ? Text(e.alarma.toString(),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ))
+                                          : Container(),
+                                      Text(e.idControlPozo.toString(),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                      Text(e.bateria,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                      Text(e.userIdInput.toString(),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                      e.fechaCargaAPP == ""
+                                          ? Container()
+                                          : Text(
+                                              //e.fechaCargaAPP,
+                                              DateFormat('dd/MM/yyyy').format(
+                                                  DateTime.parse(
+                                                      e.fechaCargaAPP)),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              )),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    width: 15,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      e.alarma! > 0
+                                          ? const Text(" ",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xFF781f1e),
+                                                fontWeight: FontWeight.bold,
+                                              ))
+                                          : Container(),
+                                      const Text("Fecha: ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      const Text("Pozo: ",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF781f1e),
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                      e.fechaCargaAPP == ""
+                                          ? Container()
+                                          : const Text("",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xFF781f1e),
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      e.alarma! > 0
+                                          ? const Text(" ",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xFF781f1e),
+                                                fontWeight: FontWeight.bold,
+                                              ))
+                                          : Container(),
+                                      Text(e.fecha,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                      Text(e.pozo,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          )),
+                                      e.fechaCargaAPP == ""
+                                          ? Container()
+                                          : const Text("",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xFF781f1e),
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -1218,9 +1286,9 @@ class _HomeScreenState extends State<HomeScreen>
 
       _medicionesCab = [];
       for (var medicion in _medicionesCabCompleta) {
-        if (medicion.userIdInput == widget.user.idUser) {
-          _medicionesCab.add(medicion);
-        }
+        //if (medicion.userIdInput == widget.user.idUser) {
+        _medicionesCab.add(medicion);
+        //}
       }
       _medicionesCab.sort((b, a) {
         return a.idControlPozo
@@ -1732,17 +1800,27 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _noContent() {
     return Center(
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        child: const Text(
-          '',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
+        child: _bateriaSelected != "Seleccione una Batería..." && _pozos.isEmpty
+            ? Container(
+                margin: const EdgeInsets.all(20),
+                child: const Text(
+                  'No existen pozos para esta Batería',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            : Container(
+                margin: const EdgeInsets.all(20),
+                child: const Text(
+                  '',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ));
   }
 
   Widget _noContent2() {
@@ -1774,5 +1852,19 @@ class _HomeScreenState extends State<HomeScreen>
         ),
       ),
     );
+  }
+
+//*****************************************************************************
+//************************** METODO SHOWSNACKBAR ******************************
+//*****************************************************************************
+
+  void _showSnackbar(String text) {
+    SnackBar snackbar = SnackBar(
+      content: Text(text),
+      backgroundColor: Colors.lightGreen,
+      //duration: Duration(seconds: 3),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    //ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 }

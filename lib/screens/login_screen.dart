@@ -835,6 +835,15 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       // _colorControlDePozoEMBLLE = Colors.green;
       _showLoader = false;
+      _showSnackbar("Debe ingresar su Usuario y Contraseña");
+      // showAlertDialog(
+      //     context: context,
+      //     title: 'Mensaje',
+      //     message:
+      //         'Debe ingresar su Usuario y Contraseña. Luego apretar Aceptar. Debe estar conectado a Internet al menos la primera vez para que la Aplicación baje desde el Sevidor los datos necesarios para trabajar (Area, Yacimientos, Baterías, Pozos, Usuarios, etc.)',
+      //     actions: <AlertDialogAction>[
+      //       const AlertDialogAction(key: null, label: 'Aceptar'),
+      //     ]);
     });
   }
 
@@ -913,5 +922,19 @@ class _LoginScreenState extends State<LoginScreen> {
     };
 
     await ApiHelper.post('/api/WebSesions/', requestWebSesion);
+  }
+
+//*****************************************************************************
+//************************** METODO SHOWSNACKBAR ******************************
+//*****************************************************************************
+
+  void _showSnackbar(String text) {
+    SnackBar snackbar = SnackBar(
+      content: Text(text),
+      backgroundColor: Colors.lightGreen,
+      //duration: Duration(seconds: 3),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    //ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 }

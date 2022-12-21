@@ -28,6 +28,11 @@ class DBAlarmas {
         .delete("alarmas", where: "idalarma = ?", whereArgs: [alarma.idalarma]);
   }
 
+  static Future<int> deleteAll() async {
+    Database database = await _openDBAlarmas();
+    return database.delete("alarmas");
+  }
+
   static Future<int> update(Alarma alarma) async {
     Database database = await _openDBAlarmas();
     return database.update("alarmas", alarma.toMap(),

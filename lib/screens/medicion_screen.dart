@@ -1871,6 +1871,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
     DBMedicionesCabecera.insertMedicionCab(medicionCabecera);
 
     await _actualizaMedicionesCab();
+    _showSnackbar('Nueva medición grabada con éxito en Base de Datos Local');
     setState(() {});
 
 //---------------------- Si es de Alarma la marca con TAG=1 ------------------
@@ -2282,5 +2283,19 @@ class _MedicionScreenState extends State<MedicionScreen> {
   void _logOut() async {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+  }
+
+//*****************************************************************************
+//************************** METODO SHOWSNACKBAR ******************************
+//*****************************************************************************
+
+  void _showSnackbar(String text) {
+    SnackBar snackbar = SnackBar(
+      content: Text(text),
+      backgroundColor: Colors.lightGreen,
+      //duration: Duration(seconds: 3),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    //ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 }

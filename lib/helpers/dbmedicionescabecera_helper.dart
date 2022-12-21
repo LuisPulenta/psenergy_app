@@ -23,6 +23,11 @@ class DBMedicionesCabecera {
         where: "idControlPozo = ?", whereArgs: [medicioncab.idControlPozo]);
   }
 
+  static Future<int> deleteAll() async {
+    Database database = await _openDBMedicionesCab();
+    return database.delete("medicionescabecera");
+  }
+
   static Future<int> update(MedicionCabecera medicioncab) async {
     Database database = await _openDBMedicionesCab();
     return database.update("medicionescabecera", medicioncab.toMap(),
