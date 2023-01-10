@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String _imeiNo = "";
 
+  bool _notifications = false;
+
   Usuario _usuarioLogueado = Usuario(
       idUser: 0,
       codigo: '',
@@ -52,11 +56,14 @@ class _LoginScreenState extends State<LoginScreen> {
       causanteC: '',
       habilitaPaqueteria: 0);
 
-  String _email = '';
-  String _password = '';
+  //String _email = '';
+  //String _password = '';
 
   //String _email = 'TEST';
   //String _password = 'TEST';
+
+  String _email = 'CMAEDA';
+  String _password = 'CMA134';
 
   String _emailError = '';
   bool _emailShowError = false;
@@ -165,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        //_showRememberme(),
+                        _showNotifications(),
                         _showButtons(),
                         const SizedBox(
                           height: 10,
@@ -247,6 +254,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+//-----------------------------------------------------------------
+//--------------------- METODO SHOWNOTIFICATIONS ------------------
+//-----------------------------------------------------------------
+
+  _showNotifications() {
+    return CheckboxListTile(
+      title: const Text('Notificaciones:'),
+      value: _notifications,
+      onChanged: (value) {
+        setState(() {
+          _notifications = value!;
+        });
+      },
+    );
+  }
+
 //----------------------------------------------------------------------
 //---------------------------- _showButtons ----------------------------
 //----------------------------------------------------------------------
@@ -296,85 +319,229 @@ class _LoginScreenState extends State<LoginScreen> {
 //----------------------------------------------------------------------
 
   void _login() async {
-    setState(() {
-      _passwordShow = false;
-    });
+    FocusScope.of(context).unfocus(); //Oculta el teclado
 
-    if (!validateFields()) {
-      return;
-    }
-
-    List<Usuario> filteredUsuario = [];
-    for (var usuario in _usuarios) {
-      if (usuario.usrlogin.toLowerCase() == (_email.toLowerCase()) &&
-          usuario.usrcontrasena.toLowerCase() == (_password.toLowerCase())) {
-        filteredUsuario.add(usuario);
-      }
-    }
-
-    if (filteredUsuario.isEmpty) {
+//***** Login NORMAL *****
+    if (!_notifications) {
       setState(() {
-        _passwordShowError = true;
-        _passwordError = 'Usuario o contraseña incorrectos';
+        _passwordShow = false;
       });
-      return;
-    }
 
-    _usuarioLogueado = filteredUsuario[0];
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('conectadodesde', DateTime.now().toString());
-    await prefs.setString('validohasta',
-        DateTime.now().add(const Duration(hours: 12)).toString());
-
-    // Agregar registro a bd local websesion
-
-    Random r = Random();
-    int resultado = r.nextInt((99999999 - 10000000) + 1) + 10000000;
-    double hora = (DateTime.now().hour * 3600 +
-            DateTime.now().minute * 60 +
-            DateTime.now().second +
-            DateTime.now().millisecond * 0.001) *
-        100;
-
-    WebSesion webSesion = WebSesion(
-        nroConexion: resultado,
-        usuario: _usuarioLogueado.idUser.toString(),
-        iP: _imeiNo,
-        loginDate: DateTime.now().toString(),
-        loginTime: hora.round(),
-        modulo: 'App-${_usuarioLogueado.codigo}',
-        logoutDate: "",
-        logoutTime: 0,
-        conectAverage: 0,
-        id_ws: 0,
-        version: Constants.version);
-
-    DBWebSesions.insertWebSesion(webSesion);
-
-    // Agregar nroConexion a SharedPreferences
-
-    // Si hay internet
-    //    - Subir al servidor todos los registros de la bd local websesion
-    //    - borrar la bd local websesion
-
-    var connectivityResult = await Connectivity().checkConnectivity();
-
-    if (connectivityResult != ConnectivityResult.none) {
-      _webSesionsdb = await DBWebSesions.webSesions();
-
-      for (var _webSesion in _webSesionsdb) {
-        await _postWebSesion(_webSesion);
+      if (!validateFields()) {
+        return;
       }
-      await DBWebSesions.delete();
-    }
 
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MenuScreen(
-                  user: _usuarioLogueado,
-                )));
+      List<Usuario> filteredUsuario = [];
+      for (var usuario in _usuarios) {
+        if (usuario.usrlogin.toLowerCase() == (_email.toLowerCase()) &&
+            usuario.usrcontrasena.toLowerCase() == (_password.toLowerCase())) {
+          filteredUsuario.add(usuario);
+        }
+      }
+
+      if (filteredUsuario.isEmpty) {
+        setState(() {
+          _passwordShowError = true;
+          _passwordError = 'Usuario o contraseña incorrectos';
+        });
+        return;
+      }
+
+      _usuarioLogueado = filteredUsuario[0];
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('conectadodesde', DateTime.now().toString());
+      await prefs.setString('validohasta',
+          DateTime.now().add(const Duration(hours: 12)).toString());
+
+      // Agregar registro a bd local websesion
+
+      Random r = Random();
+      int resultado = r.nextInt((99999999 - 10000000) + 1) + 10000000;
+      double hora = (DateTime.now().hour * 3600 +
+              DateTime.now().minute * 60 +
+              DateTime.now().second +
+              DateTime.now().millisecond * 0.001) *
+          100;
+
+      WebSesion webSesion = WebSesion(
+          nroConexion: resultado,
+          usuario: _usuarioLogueado.idUser.toString(),
+          iP: _imeiNo,
+          loginDate: DateTime.now().toString(),
+          loginTime: hora.round(),
+          modulo: 'App-${_usuarioLogueado.codigo}',
+          logoutDate: "",
+          logoutTime: 0,
+          conectAverage: 0,
+          id_ws: 0,
+          version: Constants.version);
+
+      DBWebSesions.insertWebSesion(webSesion);
+
+      // Agregar nroConexion a SharedPreferences
+
+      // Si hay internet
+      //    - Subir al servidor todos los registros de la bd local websesion
+      //    - borrar la bd local websesion
+
+      var connectivityResult = await Connectivity().checkConnectivity();
+
+      if (connectivityResult != ConnectivityResult.none) {
+        _webSesionsdb = await DBWebSesions.webSesions();
+
+        for (var _webSesion in _webSesionsdb) {
+          await _postWebSesion(_webSesion);
+        }
+        await DBWebSesions.delete();
+      }
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MenuScreen(
+                    user: _usuarioLogueado,
+                  )));
+    } else
+
+    //***** Login a Notifications *****
+    {
+      setState(() {
+        _passwordShow = false;
+      });
+
+      if (!validateFields()) {
+        return;
+      }
+
+      setState(() {
+        _showLoader = true;
+      });
+
+      var connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult == ConnectivityResult.none) {
+        setState(() {
+          _showLoader = false;
+        });
+        await showAlertDialog(
+            context: context,
+            title: 'Error',
+            message: 'Verifica que estes conectado a internet.',
+            actions: <AlertDialogAction>[
+              const AlertDialogAction(key: null, label: 'Aceptar'),
+            ]);
+        return;
+      }
+
+      Map<String, dynamic> request = {
+        'Email': _email,
+        'password': _password,
+      };
+
+      var url = Uri.parse('${Constants.apiUrl}/Api/Account/GetUserByEmail');
+      var response = await http.post(
+        url,
+        headers: {
+          'content-type': 'application/json',
+          'accept': 'application/json',
+        },
+        body: jsonEncode(request),
+      );
+
+      if (response.statusCode >= 400) {
+        setState(() {
+          _passwordShowError = true;
+          _passwordError = 'Email o contraseña incorrectos';
+          _showLoader = false;
+        });
+        return;
+      }
+
+      var body = response.body;
+      var decodedJson = jsonDecode(body);
+      var user = User.fromJson(decodedJson);
+
+      if (user.contrasena.toLowerCase() != _password.toLowerCase()) {
+        setState(() {
+          _showLoader = false;
+          _passwordShowError = true;
+          _passwordError = 'Email o contraseña incorrectos';
+        });
+        return;
+      }
+
+      if (user.permOS != 1) {
+        setState(() {
+          _showLoader = false;
+          _passwordShowError = true;
+          _passwordError = 'Usuario no habilitado';
+        });
+        return;
+      }
+
+      _usuarioLogueado = Usuario(
+          idUser: user.idUsuario,
+          codigo: "",
+          apellidonombre: user.nombre + " " + user.apellido,
+          usrlogin: user.login,
+          usrcontrasena: user.contrasena,
+          perfil: 0,
+          habilitadoWeb: 0,
+          causanteC: "",
+          habilitaPaqueteria: 0);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('conectadodesde', DateTime.now().toString());
+      await prefs.setString('validohasta',
+          DateTime.now().add(const Duration(hours: 12)).toString());
+
+      // Agregar registro a bd local websesion
+
+      Random r = Random();
+      int resultado = r.nextInt((99999999 - 10000000) + 1) + 10000000;
+      double hora = (DateTime.now().hour * 3600 +
+              DateTime.now().minute * 60 +
+              DateTime.now().second +
+              DateTime.now().millisecond * 0.001) *
+          100;
+
+      WebSesion webSesion = WebSesion(
+          nroConexion: resultado,
+          usuario: _usuarioLogueado.idUser.toString(),
+          iP: _imeiNo,
+          loginDate: DateTime.now().toString(),
+          loginTime: hora.round(),
+          modulo: 'App-${_usuarioLogueado.codigo}',
+          logoutDate: "",
+          logoutTime: 0,
+          conectAverage: 0,
+          id_ws: 0,
+          version: Constants.version);
+
+      DBWebSesions.insertWebSesion(webSesion);
+
+      // Agregar nroConexion a SharedPreferences
+
+      // Si hay internet
+      //    - Subir al servidor todos los registros de la bd local websesion
+      //    - borrar la bd local websesion
+
+      if (connectivityResult != ConnectivityResult.none) {
+        _webSesionsdb = await DBWebSesions.webSesions();
+
+        for (var _webSesion in _webSesionsdb) {
+          await _postWebSesion(_webSesion);
+        }
+        await DBWebSesions.delete();
+      }
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Menu2Screen(
+                    user: _usuarioLogueado,
+                  )));
+    }
   }
 
 //----------------------------------------------------------------------

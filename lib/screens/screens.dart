@@ -6,4 +6,5 @@ export 'package:psenergy_app/screens/home_screen.dart';
 export 'package:psenergy_app/screens/login_screen.dart';
 export 'package:psenergy_app/screens/medicion_screen.dart';
 export 'package:psenergy_app/screens/menu_screen.dart';
+export 'package:psenergy_app/screens/menu2_screen.dart';
 export 'package:psenergy_app/screens/wait_screen.dart';
