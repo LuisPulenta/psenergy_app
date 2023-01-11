@@ -298,4 +298,57 @@ class ApiHelper {
     }
     return Response(isSuccess: true, result: list);
   }
+
+  //------------------------------------------------------------------------------
+  static Future<Response> getNotifications() async {
+    var url = Uri.parse('${Constants.apiUrl}/api/Notifications');
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<Notificacion> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(Notificacion.fromJson(item));
+      }
+    }
+    return Response(isSuccess: true, result: list);
+  }
+
+  //---------------------------------------------------------------------------
+  static Future<Response> getDestinos(int iduser) async {
+    var url =
+        Uri.parse('${Constants.apiUrl}/api/Destinatarios/GetDestinos/$iduser');
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<Destino> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(Destino.fromJson(item));
+      }
+    }
+    return Response(isSuccess: true, result: list);
+  }
 }

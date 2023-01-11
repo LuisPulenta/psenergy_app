@@ -5,7 +5,7 @@ import 'package:psenergy_app/screens/screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Menu2Screen extends StatefulWidget {
-  final Usuario user;
+  final User user;
 
   const Menu2Screen({
     Key? key,
@@ -95,7 +95,7 @@ class _Menu2ScreenState extends State<Menu2Screen> {
                 height: 200,
               ),
               Text(
-                'Bienvenido/a ${widget.user.apellidonombre}',
+                'Bienvenido/a ${widget.user.nombre + " " + widget.user.apellido}',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -154,7 +154,7 @@ class _Menu2ScreenState extends State<Menu2Screen> {
                             fontWeight: FontWeight.bold)),
                       ),
                       Text(
-                        widget.user.apellidonombre,
+                        widget.user.nombre + " " + widget.user.apellido,
                         style: (const TextStyle(color: Colors.black)),
                       ),
                     ],
@@ -178,14 +178,8 @@ class _Menu2ScreenState extends State<Menu2Screen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomeScreen(
+                        builder: (context) => NotificationsScreen(
                               user: widget.user,
-                              areas: _areas,
-                              yacimientos: _yacimientos,
-                              baterias: _baterias,
-                              pozos: _pozos,
-                              pozosformulas: _pozosformulas,
-                              pozoscontroles: _pozoscontroles,
                             )));
               },
             ),
