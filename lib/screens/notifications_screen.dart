@@ -6,6 +6,8 @@ import 'package:psenergy_app/components/loader_component.dart';
 import 'package:psenergy_app/helpers/api_helper.dart';
 import 'package:psenergy_app/models/models.dart';
 
+import 'screens.dart';
+
 class NotificationsScreen extends StatefulWidget {
   final User user;
   const NotificationsScreen({Key? key, required this.user}) : super(key: key);
@@ -49,10 +51,26 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         title: const Text('Notificaciones'),
         centerTitle: true,
       ),
-      body: Center(
-        child: _showLoader
-            ? const LoaderComponent(text: 'Por favor espere...')
-            : _getContent(),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(
+                (0xffe9dac2),
+              ),
+              Color(
+                (0xffd3a735),
+              ),
+            ],
+          ),
+        ),
+        child: Center(
+          child: _showLoader
+              ? const LoaderComponent(text: 'Por favor espere...')
+              : _getContent(),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -215,12 +233,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       child: ListView(
         children: _notificationsFiltered.map((e) {
           return Card(
-            color: const Color.fromARGB(255, 189, 162, 148),
+            color: Color.fromARGB(255, 238, 231, 227),
             shadowColor: Colors.white,
             elevation: 10,
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 5),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                _goNotification(e);
+              },
               child: Container(
                 height: 150, //136,
                 margin: const EdgeInsets.all(0),
@@ -423,7 +443,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             color: Color(0xFF781f1e),
                           ),
                           onPressed: () {
-                            _goInfoInspeccion(e);
+                            _goNotification(e);
                           }),
                     )
                   ],
@@ -437,20 +457,20 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
 //------------------------------------------------------------------
-//---------------------------- _getListView ------------------------
+//---------------------------- _goNotification ---------------------
 //------------------------------------------------------------------
 
-  void _goInfoInspeccion(Notificacion e) async {
-    // String? result = await Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => InspeccionDuplicarScreen(
-    //               user: widget.user,
-    //               vistaInspeccion: e,
-    //             )));
-    // if (result == 'yes') {
-    //   _getNotifications();
-    // }
+  void _goNotification(Notificacion e) async {
+    String? result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => NotificationScreen(
+                  user: widget.user,
+                  notification: e,
+                )));
+    if (result == 'yes') {
+      _getNotifications();
+    }
   }
 
 //------------------------------------------------------------------
@@ -481,24 +501,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
 //-------------------------------------------------------------
-//--------------------- METODO SHOWVENCENHOY ------------------
+//--------------------- METODO SHOWMIAS -----------------------
 //-------------------------------------------------------------
 
-  _showVencenHoy() {
+  _showMias() {
     return CheckboxListTile(
-      title: const Text('Vencen hoy:'),
-      value: _vencenhoy,
+      title: const Text('Mis notificaciones:'),
+      value: _mias,
       onChanged: (value) {
         setState(() {
-          _vencenhoy = value!;
+          _mias = value!;
         });
-        if (_vencenhoy) {
+
+        //---------------------------------------------------------------------
+        if (_vencenhoy == false && _mias == false) {
+          _notificationsFiltered = _notifications;
+        }
+
+        //---------------------------------------------------------------------
+        if (_vencenhoy == true && _mias == false) {
           _notificationsFiltered = [];
 
           _notifications.forEach((notificacion) {
-            String fechaNotificacion =
-                notificacion.fechaFin.toString().substring(0, 10);
-
             int anioHoy = DateTime.now().year;
             int mesHoy = DateTime.now().month;
             int diaHoy = DateTime.now().day;
@@ -516,26 +540,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               _notificationsFiltered.add(notificacion);
             }
           });
-        } else {
-          _notificationsFiltered = _notifications;
         }
-      },
-    );
-  }
 
-//-------------------------------------------------------------
-//--------------------- METODO SHOWMIAS -----------------------
-//-------------------------------------------------------------
-
-  _showMias() {
-    return CheckboxListTile(
-      title: const Text('Mis notificaciones:'),
-      value: _mias,
-      onChanged: (value) {
-        setState(() {
-          _mias = value!;
-        });
-        if (_mias) {
+        //---------------------------------------------------------------------
+        if (_vencenhoy == false && _mias == true) {
           _notificationsFiltered = [];
 
           _notifications.forEach((notificacion) {
@@ -545,9 +553,123 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               }
             });
           });
-        } else {
+        }
+
+        //---------------------------------------------------------------------
+        if (_vencenhoy == true && _mias == true) {
+          _notificationsFiltered = [];
+
+          _notifications.forEach((notificacion) {
+            _destinos.forEach((destino) {
+              int anioHoy = DateTime.now().year;
+              int mesHoy = DateTime.now().month;
+              int diaHoy = DateTime.now().day;
+
+              int anioNotificacion =
+                  int.parse(notificacion.fechaFin.toString().substring(0, 4));
+              int mesNotificacion =
+                  int.parse(notificacion.fechaFin.toString().substring(5, 7));
+              int diaNotificacion =
+                  int.parse(notificacion.fechaFin.toString().substring(8, 10));
+              if (notificacion.idnotficacion == destino.idnotificacion &&
+                  (anioHoy == anioNotificacion &&
+                      mesHoy == mesNotificacion &&
+                      diaHoy == diaNotificacion)) {
+                _notificationsFiltered.add(notificacion);
+              }
+            });
+          });
+        }
+
+        //---------------------------------------------------------------------
+        setState(() {});
+      },
+    );
+  }
+
+//-------------------------------------------------------------
+//--------------------- METODO SHOWVENCENHOY ------------------
+//-------------------------------------------------------------
+
+  _showVencenHoy() {
+    return CheckboxListTile(
+      title: const Text('Vencen hoy:'),
+      value: _vencenhoy,
+      onChanged: (value) {
+        setState(() {
+          _vencenhoy = value!;
+        });
+
+        //---------------------------------------------------------------------
+        if (_vencenhoy == false && _mias == false) {
           _notificationsFiltered = _notifications;
         }
+
+        //---------------------------------------------------------------------
+        if (_vencenhoy == true && _mias == false) {
+          _notificationsFiltered = [];
+
+          _notifications.forEach((notificacion) {
+            int anioHoy = DateTime.now().year;
+            int mesHoy = DateTime.now().month;
+            int diaHoy = DateTime.now().day;
+
+            int anioNotificacion =
+                int.parse(notificacion.fechaFin.toString().substring(0, 4));
+            int mesNotificacion =
+                int.parse(notificacion.fechaFin.toString().substring(5, 7));
+            int diaNotificacion =
+                int.parse(notificacion.fechaFin.toString().substring(8, 10));
+
+            if (anioHoy == anioNotificacion &&
+                mesHoy == mesNotificacion &&
+                diaHoy == diaNotificacion) {
+              _notificationsFiltered.add(notificacion);
+            }
+          });
+        }
+
+        //---------------------------------------------------------------------
+        if (_vencenhoy == false && _mias == true) {
+          _notificationsFiltered = [];
+
+          _notifications.forEach((notificacion) {
+            _destinos.forEach((destino) {
+              if (notificacion.idnotficacion == destino.idnotificacion) {
+                _notificationsFiltered.add(notificacion);
+              }
+            });
+          });
+        }
+
+        //---------------------------------------------------------------------
+        if (_vencenhoy == true && _mias == true) {
+          _notificationsFiltered = [];
+
+          _notifications.forEach((notificacion) {
+            _destinos.forEach((destino) {
+              int anioHoy = DateTime.now().year;
+              int mesHoy = DateTime.now().month;
+              int diaHoy = DateTime.now().day;
+
+              int anioNotificacion =
+                  int.parse(notificacion.fechaFin.toString().substring(0, 4));
+              int mesNotificacion =
+                  int.parse(notificacion.fechaFin.toString().substring(5, 7));
+              int diaNotificacion =
+                  int.parse(notificacion.fechaFin.toString().substring(8, 10));
+              if (notificacion.idnotficacion == destino.idnotificacion &&
+                  (anioHoy == anioNotificacion &&
+                      mesHoy == mesNotificacion &&
+                      diaHoy == diaNotificacion)) {
+                _notificationsFiltered.add(notificacion);
+              }
+            });
+          });
+        }
+
+        //---------------------------------------------------------------------
+        setState(() {});
       },
     );
   }

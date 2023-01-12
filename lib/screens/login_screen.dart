@@ -62,8 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
   //String _email = 'TEST';
   //String _password = 'TEST';
 
-  String _email = 'ABONATTO';
-  String _password = '123456';
+  String _email = 'CMaeda';
+  String _password = 'CMA134';
 
   String _emailError = '';
   bool _emailShowError = false;
