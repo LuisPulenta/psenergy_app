@@ -122,11 +122,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
     setState(() {
       _notifications = response.result;
-      _notifications.sort((a, b) {
-        return a.fechacarga
-            .toString()
-            .toLowerCase()
-            .compareTo(b.fechacarga.toString().toLowerCase());
+      _notifications.sort((b, a) {
+        return a.idnotficacion.compareTo(b.idnotficacion);
       });
     });
     _notificationsFiltered = _notifications;
