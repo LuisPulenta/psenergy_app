@@ -60,7 +60,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ))
                 ],
               ),
-              Divider(
+              const Divider(
                 color: Colors.black,
               ),
               Row(
@@ -307,7 +307,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ))
                 ],
               ),
-              Divider(
+              const Divider(
                 color: Colors.black,
               ),
               Row(

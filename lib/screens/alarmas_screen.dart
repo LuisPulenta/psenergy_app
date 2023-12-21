@@ -446,8 +446,6 @@ class _AlarmasScreenState extends State<AlarmasScreen> {
             .compareTo(b.bateria.toString().toLowerCase());
       });
     });
-
-    var c = 1234;
   }
 
 //*****************************************************************************

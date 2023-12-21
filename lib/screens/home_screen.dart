@@ -36,7 +36,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  @override
   TabController? _tabController;
   Usuario _user = Usuario(
       idUser: 0,
@@ -274,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen>
                             ],
                           ),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
+                            backgroundColor: Colors.white,
                             minimumSize: const Size(50, 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
@@ -432,7 +431,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: const Color(0xFF9a6a2e),
+                              backgroundColor: const Color(0xFF9a6a2e),
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -455,7 +454,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.red,
+                              backgroundColor: Colors.red,
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -487,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: const Color(0xFF9a6a2e),
+                              backgroundColor: const Color(0xFF9a6a2e),
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -510,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: const Color(0xFF9a6a2e),
+                              backgroundColor: const Color(0xFF9a6a2e),
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -1209,7 +1208,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
+                      backgroundColor: Colors.red,
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
@@ -1249,7 +1248,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
-                      primary: const Color(0xFF9a6a2e),
+                      backgroundColor: const Color(0xFF9a6a2e),
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
@@ -1296,8 +1295,6 @@ class _HomeScreenState extends State<HomeScreen>
             .toLowerCase()
             .compareTo(b.idControlPozo.toString().toLowerCase());
       });
-
-      var a1 = 1;
     });
   }
 
@@ -1390,10 +1387,6 @@ class _HomeScreenState extends State<HomeScreen>
       }
       await _actualizaMedicionesCab();
 
-      var b = _medicionesCab;
-
-      var c = 1;
-
       setState(() {});
     }
   }
@@ -1434,7 +1427,7 @@ class _HomeScreenState extends State<HomeScreen>
       };
 
       if (medicion.alarma > 0) {
-        Response response2 = await ApiHelper.put(
+        await ApiHelper.put(
           '/api/ControlDePozoAlarmas/',
           medicion.alarma.toString(),
           request2,
@@ -1746,7 +1739,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ],
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
+                        backgroundColor: Colors.red,
                         minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
@@ -1777,7 +1770,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
-                      primary: const Color(0xFF9a6a2e),
+                      backgroundColor: const Color(0xFF9a6a2e),
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
@@ -1852,19 +1845,5 @@ class _HomeScreenState extends State<HomeScreen>
         ),
       ),
     );
-  }
-
-//*****************************************************************************
-//************************** METODO SHOWSNACKBAR ******************************
-//*****************************************************************************
-
-  void _showSnackbar(String text) {
-    SnackBar snackbar = SnackBar(
-      content: Text(text),
-      backgroundColor: Colors.lightGreen,
-      //duration: Duration(seconds: 3),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-    //ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 }

@@ -1714,7 +1714,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
               ],
             ),
             style: ElevatedButton.styleFrom(
-              primary: const Color(0xFF9a6a2e),
+              backgroundColor: const Color(0xFF9a6a2e),
               minimumSize: const Size(double.infinity, 50),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
@@ -1994,7 +1994,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
       };
 
       if (medicion.alarma > 0) {
-        Response response2 = await ApiHelper.put(
+        await ApiHelper.put(
           '/api/ControlDePozoAlarmas/',
           medicion.alarma.toString(),
           request2,

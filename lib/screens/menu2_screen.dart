@@ -21,17 +21,8 @@ class _Menu2ScreenState extends State<Menu2Screen> {
 //************************** DEFINICION DE VARIABLES **************************
 //*****************************************************************************
 
-  List<Usuario> _usuarios = [];
-  List<Area> _areas = [];
-  List<Yacimiento> _yacimientos = [];
-  List<Bateria> _baterias = [];
-  List<Pozo> _pozos = [];
-  List<PozosFormula> _pozosformulas = [];
-  List<PozosControle> _pozoscontroles = [];
   final List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
-
-  List<Alarma> _alarmas = [];
 
   final Usuario _usuarioLogueado = Usuario(
       idUser: 0,
@@ -224,15 +215,6 @@ class _Menu2ScreenState extends State<Menu2Screen> {
 //----------------------------------------------------------------------
 
   Future<void> _getDatos() async {
-    _usuarios = await DBUsuarios.usuarios();
-    _areas = await DBAreas.areas();
-    _yacimientos = await DBYacimientos.yacimientos();
-    _baterias = await DBBaterias.baterias();
-    _pozos = await DBPozos.pozos();
-    _pozosformulas = await DBPozosFormulas.pozosformulas();
-    _pozoscontroles = await DBPozosControles.pozoscontroles();
-    _alarmas = await DBAlarmas.alarma();
-
     await _getMedicionesCab();
   }
 

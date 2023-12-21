@@ -295,7 +295,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFF9a6a2e),
+                    backgroundColor: const Color(0xFF9a6a2e),
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -478,17 +478,6 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         return;
       }
-
-      Usuario _usuarioLogueado2 = Usuario(
-          idUser: user.idUsuario,
-          codigo: "",
-          apellidonombre: user.nombre + " " + user.apellido,
-          usrlogin: user.login,
-          usrcontrasena: user.contrasena,
-          perfil: 0,
-          habilitadoWeb: 0,
-          causanteC: "",
-          habilitaPaqueteria: 0);
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('conectadodesde', DateTime.now().toString());

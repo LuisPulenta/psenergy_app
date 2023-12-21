@@ -184,7 +184,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ],
         ),
         style: ElevatedButton.styleFrom(
-          primary: const Color(0xFF9a6a2e),
+          backgroundColor: const Color(0xFF9a6a2e),
           minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),

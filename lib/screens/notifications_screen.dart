@@ -183,8 +183,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             .compareTo(b.idnotificacion.toString().toLowerCase());
       });
     });
-
-    var a = 123;
   }
 
 //------------------------------------------------------------------
@@ -230,7 +228,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       child: ListView(
         children: _notificationsFiltered.map((e) {
           return Card(
-            color: Color.fromARGB(255, 238, 231, 227),
+            color: const Color.fromARGB(255, 238, 231, 227),
             shadowColor: Colors.white,
             elevation: 10,
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 5),
@@ -519,7 +517,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         if (_vencenhoy == true && _mias == false) {
           _notificationsFiltered = [];
 
-          _notifications.forEach((notificacion) {
+          for (var notificacion in _notifications) {
             int anioHoy = DateTime.now().year;
             int mesHoy = DateTime.now().month;
             int diaHoy = DateTime.now().day;
@@ -536,28 +534,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 diaHoy == diaNotificacion) {
               _notificationsFiltered.add(notificacion);
             }
-          });
+          }
         }
 
         //---------------------------------------------------------------------
         if (_vencenhoy == false && _mias == true) {
           _notificationsFiltered = [];
 
-          _notifications.forEach((notificacion) {
-            _destinos.forEach((destino) {
+          for (var notificacion in _notifications) {
+            for (var destino in _destinos) {
               if (notificacion.idnotficacion == destino.idnotificacion) {
                 _notificationsFiltered.add(notificacion);
               }
-            });
-          });
+            }
+          }
         }
 
         //---------------------------------------------------------------------
         if (_vencenhoy == true && _mias == true) {
           _notificationsFiltered = [];
 
-          _notifications.forEach((notificacion) {
-            _destinos.forEach((destino) {
+          for (var notificacion in _notifications) {
+            for (var destino in _destinos) {
               int anioHoy = DateTime.now().year;
               int mesHoy = DateTime.now().month;
               int diaHoy = DateTime.now().day;
@@ -574,8 +572,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       diaHoy == diaNotificacion)) {
                 _notificationsFiltered.add(notificacion);
               }
-            });
-          });
+            }
+          }
         }
 
         //---------------------------------------------------------------------
@@ -606,7 +604,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         if (_vencenhoy == true && _mias == false) {
           _notificationsFiltered = [];
 
-          _notifications.forEach((notificacion) {
+          for (var notificacion in _notifications) {
             int anioHoy = DateTime.now().year;
             int mesHoy = DateTime.now().month;
             int diaHoy = DateTime.now().day;
@@ -623,28 +621,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 diaHoy == diaNotificacion) {
               _notificationsFiltered.add(notificacion);
             }
-          });
+          }
         }
 
         //---------------------------------------------------------------------
         if (_vencenhoy == false && _mias == true) {
           _notificationsFiltered = [];
 
-          _notifications.forEach((notificacion) {
-            _destinos.forEach((destino) {
+          for (var notificacion in _notifications) {
+            for (var destino in _destinos) {
               if (notificacion.idnotficacion == destino.idnotificacion) {
                 _notificationsFiltered.add(notificacion);
               }
-            });
-          });
+            }
+          }
         }
 
         //---------------------------------------------------------------------
         if (_vencenhoy == true && _mias == true) {
           _notificationsFiltered = [];
 
-          _notifications.forEach((notificacion) {
-            _destinos.forEach((destino) {
+          for (var notificacion in _notifications) {
+            for (var destino in _destinos) {
               int anioHoy = DateTime.now().year;
               int mesHoy = DateTime.now().month;
               int diaHoy = DateTime.now().day;
@@ -661,8 +659,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       diaHoy == diaNotificacion)) {
                 _notificationsFiltered.add(notificacion);
               }
-            });
-          });
+            }
+          }
         }
 
         //---------------------------------------------------------------------

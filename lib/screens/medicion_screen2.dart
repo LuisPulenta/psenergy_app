@@ -17,14 +17,16 @@ class MedicionScreen extends StatefulWidget {
   final int opcion;
   final int alarma;
 
-  MedicionScreen(
-      {required this.user,
+  const MedicionScreen(
+      {Key? key,
+      required this.user,
       required this.pozo,
       required this.pozos,
       required this.pozosformulas,
       required this.pozoscontroles,
       required this.opcion,
-      required this.alarma});
+      required this.alarma})
+      : super(key: key);
 
   @override
   _MedicionScreenState createState() => _MedicionScreenState();
@@ -56,11 +58,9 @@ class _MedicionScreenState extends State<MedicionScreen> {
       profundidad: 0.0,
       vidaUtil: 0.0);
 
-  List<PozosControle> _pozoscontroles = [];
-  List<PozosControle> _pozoscontrolesselected = [];
+  final List<PozosControle> _pozoscontroles = [];
   List<MedicionCabecera> _medicionesCab = [];
   List<MedicionCabecera> _medicionesCabCompleta = [];
-  bool _showLoader = false;
   bool _mostrarRPM = false;
   bool _mostrarTorque = false;
   bool _mostrarGPM = false;
@@ -77,105 +77,107 @@ class _MedicionScreenState extends State<MedicionScreen> {
   String _validohasta = '';
 
   String _prtbg = '';
-  String _prtbgError = '';
-  bool _prtbgShowError = false;
-  TextEditingController _prtbgController = TextEditingController();
+  final String _prtbgError = '';
+  final bool _prtbgShowError = false;
+  final TextEditingController _prtbgController = TextEditingController();
 
   String _prlinea = '';
-  String _prlineaError = '';
-  bool _prlineaShowError = false;
-  TextEditingController _prlineaController = TextEditingController();
+  final String _prlineaError = '';
+  final bool _prlineaShowError = false;
+  final TextEditingController _prlineaController = TextEditingController();
 
   String _prcsg = '';
-  String _prcsgError = '';
-  bool _prcsgShowError = false;
-  TextEditingController _prcsgController = TextEditingController();
+  final String _prcsgError = '';
+  final bool _prcsgShowError = false;
+  final TextEditingController _prcsgController = TextEditingController();
 
   String _ql = '';
-  String _qlError = '';
-  bool _qlShowError = false;
-  TextEditingController _qlController = TextEditingController();
+  final String _qlError = '';
+  final bool _qlShowError = false;
+  final TextEditingController _qlController = TextEditingController();
 
   String _qg = '';
-  String _qgError = '';
-  bool _qgShowError = false;
-  TextEditingController _qgController = TextEditingController();
+  final String _qgError = '';
+  final bool _qgShowError = false;
+  final TextEditingController _qgController = TextEditingController();
 
   String _caudalinst = '';
-  String _caudalinstError = '';
-  bool _caudalinstShowError = false;
-  TextEditingController _caudalinstController = TextEditingController();
+  final String _caudalinstError = '';
+  final bool _caudalinstShowError = false;
+  final TextEditingController _caudalinstController = TextEditingController();
 
   String _lecturaacumulada = '';
-  String _lecturaacumuladaError = '';
-  bool _lecturaacumuladaShowError = false;
-  TextEditingController _lecturaacumuladaController = TextEditingController();
+  final String _lecturaacumuladaError = '';
+  final bool _lecturaacumuladaShowError = false;
+  final TextEditingController _lecturaacumuladaController =
+      TextEditingController();
 
   String _presionantesdelfiltro = '';
-  String _presionantesdelfiltroError = '';
-  bool _presionantesdelfiltroShowError = false;
-  TextEditingController _presionantesdelfiltroController =
+  final String _presionantesdelfiltroError = '';
+  final bool _presionantesdelfiltroShowError = false;
+  final TextEditingController _presionantesdelfiltroController =
       TextEditingController();
 
   String _observaciones = '';
-  String _observacionesError = '';
-  bool _observacionesShowError = false;
-  TextEditingController _observacionesController = TextEditingController();
+  final String _observacionesError = '';
+  final bool _observacionesShowError = false;
+  final TextEditingController _observacionesController =
+      TextEditingController();
 
   String _tiempo = '';
-  String _tiempoError = '';
-  bool _tiempoShowError = false;
-  TextEditingController _tiempoController = TextEditingController();
+  final String _tiempoError = '';
+  final bool _tiempoShowError = false;
+  final TextEditingController _tiempoController = TextEditingController();
 
-  String _rpm = '';
-  String _rpmError = '';
-  bool _rpmShowError = false;
-  TextEditingController _rpmController = TextEditingController();
+  final String _rpm = '';
+  final String _rpmError = '';
+  final bool _rpmShowError = false;
+  final TextEditingController _rpmController = TextEditingController();
 
   String _torque = '';
-  String _torqueError = '';
-  bool _torqueShowError = false;
-  TextEditingController _torqueController = TextEditingController();
+  final String _torqueError = '';
+  final bool _torqueShowError = false;
+  final TextEditingController _torqueController = TextEditingController();
 
-  String _gpm = '';
-  String _gpmError = '';
-  bool _gpmShowError = false;
-  TextEditingController _gpmController = TextEditingController();
+  final String _gpm = '';
+  final String _gpmError = '';
+  final bool _gpmShowError = false;
+  final TextEditingController _gpmController = TextEditingController();
 
   String _carrera = '';
-  String _carreraError = '';
-  bool _carreraShowError = false;
-  TextEditingController _carreraController = TextEditingController();
+  final String _carreraError = '';
+  final bool _carreraShowError = false;
+  final TextEditingController _carreraController = TextEditingController();
 
   String _frecuencia = '';
-  String _frecuenciaError = '';
-  bool _frecuenciaShowError = false;
-  TextEditingController _frecuenciaController = TextEditingController();
+  final String _frecuenciaError = '';
+  final bool _frecuenciaShowError = false;
+  final TextEditingController _frecuenciaController = TextEditingController();
 
   String _pip = '';
-  String _pipError = '';
-  bool _pipShowError = false;
-  TextEditingController _pipController = TextEditingController();
+  final String _pipError = '';
+  final bool _pipShowError = false;
+  final TextEditingController _pipController = TextEditingController();
 
   String _amp = '';
-  String _ampError = '';
-  bool _ampShowError = false;
-  TextEditingController _ampController = TextEditingController();
+  final String _ampError = '';
+  final bool _ampShowError = false;
+  final TextEditingController _ampController = TextEditingController();
 
   String _volt = '';
-  String _voltError = '';
-  bool _voltShowError = false;
-  TextEditingController _voltController = TextEditingController();
+  final String _voltError = '';
+  final bool _voltShowError = false;
+  final TextEditingController _voltController = TextEditingController();
 
   String _orificio = '';
-  String _orificioError = '';
-  bool _orificioShowError = false;
-  TextEditingController _orificioController = TextEditingController();
+  final String _orificioError = '';
+  final bool _orificioShowError = false;
+  final TextEditingController _orificioController = TextEditingController();
 
   String _temperatura = '';
-  String _temperaturaError = '';
-  bool _temperaturaShowError = false;
-  TextEditingController _temperaturaController = TextEditingController();
+  final String _temperaturaError = '';
+  final bool _temperaturaShowError = false;
+  final TextEditingController _temperaturaController = TextEditingController();
 
 //****************************************************************
 //************************** INIT STATE **************************
@@ -187,7 +189,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
     _getprefs();
 
     _pozo = widget.pozo;
-    widget.pozoscontroles.forEach((pozoscontrol) {
+    for (var pozoscontrol in widget.pozoscontroles) {
       if (pozoscontrol.codigopozo == _pozo.codigopozo) {
         _pozoscontroles.add(pozoscontrol);
         if (pozoscontrol.idformula == 1) {
@@ -221,7 +223,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           _mostrarTemperatura = true;
         }
       }
-    });
+    }
   }
 
 //****************************************************************
@@ -230,17 +232,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xffe9dac2),
+        backgroundColor: const Color(0xffe9dac2),
         appBar: AppBar(
-          title: Text("Nueva medición"),
-          backgroundColor: Color(0xff9a6a2e),
+          title: const Text("Nueva medición"),
+          backgroundColor: const Color(0xff9a6a2e),
           centerTitle: true,
         ),
         body: Stack(
           children: <Widget>[
             SingleChildScrollView(
               child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -260,7 +262,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Text("Pozo: ",
+                            const Text("Pozo: ",
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFF781f1e),
@@ -268,25 +270,25 @@ class _MedicionScreenState extends State<MedicionScreen> {
                                 )),
                             Expanded(
                               child: Text(_pozo.descripcion.toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                   )),
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        Divider(
+                        const Divider(
                           color: Color(0xFF3c2920),
                           height: 2,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
                           children: <Widget>[
-                            Text("Tipo Pozo: ",
+                            const Text("Tipo Pozo: ",
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFF781f1e),
@@ -294,25 +296,25 @@ class _MedicionScreenState extends State<MedicionScreen> {
                                 )),
                             Expanded(
                               child: Text(_pozo.tipopozo.toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                   )),
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        Divider(
+                        const Divider(
                           color: Color(0xFF3c2920),
                           height: 2,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
                           children: <Widget>[
-                            Text("Fecha: ",
+                            const Text("Fecha: ",
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFF781f1e),
@@ -320,21 +322,22 @@ class _MedicionScreenState extends State<MedicionScreen> {
                                 )),
                             Expanded(
                               child: Text(
-                                  '${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
-                                  style: TextStyle(
+                                  DateFormat('dd/MM/yyyy')
+                                      .format(DateTime.now()),
+                                  style: const TextStyle(
                                     fontSize: 16,
                                   )),
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        Divider(
+                        const Divider(
                           color: Color(0xFF3c2920),
                           height: 2,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         _showprtbg(),
@@ -369,7 +372,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
                         _mostrarOrificio ? _showOrificio() : Container(),
                         _mostrarTemperatura ? _showTemperatura() : Container(),
                         _showobservaciones(),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         _showButton(),
@@ -398,7 +401,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -406,28 +409,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.compress, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.compress, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Pr Tgb:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -444,10 +447,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("kg/cm²"),
+          const Text("kg/cm²"),
         ],
       ),
     );
@@ -465,7 +468,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -473,28 +476,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.compare_sharp, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.compare_sharp, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Pr Línea:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -511,10 +514,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("kg/cm²"),
+          const Text("kg/cm²"),
         ],
       ),
     );
@@ -532,7 +535,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -540,28 +543,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.compare_arrows, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.compare_arrows, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Pr Csg:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -578,10 +581,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("kg/cm²"),
+          const Text("kg/cm²"),
         ],
       ),
     );
@@ -599,7 +602,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -607,28 +610,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.water, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.water, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Ql:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -645,10 +648,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("m³/d"),
+          const Text("m³/d"),
         ],
       ),
     );
@@ -666,7 +669,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -674,28 +677,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.waves, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.waves, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Qg:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -712,10 +715,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("m³/d"),
+          const Text("m³/d"),
         ],
       ),
     );
@@ -733,7 +736,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -741,28 +744,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.hourglass_bottom, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.hourglass_bottom, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Tiempo:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -779,144 +782,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("horas"),
-        ],
-      ),
-    );
-  }
-
-//****************************************************************
-//************************** _showgpm ****************************
-//****************************************************************
-
-  Widget _showgpm() {
-    return Container(
-      decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Colors.yellow,
-          border: Border.all(
-              color: Colors.black, width: 1, style: BorderStyle.solid),
-          borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
-            Color(
-              (0xffe9dac2),
-            ),
-            Color(
-              (0xffd3a735),
-            )
-          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black,
-                offset: Offset(3, 5),
-                blurRadius: 5,
-                spreadRadius: 3)
-          ]),
-      padding: EdgeInsets.all(5),
-      child: Row(
-        children: <Widget>[
-          Icon(Icons.av_timer, color: Color(0xFF781f1e)),
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            "GPM:",
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF781f1e)),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: TextField(
-              controller: _gpmController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                hintText: 'Ingresa GPM...',
-                errorText: _gpmShowError ? _gpmError : null,
-              ),
-              onChanged: (value) {
-                _gpm = value;
-              },
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Text(""),
-        ],
-      ),
-    );
-  }
-
-//****************************************************************
-//************************** _showcarrera ************************
-//****************************************************************
-
-  Widget _showcarrera() {
-    return Container(
-      decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Colors.yellow,
-          border: Border.all(
-              color: Colors.black, width: 1, style: BorderStyle.solid),
-          borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
-            Color(
-              (0xffe9dac2),
-            ),
-            Color(
-              (0xffd3a735),
-            )
-          ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black,
-                offset: Offset(3, 5),
-                blurRadius: 5,
-                spreadRadius: 3)
-          ]),
-      padding: EdgeInsets.all(5),
-      child: Row(
-        children: <Widget>[
-          Icon(Icons.run_circle, color: Color(0xFF781f1e)),
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            "Carrera:",
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF781f1e)),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: TextField(
-              controller: _carreraController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                hintText: 'Ingresa Carrera...',
-                errorText: _carreraShowError ? _carreraError : null,
-              ),
-              onChanged: (value) {
-                _carrera = value;
-              },
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Text(""),
+          const Text("horas"),
         ],
       ),
     );
@@ -934,7 +803,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -942,28 +811,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.air, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.air, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Caudal Inst.:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -980,10 +849,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("m³/h"),
+          const Text("m³/h"),
         ],
       ),
     );
@@ -1001,7 +870,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1009,28 +878,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.add_task, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.add_task, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Lectura Acumulada.:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1048,10 +917,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("m³"),
+          const Text("m³"),
         ],
       ),
     );
@@ -1069,7 +938,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1077,28 +946,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.restore, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.restore, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Presión antes del filtro:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1117,10 +986,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text("kg/cm³"),
+          const Text("kg/cm³"),
         ],
       ),
     );
@@ -1138,7 +1007,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1146,28 +1015,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.list, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.list, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Observaciones:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1184,10 +1053,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Text(""),
+          const Text(""),
         ],
       ),
     );
@@ -1205,7 +1074,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1213,28 +1082,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.speed, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.speed, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "RPM:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1268,7 +1137,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1276,28 +1145,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.sync_disabled, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.sync_disabled, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Torque:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1331,7 +1200,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1339,28 +1208,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.speed, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.speed, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "GPM:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1394,7 +1263,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1402,28 +1271,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.run_circle, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.run_circle, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Carrera:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1457,7 +1326,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1465,28 +1334,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.bolt, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.bolt, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Frecuencia:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1520,7 +1389,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1528,28 +1397,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.stacked_bar_chart, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.stacked_bar_chart, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Pip:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1583,7 +1452,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1591,28 +1460,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.motion_photos_auto, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.motion_photos_auto, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Amp:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1646,7 +1515,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1654,28 +1523,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.battery_charging_full, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.battery_charging_full, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Volt:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1709,7 +1578,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1717,28 +1586,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.circle, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.circle, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Orificio:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1772,7 +1641,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           border: Border.all(
               color: Colors.black, width: 1, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(colors: [
+          gradient: const LinearGradient(colors: [
             Color(
               (0xffe9dac2),
             ),
@@ -1780,28 +1649,28 @@ class _MedicionScreenState extends State<MedicionScreen> {
               (0xffd3a735),
             )
           ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black,
                 offset: Offset(3, 5),
                 blurRadius: 5,
                 spreadRadius: 3)
           ]),
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.thermostat, color: Color(0xFF781f1e)),
-          SizedBox(
+          const Icon(Icons.thermostat, color: Color(0xFF781f1e)),
+          const SizedBox(
             width: 10,
           ),
-          Text(
+          const Text(
             "Temperatura:",
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF781f1e)),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -1828,40 +1697,38 @@ class _MedicionScreenState extends State<MedicionScreen> {
 //****************************************************************
 
   Widget _showButton() {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Expanded(
-            child: ElevatedButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.save),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text('Enviar'),
-                ],
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xFF9a6a2e),
-                minimumSize: Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Expanded(
+          child: ElevatedButton(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const <Widget>[
+                Icon(Icons.save),
+                SizedBox(
+                  width: 20,
                 ),
-              ),
-              onPressed: () {
-                if (DateTime.parse(_validohasta).isBefore(DateTime.now())) {
-                  _logOut();
-                } else {
-                  _save();
-                }
-              },
+                Text('Enviar'),
+              ],
             ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF9a6a2e),
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            onPressed: () {
+              if (DateTime.parse(_validohasta).isBefore(DateTime.now())) {
+                _logOut();
+              } else {
+                _save();
+              }
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -1876,7 +1743,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           title: 'Error',
           message: 'No ha ingresado ninguna medición',
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -1920,21 +1787,19 @@ class _MedicionScreenState extends State<MedicionScreen> {
 //****************************************************************
 
   void _addRecord() async {
-    setState(() {
-      _showLoader = true;
-    });
+    setState(() {});
 //---------------------- GRABA MEDICION EN TABLA LOCAL ------------------
     await _actualizaMedicionesCab();
 
-    if (_medicionesCabCompleta.length == 0) {
+    if (_medicionesCabCompleta.isEmpty) {
       _idMedicion = 1;
     } else {
       _idMedicion = 0;
-      _medicionesCabCompleta.forEach((element) {
+      for (var element in _medicionesCabCompleta) {
         if (element.idControlPozo > _idMedicion) {
           _idMedicion = element.idControlPozo;
         }
-      });
+      }
       _idMedicion = _idMedicion + 1;
     }
 
@@ -1942,8 +1807,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
         idControlPozo: _idMedicion,
         bateria: widget.pozo.codigobateria,
         pozo: widget.pozo.codigopozo,
-        fecha:
-            DateTime.now().add(Duration(days: 0)).toString().substring(0, 10),
+        fecha: DateTime.now()
+            .add(const Duration(days: 0))
+            .toString()
+            .substring(0, 10),
         ql: _ql == "" ? 0 : double.parse(_ql.replaceAll(',', '.')),
         qo: 0,
         qw: 0,
@@ -2001,19 +1868,6 @@ class _MedicionScreenState extends State<MedicionScreen> {
 
     DBMedicionesCabecera.insertMedicionCab(medicionCabecera);
 
-    Alarma _alarmaBorrar = Alarma(
-        idalarma: 0,
-        fechacarga: '',
-        provieneidcontrol: 0,
-        pozo: '',
-        bateria: '',
-        idusuariocarga: 0,
-        idusuarioapp: 0,
-        fechaejecutada: '',
-        nuevoidcontrol: 0,
-        observacion: '',
-        tag: 0);
-
     _alarmas = await DBAlarmas.alarma();
 
     for (Alarma alarma in _alarmas) {
@@ -2024,9 +1878,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
 
     await _actualizaMedicionesCab();
     _showSnackbar('Nueva medición grabada con éxito en Base de Datos Local');
-    setState(() {
-      _showLoader = false;
-    });
+    setState(() {});
 
 //********************************************************************
 //************ RECORRE TABLA LOCAL PARA GRABAR EN SERVIDOR ***********
@@ -2036,7 +1888,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      _medicionesCab.forEach((medicion) {
+      for (var medicion in _medicionesCab) {
         if (medicion.enviado == 0) {
           Map<String, dynamic> request = {
             'idControlPozo': 0,
@@ -2083,17 +1935,17 @@ class _MedicionScreenState extends State<MedicionScreen> {
             'fechaCargaAPP': DateTime.now().toString(),
           };
 
-          widget.pozos.forEach((pozo) {
+          for (var pozo in widget.pozos) {
             if (pozo.codigopozo == medicion.pozo) {
               _pozo = pozo;
             }
-          });
+          }
 
           _addRecordServer(request, medicion);
 
           //_addRecordsDetallesServer(medicion);
         }
-      });
+      }
     }
 
     Navigator.pop(context, 'yes');
@@ -2125,7 +1977,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
     };
 
     if (medicion.alarma > 0) {
-      Response response2 = await ApiHelper.put(
+      await ApiHelper.put(
         '/api/ControlDePozoAlarmas/',
         medicion.alarma.toString(),
         request2,
@@ -2158,7 +2010,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -2299,13 +2151,13 @@ class _MedicionScreenState extends State<MedicionScreen> {
 
   void _addRecordsDetallesServer(MedicionCabecera medicion) async {
     List<PozosControle> _pozoscontrolesselected = [];
-    widget.pozoscontroles.forEach((pozoscontrol) {
+    for (var pozoscontrol in widget.pozoscontroles) {
       if (pozoscontrol.codigopozo == medicion.pozo) {
         _pozoscontrolesselected.add(pozoscontrol);
       }
-    });
-    if (_pozoscontrolesselected.length > 0) {
-      _pozoscontrolesselected.forEach((_pozocontrolselected) {
+    }
+    if (_pozoscontrolesselected.isNotEmpty) {
+      for (var _pozocontrolselected in _pozoscontrolesselected) {
         _pozocontrolselected.idformula == 1
             ? _valor = (medicion.regimenOperacion)!.toDouble()
             : _pozocontrolselected.idformula == 2
@@ -2341,7 +2193,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
         if (_valor > 0) {
           _grabadetalle(request3);
         }
-      });
+      }
     }
   }
 
@@ -2359,7 +2211,7 @@ class _MedicionScreenState extends State<MedicionScreen> {
           title: 'Error',
           message: response.message,
           actions: <AlertDialogAction>[
-            AlertDialogAction(key: null, label: 'Aceptar'),
+            const AlertDialogAction(key: null, label: 'Aceptar'),
           ]);
       return;
     }
@@ -2372,21 +2224,21 @@ class _MedicionScreenState extends State<MedicionScreen> {
   Future<void> _actualizaMedicionesCab() async {
     _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
 
-    _medicionesCabCompleta.forEach((medicion) {
+    for (var medicion in _medicionesCabCompleta) {
       if (DateTime.parse(medicion.fecha)
-              .isBefore(DateTime.now().add(Duration(days: -30))) &&
+              .isBefore(DateTime.now().add(const Duration(days: -30))) &&
           medicion.enviado != 0) {
         DBMedicionesCabecera.delete(medicion);
       }
-    });
+    }
 
     _medicionesCabCompleta = await DBMedicionesCabecera.medicionescabecera();
     _medicionesCab = [];
-    _medicionesCabCompleta.forEach((medicion) {
+    for (var medicion in _medicionesCabCompleta) {
       if (medicion.userIdInput == widget.user.idUser) {
         _medicionesCab.add(medicion);
       }
-    });
+    }
     _medicionesCab.sort((b, a) {
       return a.idControlPozo
           .toString()
@@ -2412,55 +2264,10 @@ class _MedicionScreenState extends State<MedicionScreen> {
 
   void _logOut() async {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
-//****************************************************************
-//************************** _carteles ***************************
-//****************************************************************
-
-  void _carteles() async {
-    await showAlertDialog(
-        context: context,
-        title: 'Usuario',
-        message: widget.user.apellidonombre,
-        actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar'),
-        ]);
-
-    await showAlertDialog(
-        context: context,
-        title: 'Pozo',
-        message: widget.pozo.codigopozo,
-        actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar'),
-        ]);
-
-    await showAlertDialog(
-        context: context,
-        title: 'Pozos cantidad',
-        message: widget.pozos.length.toString(),
-        actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar'),
-        ]);
-
-    await showAlertDialog(
-        context: context,
-        title: 'Pozos Formulas',
-        message: widget.pozosformulas.length.toString(),
-        actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar'),
-        ]);
-
-    await showAlertDialog(
-        context: context,
-        title: 'Pozos Controles',
-        message: widget.pozoscontroles.length.toString(),
-        actions: <AlertDialogAction>[
-          AlertDialogAction(key: null, label: 'Aceptar'),
-        ]);
-  }
-  //*****************************************************************************
+//*****************************************************************************
 //************************** METODO SHOWSNACKBAR ******************************
 //*****************************************************************************
 
